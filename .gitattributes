@@ -1,3 +1,0 @@
-use.rawcode.txt filter=lfs diff=lfs merge=lfs -text
-train*.h5 filter=lfs diff=lfs merge=lfs -text
-use*.h5 filter=lfs diff=lfs merge=lfs -text
