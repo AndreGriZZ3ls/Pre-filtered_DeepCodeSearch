@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 __author__    = "Andre Warnecke"
-__copyright__ = "Copyright © 2022, André Warnecke"
+__copyright__ = "Copyright (c) 2022, André Warnecke"
 
 #Citation for DeepCS, which is called/executed in the context of this program:
 '''bibtex

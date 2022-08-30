@@ -4,7 +4,7 @@
    utilizing a deep learning neural net) and use this index to pre-select search candidates, increasing DeepCS performance."""
 
 __author__    = "Andre Warnecke"
-__copyright__ = "Copyright © 2022, Andre Warnecke"
+__copyright__ = "Copyright (c) 2022, Andre Warnecke"
 
 #Citation for DeepCS, which is called/executed in the context of this program:
 '''bibtex
