@@ -114,8 +114,9 @@ if __name__ == '__main__':
                 print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
                 #print(result_line_numbers)
                 result_line_numbers = list(result_line_numbers)
-                #engine._code_reprs  = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers)
-                engine._code_reprs = engine.repr_code(model, result_line_numbers)
+                engine._code_reprs  = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers)
+                print(f"######## Shape of code vectors: {engine._code_reprs.shape}")
+                #engine._code_reprs = engine.repr_code(model, result_line_numbers)
                 engine._codebase   = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers)
                 deepCS_main.search_and_print_results(engine, model, vocab, query, n_results)
                 
