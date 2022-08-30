@@ -3,8 +3,8 @@
 """This program is able to create an index for given data that are compatible with DeepCS (a open source code search engine
    utilizing a deep learning neural net) and use this index to pre-select search candidates, increasing DeepCS performance."""
 
-__author__    = "André Warnecke"
-__copyright__ = "Copyright © 2022, André Warnecke"
+__author__    = "Andre Warnecke"
+__copyright__ = "Copyright © 2022, Andre Warnecke"
 
 #Citation for DeepCS, which is called/executed in the context of this program:
 '''bibtex
