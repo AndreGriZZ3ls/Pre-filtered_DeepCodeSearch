@@ -1,3 +1,7 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:f6254fb7cd49aa9e1ed41885df73448f09f900156d4d636927679664f8c8d8ea
-size 69
+keras=2.3.1
+tensorflow-gpu=2.0.0
+tables
+numpy
+tqdm
+scipy
+scikit-learn
