@@ -188,7 +188,7 @@ class SearchEngine:
         
         if lines == None: logger.info('Representing code ..')
         vecs = model.repr_code([methnames, apiseqs, tokens], batch_size = 10000)
-        vecs = vecs.astype(np.float)
+        vecs = vecs.astype(np.float64) #vecs.astype(np.float)
         vecs = normalize(vecs)
         return vecs
             
