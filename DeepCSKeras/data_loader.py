@@ -58,7 +58,6 @@ def load_code_reprs_lines(path, lines):
     codereprs=[]
     h5f = tables.open_file(path)
     vecs = h5f.root.vecs
-    print(len(vecs))
     for line in lines:
         codereprs.append(vecs[line])
     h5f.close()
