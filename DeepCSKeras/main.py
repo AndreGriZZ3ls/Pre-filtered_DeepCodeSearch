@@ -212,6 +212,8 @@ class SearchEngine:
                  
     def search_thread(self, codes, sims, desc_repr, code_reprs, i, n_results):        
     #1. compute similarity
+        print(f"code_reprs: {len(code_reprs)}, {len(code_reprs[0])}, {code_reprs[0]}")
+        print(f"desc_repr: {len(desc_repr)}, {len(desc_repr[0])}, {desc_repr[0]}")
         chunk_sims = np.dot(code_reprs, desc_repr) # [pool_size x 1] 
         chunk_sims = np.squeeze(chunk_sims, axis = 1)
     #2. choose top results
