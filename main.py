@@ -89,7 +89,7 @@ if __name__ == '__main__':
             print("Processing. Please wait.")
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
-            print(f"Query without stop words (irrelevant words): {query}")
+            print(f"Query without stop words (just relevant words): {query_list}")
             if index_type == "word_indices":
                 query_index_for_methnames = set([methname_vocab.get(w, 0) for w in query_list]) # convert user input to word indices
                 query_index_for_tokens    = set([token_vocab.get(   w, 0) for w in query_list])
@@ -106,6 +106,6 @@ if __name__ == '__main__':
                 print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
                 result_line_numbers = list(result_line_numbers)
                 engine._code_reprs  = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers)
-                engine._codebase   = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers)
+                engine._codebase    = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers)
                 deepCS_main.search_and_print_results(engine, model, vocab, query, n_results)
                 
