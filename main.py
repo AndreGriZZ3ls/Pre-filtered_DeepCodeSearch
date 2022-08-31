@@ -88,34 +88,24 @@ if __name__ == '__main__':
             engine._code_reprs = full_code_reprs
             print("Processing. Please wait.")
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
-            #print(stopwords)
-            #print(query)
             query_list = list(set(query.split(' ')) - stopwords)
-            #print(query)
+            print(f"Query without stop words (irrelevant words): {query}")
             if index_type == "word_indices":
                 query_index_for_methnames = set([methname_vocab.get(w, 0) for w in query_list]) # convert user input to word indices
                 query_index_for_tokens    = set([token_vocab.get(   w, 0) for w in query_list])
-                #print("query_index_for_methnames:")
-                #print(query_index_for_methnames)
-                #print("query_index_for_tokens:")
-                #print(query_index_for_tokens)
                 result_line_numbers = set()
                 min_common = len(query_list) * 2 / 3 + len(query_list) % 3
                 for i in range(0, len(methnames)):
                     if len(query_index_for_methnames & set(methnames[i])) >= min_common:
                     #if not query_index_for_methnames.isdisjoint(methnames[i]):
-                        #print(methnames[i])
                         result_line_numbers.add(i)
                 for i in range(0, len(tokens)):
                     if len(query_index_for_tokens & set(tokens[i])) >= min_common:
                     #if not query_index_for_tokens.isdisjoint(tokens[i]):
-                        #print(tokens[i])
                         result_line_numbers.add(i)
                 print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
-                #print(result_line_numbers)
                 result_line_numbers = list(result_line_numbers)
                 engine._code_reprs  = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers)
-                #engine._code_reprs = engine.repr_code(model, result_line_numbers)
                 engine._codebase   = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers)
                 deepCS_main.search_and_print_results(engine, model, vocab, query, n_results)
                 
