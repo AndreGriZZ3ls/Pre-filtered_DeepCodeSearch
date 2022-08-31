@@ -35,7 +35,6 @@ def load_codebase_lines(path, lines):
     #codes=codecs.open(self.path+self.data_params['use_codebase']).readlines()
     codes=codecs.open(path, encoding='utf8',errors='replace').readlines()
         #use codecs to read in case of encoding problem
-    print(f"###### length of codes {len(codes)}")
     for line in lines:
         codebase.append(codes[line])            
     return codebase #

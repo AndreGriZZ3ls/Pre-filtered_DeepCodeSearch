@@ -86,10 +86,10 @@ if __name__ == '__main__':
                 traceback.print_exc()
                 break
             engine._code_reprs = full_code_reprs
-            print("Processing. Please wait.")
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
             print(f"Query without stop words (just relevant words): {query_list}")
+            print("Processing. Please wait.")
             if index_type == "word_indices":
                 query_index_for_methnames = set([methname_vocab.get(w, 0) for w in query_list]) # convert user input to word indices
                 query_index_for_tokens    = set([token_vocab.get(   w, 0) for w in query_list])
