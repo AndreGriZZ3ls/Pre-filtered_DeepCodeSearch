@@ -31,12 +31,12 @@ def load_codebase_lines(path, lines):
     codefile: h5 file that stores raw code
     """
     logger.info('Loading pre-filtered codebase liens ...')
-    codebase=[]
+    codebase=[[]]
     #codes=codecs.open(self.path+self.data_params['use_codebase']).readlines()
     codes=codecs.open(path, encoding='utf8',errors='replace').readlines()
         #use codecs to read in case of encoding problem
     for line in tqdm(lines):
-        codebase.append(codes[line])            
+        codebase[0].append(codes[line])            
     return codebase #
 
 ### Results Data ###
