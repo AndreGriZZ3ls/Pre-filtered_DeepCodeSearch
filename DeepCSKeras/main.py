@@ -208,13 +208,13 @@ class SearchEngine:
         threads     = []
         for i,code_reprs_chunk in enumerate(self._code_reprs):
             if i == 0:
-                print(f"code_reprs type: {type(self._code_reprs)}")
+                """print(f"code_reprs type: {type(self._code_reprs)}")
                 print(f"code_reprs length: {len(self._code_reprs)} \n")
                 print(f"code_reprs_chunk type: {type(code_reprs_chunk)}")
                 print(f"code_reprs_chunk shape: {code_reprs_chunk.shape}")
                 print(f"code_reprs_chunk[0] type: {type(code_reprs_chunk[0])}")
                 print(f"code_reprs_chunk[0] length: {len(code_reprs_chunk[0])}")
-                return ##########################################################################################################
+                return ##########################################################################################################"""
             t = threading.Thread(target=self.search_thread, args = (codes, sims, desc_repr, code_reprs_chunk, i, n_results))
             threads.append(t)
         for t in threads:

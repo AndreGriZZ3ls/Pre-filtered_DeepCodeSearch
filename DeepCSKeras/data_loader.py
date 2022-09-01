@@ -31,12 +31,12 @@ def load_codebase_lines(path, lines):
     codefile: h5 file that stores raw code
     """
     logger.info('Loading pre-filtered codebase liens ...')
-    codebase=[[]]
+    codebase=[]
     #codes=codecs.open(self.path+self.data_params['use_codebase']).readlines()
     codes=codecs.open(path, encoding='utf8',errors='replace').readlines()
         #use codecs to read in case of encoding problem
     for line in tqdm(lines):
-        codebase[0].append(codes[line])            
+        codebase.append(codes[line])            
     return codebase #
 
 ### Results Data ###
@@ -55,11 +55,11 @@ def load_code_reprs(path, chunk_size):
 def load_code_reprs_lines(path, lines): 
     logger.debug(f'Loading specific code vectors (those listed in lines)..')          
     """reads some of the vectors (2D numpy array) from a hdf5 file"""
-    codereprs=[]
+    codereprs=[[]]
     h5f = tables.open_file(path)
     vecs = h5f.root.vecs
-    for line in lines:
-        codereprs.append(vecs[line])
+    for line in tqdm(lines):
+        codereprs[0].append(vecs[line])
     h5f.close()
     return codereprs #
 
