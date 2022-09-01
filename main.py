@@ -93,7 +93,7 @@ if __name__ == '__main__':
                 query_index_for_methnames = set([methname_vocab.get(w, 0) for w in query_list]) # convert user input to word indices
                 query_index_for_tokens    = set([token_vocab.get(   w, 0) for w in query_list])
                 result_line_numbers = set()
-                min_common = len(query_list) * 2 / 3 + len(query_list) % 3
+                min_common = len(query_list) / 2 + len(query_list) % 2
                 for i in range(0, len(methnames)):
                     if len(query_index_for_methnames & set(methnames[i])) >= min_common:
                     #if not query_index_for_methnames.isdisjoint(methnames[i]):
