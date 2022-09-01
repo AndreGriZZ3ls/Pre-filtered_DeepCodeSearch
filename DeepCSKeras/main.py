@@ -209,7 +209,7 @@ class SearchEngine:
         for i,code_reprs_chunk in enumerate(self._code_reprs):
             if i == 0:
                 print(f"code_reprs type: {type(self._code_reprs)}")
-                print(f"code_reprs type: {len(self._code_reprs) \n}")
+                print(f"code_reprs type: {len(self._code_reprs)} \n")
                 print(f"code_reprs_chunk type: {type(self.code_reprs_chunk)}")
                 print(f"code_reprs_chunk type: {code_reprs_chunk.shape}")
             t = threading.Thread(target=self.search_thread, args = (codes, sims, desc_repr, code_reprs_chunk, i, n_results))
