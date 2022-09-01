@@ -72,9 +72,8 @@ if __name__ == '__main__':
         
         assert config['training_params']['reload'] > 0, "Please specify the number of the optimal epoch checkpoint in config.py"
         engine.load_model(model, config['training_params']['reload'], f"./DeepCSKeras/output/{model.__class__.__name__}/models/")
-        full_code_reprs    = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], _codebase_chunksize)
-        engine._code_reprs = full_code_reprs
-        vocab = data_loader.load_pickle(data_path+config['data_params']['vocab_desc'])
+        #full_code_reprs    = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], _codebase_chunksize)
+        vocab = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
         
         methnames, tokens = indexer.load_index()
         while True:
@@ -85,7 +84,7 @@ if __name__ == '__main__':
                 print("Exception while parsing your input:")
                 traceback.print_exc()
                 break
-            engine._code_reprs = full_code_reprs
+            #engine._code_reprs = full_code_reprs
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
             print(f"Query without stop words (just relevant words): {query_list}")

@@ -44,8 +44,8 @@ class JointEmbeddingModel:
                               # If True, all subsequent layers in the model must support masking, otherwise an exception will be raised.
                               name='embedding_methname')
         methname_embedding = embedding(methname)
-        dropout = Dropout(0.25,name='dropout_methname_embed')
-        methname_dropout = dropout(methname_embedding)
+        dropout            = Dropout(0.25,name='dropout_methname_embed')
+        methname_dropout   = dropout(methname_embedding)
         # 2.rnn
         f_rnn = LSTM(self.model_params.get('n_lstm_dims', 128), recurrent_dropout=0.2, 
                      return_sequences=True, name='lstm_methname_f')
@@ -54,13 +54,13 @@ class JointEmbeddingModel:
                      recurrent_dropout=0.2, name='lstm_methname_b',go_backwards=True)        
         methname_f_rnn = f_rnn(methname_dropout)
         methname_b_rnn = b_rnn(methname_dropout)
-        dropout = Dropout(0.25,name='dropout_methname_rnn')
+        dropout        = Dropout(0.25,name='dropout_methname_rnn')
         methname_f_dropout = dropout(methname_f_rnn)
         methname_b_dropout = dropout(methname_b_rnn)
         # 3.maxpooling
-        maxpool = Lambda(lambda x: K.max(x, axis=1, keepdims=False), output_shape=lambda x: (x[0], x[2]),name='maxpool_methname')
+        maxpool       = Lambda(lambda x: K.max(x, axis=1, keepdims=False), output_shape=lambda x: (x[0], x[2]),name='maxpool_methname')
         methname_pool = Concatenate(name='concat_methname_lstms')([maxpool(methname_f_dropout), maxpool(methname_b_dropout)])
-        activation = Activation('tanh',name='active_methname')
+        activation    = Activation('tanh',name='active_methname')
         methname_repr = activation(methname_pool)
         
         
@@ -73,8 +73,8 @@ class JointEmbeddingModel:
                                          # If True, all subsequent layers must support masking, otherwise an exception will be raised.
                               name='embedding_apiseq')
         apiseq_embedding = embedding(apiseq)
-        dropout = Dropout(0.25,name='dropout_apiseq_embed')
-        apiseq_dropout = dropout(apiseq_embedding)
+        dropout          = Dropout(0.25,name='dropout_apiseq_embed')
+        apiseq_dropout   = dropout(apiseq_embedding)
         # 2.rnn
         f_rnn = LSTM(self.model_params.get('n_lstm_dims', 100), return_sequences=True, recurrent_dropout=0.2,
                       name='lstm_apiseq_f')
@@ -82,7 +82,7 @@ class JointEmbeddingModel:
                       name='lstm_apiseq_b', go_backwards=True)        
         apiseq_f_rnn = f_rnn(apiseq_dropout)
         apiseq_b_rnn = b_rnn(apiseq_dropout)
-        dropout = Dropout(0.25,name='dropout_apiseq_rnn')
+        dropout      = Dropout(0.25,name='dropout_apiseq_rnn')
         apiseq_f_dropout = dropout(apiseq_f_rnn)
         apiseq_b_dropout = dropout(apiseq_b_rnn)
         # 3.maxpooling
@@ -103,8 +103,8 @@ class JointEmbeddingModel:
                               # If True, all subsequent layers must support masking, otherwise an exception will be raised.
                               name='embedding_tokens')
         tokens_embedding = embedding(tokens)
-        dropout = Dropout(0.25,name='dropout_tokens_embed')
-        tokens_dropout= dropout(tokens_embedding)
+        dropout          = Dropout(0.25,name='dropout_tokens_embed')
+        tokens_dropout   = dropout(tokens_embedding)
 
         # 4.maxpooling
         maxpool     = Lambda(lambda x: K.max(x, axis=1, keepdims=False), output_shape=lambda x: (x[0], x[2]),name='maxpool_tokens')
@@ -113,12 +113,12 @@ class JointEmbeddingModel:
         tokens_repr = activation(tokens_pool)        
         
         ## concatenate the representation of code ##
-        merged_methname_api=Concatenate(name='merge_methname_api')([methname_repr,apiseq_repr])
-        merged_code_repr=Concatenate(name='merge_coderepr')([merged_methname_api,tokens_repr])
-        code_repr=Dense(self.model_params.get('n_hidden',400),activation='tanh',name='dense_coderepr')(merged_code_repr)
+        merged_methname_api = Concatenate(name='merge_methname_api')([methname_repr,       apiseq_repr])
+        merged_code_repr    = Concatenate(name='merge_coderepr'    )([merged_methname_api, tokens_repr])
+        code_repr           = Dense(self.model_params.get('n_hidden',400),activation='tanh',name='dense_coderepr')(merged_code_repr)
         
         
-        self._code_repr_model=Model(inputs=[methname,apiseq,tokens],outputs=[code_repr],name='code_repr_model')     
+        self._code_repr_model = Model(inputs=[methname, apiseq, tokens], outputs=[code_repr], name='code_repr_model')     
         
         
         '''
@@ -137,8 +137,8 @@ class JointEmbeddingModel:
                                       # If True, all subsequent layers must support masking, otherwise an exception will be raised.
                               name='embedding_desc')
         desc_embedding = embedding(desc)
-        dropout = Dropout(0.25,name='dropout_desc_embed')
-        desc_dropout = dropout(desc_embedding)
+        dropout        = Dropout(0.25,name='dropout_desc_embed')
+        desc_dropout   = dropout(desc_embedding)
         # 2. rnn
         f_rnn = LSTM(self.model_params.get('n_lstm_dims', 100), return_sequences=True, recurrent_dropout=0.2,
                      name='lstm_desc_f')
@@ -146,7 +146,7 @@ class JointEmbeddingModel:
                      name='lstm_desc_b', go_backwards=True) 
         desc_f_rnn = f_rnn(desc_dropout)
         desc_b_rnn = b_rnn(desc_dropout)
-        dropout = Dropout(0.25,name='dropout_desc_rnn')
+        dropout    = Dropout(0.25,name='dropout_desc_rnn')
         desc_f_dropout = dropout(desc_f_rnn)
         desc_b_dropout = dropout(desc_b_rnn)
         # 3. maxpooling
@@ -155,18 +155,18 @@ class JointEmbeddingModel:
         activation = Activation('tanh',name='active_desc')
         desc_repr  = activation(desc_pool)
         
-        self._desc_repr_model=Model(inputs=[desc],outputs=[desc_repr],name='desc_repr_model')
+        self._desc_repr_model = Model(inputs=[desc], outputs=[desc_repr], name='desc_repr_model')
             
         """
         3: calculate the cosine similarity between code and desc
         """     
         logger.debug('Building similarity model') 
-        code_repr=self._code_repr_model([methname,apiseq,tokens])
-        desc_repr=self._desc_repr_model([desc])
-        cos_sim=Dot(axes=1, normalize=True, name='cos_sim')([code_repr, desc_repr])
+        code_repr = self._code_repr_model([methname, apiseq, tokens])
+        desc_repr = self._desc_repr_model([desc])
+        cos_sim   = Dot(axes=1, normalize=True, name='cos_sim')([code_repr, desc_repr])
         
-        sim_model = Model(inputs=[methname,apiseq,tokens,desc], outputs=[cos_sim],name='sim_model')   
-        self._sim_model=sim_model  # for model evaluation  
+        sim_model = Model(inputs=[methname, apiseq, tokens, desc], outputs=[cos_sim], name='sim_model')   
+        self._sim_model = sim_model  # for model evaluation  
 
         
         '''
@@ -178,8 +178,8 @@ class JointEmbeddingModel:
                      output_shape=lambda x: x[0], name='loss')([good_sim, bad_sim])
 
         logger.debug('Building training model')
-        self._training_model=Model(inputs  = [self.methname, self.apiseq, self.tokens, self.desc_good, self.desc_bad],
-                                   outputs = [loss], name='training_model')
+        self._training_model = Model(inputs  = [self.methname, self.apiseq, self.tokens, self.desc_good, self.desc_bad],
+                                     outputs = [loss], name='training_model')
         
                 
     def summary(self, export_path):

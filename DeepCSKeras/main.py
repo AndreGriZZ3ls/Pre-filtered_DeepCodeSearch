@@ -23,10 +23,10 @@ except Exception:
 
 class SearchEngine:
     def __init__(self, args, conf = None):
-        self.data_path    = args.data_path + args.dataset+'/' 
+        self.data_path    = args.data_path + args.dataset + '/' 
         self.train_params = conf.get('training_params', dict())
-        self.data_params  = conf.get('data_params',dict())
-        self.model_params = conf.get('model_params',dict())
+        self.data_params  = conf.get('data_params',     dict())
+        self.model_params = conf.get('model_params',    dict())
         
         self._eval_sets   = None
         
@@ -194,11 +194,16 @@ class SearchEngine:
             
     
     def search(self, model, vocab, query, n_results = 10):
-        desc=[convert(vocab, query)] # convert desc sentence to word indices
+        desc = [convert(vocab, query)] # convert desc sentence to word indices
         padded_desc = pad(desc, self.data_params['desc_len'])
         desc_repr   = model.repr_desc([padded_desc])
         desc_repr   = desc_repr.astype(np.float32)
         desc_repr   = normalize(desc_repr).T # [dim x 1]
+        print(f"query: {query}")
+        print(f"desc: {desc}")
+        print(f"padded_desc: {padded_desc}")
+        print(f"desc_repr: {desc_repr}")
+        return ##########################################################################################################
         codes, sims = [], []
         threads     = []
         for i,code_reprs_chunk in enumerate(self._code_reprs):
