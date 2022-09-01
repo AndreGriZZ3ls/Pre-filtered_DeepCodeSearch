@@ -207,6 +207,11 @@ class SearchEngine:
         codes, sims = [], []
         threads     = []
         for i,code_reprs_chunk in enumerate(self._code_reprs):
+            if i == 0:
+                print(f"code_reprs type: {type(self._code_reprs)}")
+                print(f"code_reprs type: {self._code_reprs.shape} \n")
+                print(f"code_reprs_chunk type: {type(self.code_reprs_chunk)}")
+                print(f"code_reprs_chunk type: {code_reprs_chunk.shape}")
             t = threading.Thread(target=self.search_thread, args = (codes, sims, desc_repr, code_reprs_chunk, i, n_results))
             threads.append(t)
         for t in threads:
@@ -217,8 +222,7 @@ class SearchEngine:
                 
     def search_thread(self, codes, sims, desc_repr, code_reprs, i, n_results):        
     #1. compute similarity
-        print(f"code_reprs type: {type(code_reprs)}")
-        print(f"code_reprs type: {code_reprs.shape}")
+        
         #print(f"desc_repr: {len(desc_repr)}, {len(desc_repr[0])}, {desc_repr[0]}")
         return ##########################################################################################################
         chunk_sims = np.dot(code_reprs, desc_repr) # [pool_size x 1] 
