@@ -199,11 +199,11 @@ class SearchEngine:
         desc_repr   = model.repr_desc([padded_desc])
         desc_repr   = desc_repr.astype(np.float32)
         desc_repr   = normalize(desc_repr).T # [dim x 1]
-        print(f"query: {query}")
+        """print(f"query: {query}")
         print(f"desc: {desc}")
         print(f"padded_desc: {padded_desc}")
         print(f"desc_repr: {desc_repr}")
-        return ##########################################################################################################
+        return ########################################################################################################## """
         codes, sims = [], []
         threads     = []
         for i,code_reprs_chunk in enumerate(self._code_reprs):
@@ -214,11 +214,12 @@ class SearchEngine:
         for t in threads:# wait until all sub-threads finish
             t.join()
         return codes, sims
-                 
+                
     def search_thread(self, codes, sims, desc_repr, code_reprs, i, n_results):        
     #1. compute similarity
-        print(f"code_reprs: {len(code_reprs)}, {len(code_reprs[0])}, {code_reprs[0]}")
-        print(f"desc_repr: {len(desc_repr)}, {len(desc_repr[0])}, {desc_repr[0]}")
+        print(f"code_reprs type: {type(code_reprs)}")
+        print(f"code_reprs type: {code_reprs.shape}")
+        #print(f"desc_repr: {len(desc_repr)}, {len(desc_repr[0])}, {desc_repr[0]}")
         return ##########################################################################################################
         chunk_sims = np.dot(code_reprs, desc_repr) # [pool_size x 1] 
         chunk_sims = np.squeeze(chunk_sims, axis = 1)
