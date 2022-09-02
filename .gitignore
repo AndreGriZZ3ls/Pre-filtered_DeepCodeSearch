@@ -1,3 +1,4 @@
+*.pyc
 train.apiseq.h5
 train.desc.h5
 train.methname.h5
@@ -5,3 +6,4 @@ use.apiseq.h5
 use.methname.h5
 use.tokens.h5
 use.rawcode.txt
+use.codevecs.normalized.h5

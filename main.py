@@ -21,6 +21,7 @@ import os
 import sys
 import math
 import argparse
+import traceback
 
 from index_creator import IndexCreator
 import index_creator

@@ -199,22 +199,9 @@ class SearchEngine:
         desc_repr   = model.repr_desc([padded_desc])
         desc_repr   = desc_repr.astype(np.float32)
         desc_repr   = normalize(desc_repr).T # [dim x 1]
-        """print(f"query: {query}")
-        print(f"desc: {desc}")
-        print(f"padded_desc: {padded_desc}")
-        print(f"desc_repr: {desc_repr}")
-        return ########################################################################################################## """
         codes, sims = [], []
         threads     = []
         for i,code_reprs_chunk in enumerate(self._code_reprs):
-            if i == 0:
-                """print(f"code_reprs type: {type(self._code_reprs)}")
-                print(f"code_reprs length: {len(self._code_reprs)} \n")
-                print(f"code_reprs_chunk type: {type(code_reprs_chunk)}")
-                print(f"code_reprs_chunk shape: {code_reprs_chunk.shape}")
-                print(f"code_reprs_chunk[0] type: {type(code_reprs_chunk[0])}")
-                print(f"code_reprs_chunk[0] length: {len(code_reprs_chunk[0])}")
-                return ##########################################################################################################"""
             t = threading.Thread(target=self.search_thread, args = (codes, sims, desc_repr, code_reprs_chunk, i, n_results))
             threads.append(t)
         for t in threads:
@@ -225,9 +212,6 @@ class SearchEngine:
                 
     def search_thread(self, codes, sims, desc_repr, code_reprs, i, n_results):        
     #1. compute similarity
-        
-        #print(f"desc_repr: {len(desc_repr)}, {len(desc_repr[0])}, {desc_repr[0]}")
-        #return ##########################################################################################################
         chunk_sims = np.dot(code_reprs, desc_repr) # [pool_size x 1] 
         chunk_sims = np.squeeze(chunk_sims, axis = 1)
     #2. choose top results
