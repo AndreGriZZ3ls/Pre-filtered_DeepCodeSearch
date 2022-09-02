@@ -34,7 +34,7 @@ def config_JointEmbeddingModel():
         },               
         'training_params': {           
             'batch_size': 128, ### default: 128
-            'chunk_size':50000, ###  default: 100000
+            'chunk_size':5000, ###  default: 100000
             'nb_epoch': 2000, ### default: 2000
             'validation_split': 0.2,
             'optimizer': 'adam',
