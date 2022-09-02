@@ -1,4 +1,6 @@
 import os
+os.environ['NUMEXPR_MAX_THREADS'] = '128'
+
 import sys
 import random
 import traceback
@@ -64,7 +66,7 @@ class SearchEngine:
             print('Epoch %d :: \n' % i, end='')  
             
             logger.debug('loading data chunk..')
-            offset = (i-1) * self.train_params.get('chunk_size', 100000)
+            offset = (i - 1) * self.train_params.get('chunk_size', 100000)
             
             names  = data_loader.load_hdf5(self.data_path + self.data_params['train_methname'], offset, chunk_size)
             apis   = data_loader.load_hdf5(self.data_path + self.data_params['train_apiseq'],   offset, chunk_size)
