@@ -1,5 +1,6 @@
 import os
 os.environ['NUMEXPR_MAX_THREADS'] = '128'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 import sys
 import random

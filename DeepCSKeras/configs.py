@@ -33,7 +33,7 @@ def config_JointEmbeddingModel():
             'vocab_desc':'vocab.desc.pkl',
         },               
         'training_params': {           
-            'batch_size': 128, ###defaul: 128
+            'batch_size': 256, ###defaul: 128
             'chunk_size':100000,
             'nb_epoch': 2000, ###default: 2000
             'validation_split': 0.2,
