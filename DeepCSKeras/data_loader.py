@@ -36,7 +36,8 @@ def load_codebase_lines(path, lines):
     codes = codecs.open(path, encoding='utf8',errors='replace').readlines()
         #use codecs to read in case of encoding problem
     for line in tqdm(lines):
-        codebase[0].append(codes[line])            
+        codebase[0].append(codes[line]) 
+        print(codes[lines])
     return codebase #
 
 ### Results Data ###

@@ -201,7 +201,7 @@ class SearchEngine:
         desc_repr   = normalize(desc_repr).T # [dim x 1]
         codes, sims = [], []
         threads     = []
-        for i,code_reprs_chunk in enumerate(self._code_reprs):
+        for i, code_reprs_chunk in enumerate(self._code_reprs):
             t = threading.Thread(target=self.search_thread, args = (codes, sims, desc_repr, code_reprs_chunk, i, n_results))
             threads.append(t)
         for t in threads:
