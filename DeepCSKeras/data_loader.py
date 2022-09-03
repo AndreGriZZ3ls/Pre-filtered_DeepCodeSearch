@@ -1,6 +1,7 @@
 import pickle
 import codecs
 import tables
+import operator
 import numpy as np
 from tqdm import tqdm
 import logging
@@ -38,7 +39,9 @@ def load_codebase_lines(path, lines):
         #use codecs to read in case of encoding problem
     #for line in tqdm(lines):
     #    codebase[0].append(codes[line]) 
-    codebase.append([codes[line for line in lines]])
+    #codebase.append([codes[line for line in lines]])
+    f = operator.itemgetter(*lines)
+    codebase.append([f(codes)])
     return codebase #
 
 ### Results Data ###
@@ -63,7 +66,9 @@ def load_code_reprs_lines(path, lines):
     vecs = h5f.root.vecs
     #for line in tqdm(lines):
     #    codereprs[0].append(vecs[line])
-    codereprs.append([vecs[line for line in lines]])
+    #codereprs.append([vecs[line for line in lines]])
+    f = operator.itemgetter(*lines)
+    codereprs.append([f(vecs)])
     h5f.close()
     return codereprs #
 
