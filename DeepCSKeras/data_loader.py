@@ -38,7 +38,7 @@ def load_codebase_lines(path, lines):
         #use codecs to read in case of encoding problem
     #for line in tqdm(lines):
     #    codebase[0].append(codes[line]) 
-    codebase[].append([codes[line for line in lines]])
+    codebase.append([codes[line for line in lines]])
     return codebase #
 
 ### Results Data ###
