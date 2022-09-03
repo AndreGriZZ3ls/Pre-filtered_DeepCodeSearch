@@ -34,8 +34,8 @@ def config_JointEmbeddingModel():
         },               
         'training_params': {           
             'batch_size': 128, ### default: 128
-            'chunk_size':5000, ###  default: 100000
-            'nb_epoch': 2000, ### default: 2000
+            'chunk_size': 100000, ###  default: 100000
+            'nb_epoch': 1000, ### default: 2000
             'validation_split': 0.2,
             'optimizer': 'adam',
             # 'optimizer': Adam(clip_norm=0.1),
@@ -46,7 +46,7 @@ def config_JointEmbeddingModel():
                 'top1': 0.4,
             },
             'save_every': 10,
-            'reload': 0, #default: -1 | epoch that the model is reloaded from . If reload=0, then train from scratch
+            'reload': 500, #default: -1 | epoch that the model is reloaded from . If reload=0, then train from scratch
         },
 
         'model_params': {
