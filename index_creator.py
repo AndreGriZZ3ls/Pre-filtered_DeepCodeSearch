@@ -62,9 +62,29 @@ class IndexCreator:
 
     def load_index(self):
         if self.index_type == "word_indices": return self.load_data()
+        
+    def add_to_index(self, index, lines, stopwords):
+        for i in range(0, len(lines)):
+            line = list(set(lines[i]) - stopwords)
+            for word in line:
+                word = ' ' + word + ' '
+                word = word.replace(' read ', 'load').replace(' write', 'store').replace('save', 'store').replace(' dump', 'store')
+                word = word.replace('object', 'instance').replace(' quit', 'exit').replace('terminate', 'exit').replace(' leave', 'exit')
+                word = word.replace('pop ', 'delete').replace('remove', 'delete').replace('begin', 'start').replace('run ', 'execute')
+                word = word.replace(' halt', 'stop').replace('restart', 'continue').replace('append', 'add').replace('push ', 'add')
+                word = word.replace('null ', 'none').replace('method', 'function').replace('concat', 'combine').replace(' break ', 'exit')
+                word = word.replace(' implements ', 'extends').replace('runnable', 'executable').strip()
+                if word not in index:
+                    index[word] = {i}
+                else:
+                    index[word].add(i)
 
-    def create_index(self):
+    def create_index(self, stopwords):
         if self.index_type == "word_indices": print("Nothing to be done."); return
         methnames, tokens = self.load_data()
+        index = dict()
+        if self.index_type == "inverted_index":
+            add_to_index(index, methnames, stopwords)
+            add_to_index(index, tokens   , stopwords)
         
         self.safe_index(index)

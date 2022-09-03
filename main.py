@@ -57,7 +57,7 @@ if __name__ == '__main__':
     _codebase_chunksize = 2000000
 
     if args.mode == 'create_index':
-        indexer.create_index()
+        indexer.create_index(stopwords)
 
     elif args.mode == 'search':
         #data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], [])
