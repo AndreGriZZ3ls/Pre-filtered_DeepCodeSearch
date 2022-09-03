@@ -50,11 +50,6 @@ class IndexCreator:
                 methnames.append(revert(self.methname_vocab, index))
             for index in token_indices:
                 tokens.append(   revert(self.token_vocab,    index))
-            """print(type(methname_indices[0]))
-            for elem in methnames:
-                print(elem)
-            for elem in tokens:
-                print(elem)"""
             return methnames, tokens
             
         #print(type(self.methname_vocab.items()))
@@ -73,10 +68,3 @@ class IndexCreator:
         methnames, tokens = self.load_data()
         
         self.safe_index(index)
-
-# Working code to load codebase (raw methods):
-"""codes = codecs.open(self.data_path + self.data_params['use_codebase'], encoding='utf8', errors='replace').readlines()
-codebase = []
-#for i in tqdm(range(0,len(codes), chunk_size)):
-for i in tqdm(range(0, self.chunk_size, self.chunk_size)):
-    codebase.append(codes[i : i + self.chunk_size])""" #

@@ -46,7 +46,7 @@ def config_JointEmbeddingModel():
                 'top1': 0.4,
             },
             'save_every': 5,
-            'reload': 510, #default: -1 | epoch that the model is reloaded from . If reload=0, then train from scratch
+            'reload': 535, #default: -1 | epoch that the model is reloaded from . If reload=0, then train from scratch
         },
 
         'model_params': {

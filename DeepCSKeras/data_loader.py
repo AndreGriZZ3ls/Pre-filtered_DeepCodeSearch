@@ -31,13 +31,14 @@ def load_codebase_lines(path, lines):
     codefile: h5 file that stores raw code
     """
     logger.info(f'Loading {len(lines)} pre-filtered codebase lines ...')
-    codebase = [[0]]
+    #codebase = [[]]
+    codebase = []
     #codes=codecs.open(self.path+self.data_params['use_codebase']).readlines()
     codes = codecs.open(path, encoding='utf8',errors='replace').readlines()
         #use codecs to read in case of encoding problem
-    for line in tqdm(lines):
-        codebase[0].append(codes[line]) 
-        print(codes[line])
+    #for line in tqdm(lines):
+    #    codebase[0].append(codes[line]) 
+    codebase[].append([codes[line for line in lines]])
     return codebase #
 
 ### Results Data ###
@@ -56,11 +57,13 @@ def load_code_reprs(path, chunk_size):
 def load_code_reprs_lines(path, lines): 
     logger.info(f'Loading {len(lines)} pre-filtered code vectors ...')          
     """reads some of the vectors (2D numpy array) from a hdf5 file"""
-    codereprs = [[]]
+    #codereprs = [[]]
+    codereprs = []
     h5f  = tables.open_file(path)
     vecs = h5f.root.vecs
-    for line in tqdm(lines):
-        codereprs[0].append(vecs[line])
+    #for line in tqdm(lines):
+    #    codereprs[0].append(vecs[line])
+    codereprs.append([vecs[line for line in lines]])
     h5f.close()
     return codereprs #
 
@@ -92,6 +95,7 @@ def load_hdf5(vecfile, start_offset, chunk_size):
     table.close()
     return sents 
     
+# added:
 def load_hdf5_lines(vecfile, lines):
     """reads specified lines of training sentences(list of int array) from a hdf5 file"""  
     table    = tables.open_file(vecfile)
@@ -103,4 +107,4 @@ def load_hdf5_lines(vecfile, lines):
         len, pos = index[line]['length'], index[line]['pos']
         sents.append(data[pos:pos + len])
     table.close()
-    return sents 
+    return sents #
