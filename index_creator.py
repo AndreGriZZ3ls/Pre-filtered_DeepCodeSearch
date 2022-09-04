@@ -58,8 +58,8 @@ class IndexCreator:
             print("Translating methname and token word indeces back to natural language...   Please wait.")
             inverted_methname_vocab = dict((v, k) for k, v in self.methname_vocab.items())
             inverted_token_vocab    = dict((v, k) for k, v in self.token_vocab.items())
-            fm = lambda lst: [inverted_methname_vocab.get(i, 'UNK') for tqdm(i) in lst]
-            ft = lambda lst: [inverted_token_vocab.get(   i, 'UNK') for tqdm(i) in lst]
+            fm = lambda lst: [inverted_methname_vocab.get(i, 'UNK') for i in lst]
+            ft = lambda lst: [inverted_token_vocab.get(   i, 'UNK') for i in lst]
             methnames = list(map(fm, methname_indices))
             tokens    = list(map(ft, token_indices))
             return methnames, tokens
