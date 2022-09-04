@@ -74,7 +74,7 @@ def load_code_reprs_lines(path, lines, n_threads):
     #for line in tqdm(lines):
     #    codereprs[0].append(vecs[line])
     #codereprs.append([vecs[line for line in lines]])
-    chunk_size = len(liens) / n_threads + 1
+    chunk_size = len(lines) / n_threads + 1
     f = operator.itemgetter(*lines)
     vector_lines = [f(vecs)]
     for i in range(0, len(vector_lines), chunk_size):
