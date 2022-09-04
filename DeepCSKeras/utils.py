@@ -30,6 +30,7 @@ def convert(vocab, words):
     if type(words) == str:
         words = words.strip().lower().split(' ')
     return [vocab.get(w, 0) for w in words]
+
 def revert(vocab, indices):
     """revert indices into words"""
     ivocab = dict((v, k) for k, v in vocab.items())

@@ -10,7 +10,11 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s: %(name)s: %(levelna
 
 
 def load_pickle(filename):
-    return pickle.load(open(filename, 'rb'))    
+    return pickle.load(open(filename, 'rb')) 
+
+# added:
+def save_pickle(filename, index):
+    pickle.dump(index, open(filename, 'wb'), pickle.HIGHEST_PROTOCOL) #
 
 ##### Data Set #####
 def load_codebase(path, chunk_size):
@@ -27,7 +31,7 @@ def load_codebase(path, chunk_size):
     return codebase
 
 # added:
-def load_codebase_lines(path, lines): 
+def load_codebase_lines(path, lines, n_threads): 
     """load some codebase lines
     codefile: h5 file that stores raw code
     """
@@ -40,8 +44,11 @@ def load_codebase_lines(path, lines):
     #for line in tqdm(lines):
     #    codebase[0].append(codes[line]) 
     #codebase.append([codes[line for line in lines]])
+    chunk_size = len(liens) / n_threads + 1
     f = operator.itemgetter(*lines)
-    codebase.append([f(codes)])
+    codebase_lines = [f(codes)]
+    for i in range(0, len(codebase_lines), chunk_size):
+        codebase.append(codebase_lines[i:i + chunk_size])
     return codebase #
 
 ### Results Data ###
@@ -57,7 +64,7 @@ def load_code_reprs(path, chunk_size):
     return codereprs
 
 # added:
-def load_code_reprs_lines(path, lines): 
+def load_code_reprs_lines(path, lines, n_threads): 
     logger.info(f'Loading {len(lines)} pre-filtered code vectors ...')          
     """reads some of the vectors (2D numpy array) from a hdf5 file"""
     #codereprs = [[]]
@@ -67,8 +74,11 @@ def load_code_reprs_lines(path, lines):
     #for line in tqdm(lines):
     #    codereprs[0].append(vecs[line])
     #codereprs.append([vecs[line for line in lines]])
+    chunk_size = len(liens) / n_threads + 1
     f = operator.itemgetter(*lines)
-    codereprs.append([f(vecs)])
+    vector_lines = [f(vecs)]
+    for i in range(0, len(vector_lines), chunk_size):
+        codereprs.append(vector_lines[i:i + chunk_size])
     h5f.close()
     return codereprs #
 

@@ -27,44 +27,57 @@ from DeepCSKeras.utils import convert, revert, normalize
 
 class IndexCreator:
     def __init__(self, args, conf = None):
-        self.data_path   = args.data_path + args.dataset + '/'
-        self.data_params = conf.get('data_params', dict())
-        self.index_type  = args.index_type
-        self.dataset     = args.dataset
-        self.filtered_dataset = args.filtered_dataset
-        self.methname_vocab   = data_loader.load_pickle(self.data_path + conf['data_params']['vocab_methname'])
-        self.token_vocab      = data_loader.load_pickle(self.data_path + conf['data_params']['vocab_tokens'])
+        self.data_path    = args.data_path
+        self.dataset_path = args.data_path + args.dataset + '/'
+        self.data_params  = conf.get('data_params', dict())
+        self.index_type   = args.index_type
+        self.dataset      = args.dataset
+        self.index_dir    = args.index_dir
+        self.methname_vocab   = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_methname'])
+        self.token_vocab      = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_tokens'])
         self.chunk_size       = 2000000
 
     def load_data(self):
-        assert os.path.exists(self.data_path + self.data_params['use_methname']), f"Method names of real data not found."
-        assert os.path.exists(self.data_path + self.data_params['use_tokens']),   f"Tokens of real data not found."
+        assert os.path.exists(self.dataset_path + self.data_params['use_methname']), f"Method names of real data not found."
+        assert os.path.exists(self.dataset_path + self.data_params['use_tokens']),   f"Tokens of real data not found."
         #methname_indices = None #####
         #token_indices    = None #####
-        methname_indices = data_loader.load_hdf5(self.data_path + self.data_params['use_methname'], 0, -1)
-        token_indices    = data_loader.load_hdf5(self.data_path + self.data_params['use_tokens'],   0, -1)
+        methname_indices = tqdm(data_loader.load_hdf5(self.dataset_path + self.data_params['use_methname'], 0, -1))
+        token_indices    = tqdm(data_loader.load_hdf5(self.dataset_path + self.data_params['use_tokens'],   0, -1))
         if   self.index_type == "word_indices": return methname_indices, token_indices
         elif self.index_type == "inverted_index":
-            methnames, tokens = [], []
-            for index in methname_indices:
-                methnames.append(revert(self.methname_vocab, index))
-            for index in token_indices:
-                tokens.append(   revert(self.token_vocab,    index))
+            print("Translating methname and token word indeces back to natural language...   Please wait.")
+            inverted_methname_vocab = dict((v, k) for k, v in self.methname_vocab.items())
+            inverted_token_vocab    = dict((v, k) for k, v in self.token_vocab.items())
+            fm = lambda lst: [inverted_methname_vocab.get(i, 'UNK') for i in lst]
+            ft = lambda lst: [inverted_token_vocab.get(   i, 'UNK') for i in lst]
+            methnames = list(map(fm, methname_indices))
+            tokens    = list(map(ft, token_indices))
             return methnames, tokens
             
         #print(type(self.methname_vocab.items()))
         #print(self.methname_vocab.items())
 
-    def safe_index(self):
+    def safe_index(self, index):
         if self.index_type == "word_indices": return
-        os.makedirs(self.data_path, exist_ok = True)
-        # TODO save to file
+        index_path = self.data_path + self.index_dir + '/'
+        index_file = self.index_type + '.pkl'
+        #os.makedirs(self.index_path, exist_ok = True)
+        assert os.path.exists(index_path + index_file), (
+                              f"File for index storage not found. Please create an (empty) file named {index_file} in {index_path}")
+        data_loader.save_pickle(index_path + index_file, index)
 
     def load_index(self):
         if self.index_type == "word_indices": return self.load_data()
+        index_path = self.data_path + self.index_dir + '/'
+        index_file = self.index_type + '.pkl'
+        assert os.path.exists(index_path + index_file), f"Index file {index_file} not found at {index_path}"
+        return data_loader.load_pickle(index_path + index_file)
         
     def add_to_index(self, index, lines, stopwords):
-        for i in range(0, len(lines)):
+        print("Adding lines to the index...   Please wait.")
+        for i in tqdm(range(0, len(lines))):
+        #for i in tqdm(range(0, 100)):
             line = list(set(lines[i]) - stopwords)
             for word in line:
                 word = ' ' + word + ' '
@@ -84,7 +97,9 @@ class IndexCreator:
         methnames, tokens = self.load_data()
         index = dict()
         if self.index_type == "inverted_index":
-            add_to_index(index, methnames, stopwords)
-            add_to_index(index, tokens   , stopwords)
-        
+            self.add_to_index(index, methnames, stopwords)
+            self.add_to_index(index, tokens   , stopwords)
+        items = list(index.items())
+        #for i in range(0, 10):
+        #print(items[0])
         self.safe_index(index)

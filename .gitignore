@@ -1,6 +1,7 @@
 *.pyc
 epo*
 !epo1000*
+*index*.pkl
 train.apiseq.h5
 train.desc.h5
 train.methname.h5

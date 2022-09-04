@@ -33,11 +33,11 @@ from DeepCSKeras.utils import convert, revert
 
 def parse_args():
     parser = argparse.ArgumentParser("Generate Index or perform pre-filtered deep code search")
-    parser.add_argument("--data_path",  type=str, default='./DeepCSKeras/data/', help="working directory")
-    parser.add_argument("--model",      type=str, default="JointEmbeddingModel", help="DeepCS model name")
-    parser.add_argument("--index_type", type=str, default="word_indices",   help="type of index to be created or used")
-    parser.add_argument("--dataset",    type=str, default="github",         help="unfiltered dataset name")
-    parser.add_argument("--filtered_dataset", type=str, default="filtered", help="name of filtered dataset")
+    parser.add_argument("--index_type", type=str, default="word_indices", help="type of index to be created or used")
+    parser.add_argument("--index_dir",  type=str, default="indeces",      help="index directory")
+    parser.add_argument("--dataset",    type=str, default="github",       help="dataset name")
+    parser.add_argument("--data_path",  type=str, default='./DeepCSKeras/data/',       help="working directory")
+    parser.add_argument("--model",      type=str, default="JointEmbeddingModel",       help="DeepCS model name")
     parser.add_argument("--mode", choices=["create_index","search"], default='search', help="The mode to run:"
                         " The `create_index` mode constructs an index of specified type on the desired dataset; "
                         " The `search` mode filters the dataset according to given query and index before utilizing "
@@ -55,6 +55,7 @@ if __name__ == '__main__':
     stopwords      = set("a,about,after,also,an,and,another,are,around,as,at,be,because,been,before,being,between,both,but,by,came,can,come,could,did,do,does,each,every,get,got,had,has,have,he,her,here,him,himself,his,how,into,it,its,just,like,make,many,me,might,more,most,much,must,my,never,no,now,of,on,only,other,our,out,over,re,said,same,see,should,since,so,some,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,to,too,under,up,use,very,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
 
     _codebase_chunksize = 2000000
+    n_threads = 8 # number of threads for parallelization of less performance intensive program parts
 
     if args.mode == 'create_index':
         indexer.create_index(stopwords)
@@ -105,7 +106,7 @@ if __name__ == '__main__':
                         result_line_numbers.add(i)
                 print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
                 result_line_numbers = list(result_line_numbers)
-                engine._code_reprs  = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers)
-                engine._codebase    = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers)
+                engine._code_reprs  = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, n_threads)
+                engine._codebase    = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, n_threads)
                 deepCS_main.search_and_print_results(engine, model, vocab, query, n_results)
                 
