@@ -45,7 +45,7 @@ def load_codebase_lines(path, lines, n_threads):
     #for line in tqdm(lines):
     #    codebase[0].append(codes[line]) 
     #codebase.append([codes[line for line in lines]])
-    chunk_size = math.ceil(len(liens) / n_threads)
+    chunk_size = math.ceil(len(lines) / n_threads)
     f = operator.itemgetter(*lines)
     codebase_lines = [f(codes)]
     for i in range(0, len(codebase_lines), chunk_size):
