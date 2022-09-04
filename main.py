@@ -22,6 +22,7 @@ import sys
 import math
 import argparse
 import traceback
+from nltk.stem import PorterStemmer
 
 from index_creator import IndexCreator
 import index_creator
@@ -77,7 +78,10 @@ if __name__ == '__main__':
         #full_code_reprs    = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], _codebase_chunksize)
         vocab = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
         
-        methnames, tokens = indexer.load_index()
+        if index_type == "word_indices":
+            methnames, tokens = indexer.load_index()
+        else:
+            index = indexer.load_index()
         while True:
             try:
                 query     =     input('Input Query: ')
@@ -90,11 +94,11 @@ if __name__ == '__main__':
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
             print(f"Query without stop words (just relevant words): {query_list}")
+            result_line_numbers = set()
             print("Processing...  Please wait.")
             if index_type == "word_indices":
                 query_index_for_methnames = set([methname_vocab.get(w, 0) for w in query_list]) # convert user input to word indices
                 query_index_for_tokens    = set([token_vocab.get(   w, 0) for w in query_list])
-                result_line_numbers = set()
                 min_common = len(query_list) / 2 + len(query_list) % 2
                 for i in range(0, len(methnames)):
                     if len(query_index_for_methnames & set(methnames[i])) >= min_common:
@@ -106,7 +110,20 @@ if __name__ == '__main__':
                         result_line_numbers.add(i)
                 print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
                 result_line_numbers = list(result_line_numbers)
-                engine._code_reprs  = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, n_threads)
-                engine._codebase    = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, n_threads)
-                deepCS_main.search_and_print_results(engine, model, vocab, query, n_results)
                 
+            elif index_type == "inverted_index":
+                query_list = [indexer.replace_synonyms(w) for w in query_list]
+                result_line_sets = []
+                porter = PorterStemmer()
+                for word in query_list:
+                    if word in index:
+                        result_line_sets.append(index[word])
+                    elif porter.stem(word) in index:
+                        result_line_sets.append(index[word])
+                ### TODO: aus den Sets das aussortieren, was in genug Sets vorkommt und das den Resultaten hinzufügen
+            else:
+                raise Exception(f'Unsupported index type: {index_type}')
+                
+            engine._code_reprs  = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, n_threads)
+            engine._codebase    = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, n_threads)
+            deepCS_main.search_and_print_results(engine, model, vocab, query, n_results)

@@ -37,20 +37,29 @@ class IndexCreator:
         self.token_vocab      = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_tokens'])
         self.chunk_size       = 2000000
 
+    def replace_synonyms(self, word):
+        word = ' ' + word + ' '
+        word = word.replace(' read ', 'load').replace(' write', 'store').replace('save', 'store').replace(' dump', 'store')
+        word = word.replace('object', 'instance').replace(' quit', 'exit').replace('terminate', 'exit').replace(' leave', 'exit')
+        word = word.replace('pop ', 'delete').replace('remove', 'delete').replace('begin', 'start').replace('run ', 'execute')
+        word = word.replace(' halt', 'stop').replace('restart', 'continue').replace('append', 'add').replace('push ', 'add')
+        word = word.replace('null ', 'none').replace('method', 'function').replace('concat', 'combine').replace(' break ', 'exit')
+        return word.replace(' implements ', 'extends').replace('runnable', 'executable').strip()
+
     def load_data(self):
         assert os.path.exists(self.dataset_path + self.data_params['use_methname']), f"Method names of real data not found."
         assert os.path.exists(self.dataset_path + self.data_params['use_tokens']),   f"Tokens of real data not found."
         #methname_indices = None #####
         #token_indices    = None #####
-        methname_indices = tqdm(data_loader.load_hdf5(self.dataset_path + self.data_params['use_methname'], 0, -1))
-        token_indices    = tqdm(data_loader.load_hdf5(self.dataset_path + self.data_params['use_tokens'],   0, -1))
+        methname_indices = data_loader.load_hdf5(self.dataset_path + self.data_params['use_methname'], 0, -1)
+        token_indices    = data_loader.load_hdf5(self.dataset_path + self.data_params['use_tokens'],   0, -1)
         if   self.index_type == "word_indices": return methname_indices, token_indices
         elif self.index_type == "inverted_index":
             print("Translating methname and token word indeces back to natural language...   Please wait.")
             inverted_methname_vocab = dict((v, k) for k, v in self.methname_vocab.items())
             inverted_token_vocab    = dict((v, k) for k, v in self.token_vocab.items())
-            fm = lambda lst: [inverted_methname_vocab.get(i, 'UNK') for i in lst]
-            ft = lambda lst: [inverted_token_vocab.get(   i, 'UNK') for i in lst]
+            fm = lambda lst: [inverted_methname_vocab.get(i, 'UNK') for tqdm(i) in lst]
+            ft = lambda lst: [inverted_token_vocab.get(   i, 'UNK') for tqdm(i) in lst]
             methnames = list(map(fm, methname_indices))
             tokens    = list(map(ft, token_indices))
             return methnames, tokens
@@ -80,13 +89,7 @@ class IndexCreator:
         #for i in tqdm(range(0, 100)):
             line = list(set(lines[i]) - stopwords)
             for word in line:
-                word = ' ' + word + ' '
-                word = word.replace(' read ', 'load').replace(' write', 'store').replace('save', 'store').replace(' dump', 'store')
-                word = word.replace('object', 'instance').replace(' quit', 'exit').replace('terminate', 'exit').replace(' leave', 'exit')
-                word = word.replace('pop ', 'delete').replace('remove', 'delete').replace('begin', 'start').replace('run ', 'execute')
-                word = word.replace(' halt', 'stop').replace('restart', 'continue').replace('append', 'add').replace('push ', 'add')
-                word = word.replace('null ', 'none').replace('method', 'function').replace('concat', 'combine').replace(' break ', 'exit')
-                word = word.replace(' implements ', 'extends').replace('runnable', 'executable').strip()
+                word = replace_synonyms(word)
                 if word not in index:
                     index[word] = {i}
                 else:
