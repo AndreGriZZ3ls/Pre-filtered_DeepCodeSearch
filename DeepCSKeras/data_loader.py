@@ -47,9 +47,9 @@ def load_codebase_lines(path, lines, n_threads):
     #codebase.append([codes[line for line in lines]])
     chunk_size = math.ceil(len(lines) / n_threads)
     f = operator.itemgetter(*lines)
-    codebase_lines = [f(codes)]
+    codebase_lines = list(f(codes))
     for i in range(0, len(codebase_lines), chunk_size):
-        codebase.append([codebase_lines[i:i + chunk_size]])
+        codebase.append(codebase_lines[i:i + chunk_size])
     return codebase #
 
 ### Results Data ###
@@ -77,9 +77,9 @@ def load_code_reprs_lines(path, lines, n_threads):
     #codereprs.append([vecs[line for line in lines]])
     chunk_size = math.ceil(len(lines) / n_threads)
     f = operator.itemgetter(*lines)
-    vector_lines = [f(vecs)]
+    vector_lines = list(f(vecs))
     for i in range(0, len(vector_lines), chunk_size):
-        codereprs.append([vector_lines[i:i + chunk_size]])
+        codereprs.append(vector_lines[i:i + chunk_size])
     h5f.close()
     return codereprs #
 
