@@ -141,7 +141,8 @@ if __name__ == '__main__':
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, n_threads)
                 engine._codebase   = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, n_threads)
             else:
-                #print(f"########## {type(result_line_numbers[0])}")
+                print(f"########## {type(result_line_numbers)}")
+                print(f"########## {type(result_line_numbers[0])}")
                 #result_line_numbers = list(result_line_numbers)
                 f = operator.itemgetter(*result_line_numbers)
                 chunk_size     = math.ceil(len(result_line_numbers) / n_threads)
