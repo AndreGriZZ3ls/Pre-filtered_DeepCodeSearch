@@ -101,9 +101,9 @@ if __name__ == '__main__':
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
             print(f"Query without stop words (just relevant words): {query_list}")
-            result_line_numbers = set()
             print("Processing...  Please wait.")
             if index_type == "word_indices":
+                result_line_numbers = set()
                 query_index_for_methnames = set([methname_vocab.get(w, 0) for w in query_list]) # convert user input to word indices
                 query_index_for_tokens    = set([token_vocab.get(   w, 0) for w in query_list])
                 min_common = len(query_list) / 2 + len(query_list) % 2
@@ -133,7 +133,6 @@ if __name__ == '__main__':
                     for line_nr in list:
                         cnt[line_nr] += 1
                 #min_common = len(query_list) / 2 + len(query_list) % 2
-                result_line_numbers = []
                 result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
             else:
                 raise Exception(f'Unsupported index type: {index_type}')
