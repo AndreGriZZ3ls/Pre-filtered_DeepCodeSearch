@@ -145,6 +145,7 @@ if __name__ == '__main__':
                 #result_line_numbers = list(result_line_numbers)
                 f = operator.itemgetter(*result_line_numbers)
                 chunk_size     = math.ceil(len(result_line_numbers) / n_threads)
+                print(f"########## {type(full_code_reprs)}")
                 codebase_lines = list(f(full_code_reprs))
                 for i in range(0, len(codebase_lines), chunk_size):
                     codebase.append(codebase_lines[i:i + chunk_size])
