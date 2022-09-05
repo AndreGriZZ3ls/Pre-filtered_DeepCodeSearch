@@ -22,6 +22,7 @@ import sys
 import math
 import argparse
 import traceback
+from collections import Counter
 from nltk.stem import PorterStemmer
 
 from index_creator import IndexCreator
