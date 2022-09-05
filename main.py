@@ -133,7 +133,7 @@ if __name__ == '__main__':
                     for line_nr in list:
                         cnt[line_nr] += 1
                 #min_common = len(query_list) / 2 + len(query_list) % 2
-                result_line_numbers = cnt.most_common(10000 + 100 * n_results)
+                result_line_numbers = cnt.most_common(10000 + 100 * n_results)[0][0]
             else:
                 raise Exception(f'Unsupported index type: {index_type}')
             
@@ -141,7 +141,7 @@ if __name__ == '__main__':
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, n_threads)
                 engine._codebase   = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, n_threads)
             else:
-                print(f"########## {type(result_line_numbers[0])}")
+                #print(f"########## {type(result_line_numbers[0])}")
                 result_line_numbers = list(result_line_numbers)
                 f = operator.itemgetter(*result_line_numbers)
                 chunk_size     = math.ceil(len(result_line_numbers) / n_threads)
