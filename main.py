@@ -133,11 +133,11 @@ if __name__ == '__main__':
                     for line_nr in list:
                         cnt[line_nr] += 1
                 #min_common = len(query_list) / 2 + len(query_list) % 2
-                result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
+                result_line_numbers_tupel, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
             else:
                 raise Exception(f'Unsupported index type: {index_type}')
             
-            result_line_numbers = list(result_line_numbers)
+            result_line_numbers = list(result_line_numbers_tupel)
             if less_memory:
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, n_threads)
                 engine._codebase   = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, n_threads)
