@@ -44,7 +44,7 @@ def parse_args():
                         " The `search` mode filters the dataset according to given query and index before utilizing "
                         " DeepCS with a trained model to search pre-selected for the K most relevant code snippets.")
     parser.add_argument("--less_memory_mode", action="store_true", default=False, help="If active the program will load some files "
-                        "just (partial) pre-filtered after each query input instead of complete in the beginning (slower)." # added
+                        "just (partial) pre-filtered after each query input instead of complete in the beginning (slower).") # added
     return parser.parse_args()
 
 if __name__ == '__main__':
