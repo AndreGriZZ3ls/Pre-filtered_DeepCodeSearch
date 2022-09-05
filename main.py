@@ -133,7 +133,7 @@ if __name__ == '__main__':
                     for line_nr in list:
                         cnt[line_nr] += 1
                 #min_common = len(query_list) / 2 + len(query_list) % 2
-                result_line_numbers = cnt.most_common(10000 + 100 * n_results)
+                result_line_numbers = list(cnt.most_common(10000 + 100 * n_results))
             else:
                 raise Exception(f'Unsupported index type: {index_type}')
             
