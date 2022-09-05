@@ -191,7 +191,7 @@ class SearchEngine:
         
         if lines == None: logger.info('Representing code ..')
         vecs = model.repr_code([methnames, apiseqs, tokens], batch_size = 10000)
-        vecs = vecs.astype(np.float32) #vecs.astype(np.float)
+        vecs = vecs.astype(np.float64) #vecs.astype(np.float)
         vecs = normalize(vecs)
         return vecs
             
@@ -200,7 +200,7 @@ class SearchEngine:
         desc = [convert(vocab, query)] # convert desc sentence to word indices
         padded_desc = pad(desc, self.data_params['desc_len'])
         desc_repr   = model.repr_desc([padded_desc])
-        desc_repr   = desc_repr.astype(np.float32)
+        desc_repr   = desc_repr.astype(np.float64)
         desc_repr   = normalize(desc_repr).T # [dim x 1]
         codes, sims = [], []
         threads     = []
