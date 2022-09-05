@@ -101,9 +101,9 @@ if __name__ == '__main__':
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
             print(f"Query without stop words (just relevant words): {query_list}")
+            result_line_numbers = set()
             print("Processing...  Please wait.")
             if index_type == "word_indices":
-                result_line_numbers = set()
                 query_index_for_methnames = set([methname_vocab.get(w, 0) for w in query_list]) # convert user input to word indices
                 query_index_for_tokens    = set([token_vocab.get(   w, 0) for w in query_list])
                 min_common = len(query_list) / 2 + len(query_list) % 2
@@ -129,24 +129,22 @@ if __name__ == '__main__':
                         result_line_lists.append(index[word])
                 ### TODO: aus den Sets das aussortieren, was in genug Sets vorkommt und das den Resultaten hinzufügen
                 cnt = Counter()
-                for list in result_line_lists:
-                    for line_nr in list:
+                for line_list in result_line_lists:
+                    for line_nr in line_list:
                         cnt[line_nr] += 1
                 #min_common = len(query_list) / 2 + len(query_list) % 2
-                result_line_numbers_tupel, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
+                result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
             else:
                 raise Exception(f'Unsupported index type: {index_type}')
             
-            result_line_numbers = list(result_line_numbers_tupel)
             if less_memory:
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, n_threads)
                 engine._codebase   = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, n_threads)
             else:
-                print(f"########## {type(result_line_numbers)}")
-                print(f"########## {type(result_line_numbers[0])}")
+                #print(f"########## {type(result_line_numbers[0])}")
+                result_line_numbers = list(result_line_numbers)
                 f = operator.itemgetter(*result_line_numbers)
                 chunk_size     = math.ceil(len(result_line_numbers) / n_threads)
-                print(f"########## {type(full_code_reprs)}")
                 codebase_lines = list(f(full_code_reprs))
                 for i in range(0, len(codebase_lines), chunk_size):
                     codebase.append(codebase_lines[i:i + chunk_size])
