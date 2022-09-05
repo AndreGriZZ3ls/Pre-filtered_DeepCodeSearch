@@ -55,7 +55,7 @@ class IndexCreator:
         token_indices    = data_loader.load_hdf5(self.dataset_path + self.data_params['use_tokens'],   0, -1)
         if   self.index_type == "word_indices": return methname_indices, token_indices
         elif self.index_type == "inverted_index":
-            print("Translating methname and token word indeces back to natural language...   Please wait.")
+            print("Translating methname and token word indices back to natural language...   Please wait.")
             inverted_methname_vocab = dict((v, k) for k, v in self.methname_vocab.items())
             inverted_token_vocab    = dict((v, k) for k, v in self.token_vocab.items())
             fm = lambda lst: [inverted_methname_vocab.get(i, 'UNK') for i in lst]
@@ -91,9 +91,9 @@ class IndexCreator:
             for word in line:
                 word = replace_synonyms(word)
                 if word not in index:
-                    index[word] = {i}
+                    index[word] = [i]
                 else:
-                    index[word].add(i)
+                    index[word].append(i)
 
     def create_index(self, stopwords):
         if self.index_type == "word_indices": print("Nothing to be done."); return
@@ -102,7 +102,7 @@ class IndexCreator:
         if self.index_type == "inverted_index":
             self.add_to_index(index, methnames, stopwords)
             self.add_to_index(index, tokens   , stopwords)
-        items = list(index.items())
+        #items = list(index.items())
         #for i in range(0, 10):
         #print(items[0])
         self.safe_index(index)

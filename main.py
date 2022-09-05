@@ -35,7 +35,7 @@ from DeepCSKeras.utils import convert, revert
 def parse_args():
     parser = argparse.ArgumentParser("Generate Index or perform pre-filtered deep code search")
     parser.add_argument("--index_type", type=str, default="word_indices", help="type of index to be created or used")
-    parser.add_argument("--index_dir",  type=str, default="indeces",      help="index directory")
+    parser.add_argument("--index_dir",  type=str, default="indices",      help="index directory")
     parser.add_argument("--dataset",    type=str, default="github",       help="dataset name")
     parser.add_argument("--data_path",  type=str, default='./DeepCSKeras/data/',       help="working directory")
     parser.add_argument("--model",      type=str, default="JointEmbeddingModel",       help="DeepCS model name")
@@ -43,6 +43,8 @@ def parse_args():
                         " The `create_index` mode constructs an index of specified type on the desired dataset; "
                         " The `search` mode filters the dataset according to given query and index before utilizing "
                         " DeepCS with a trained model to search pre-selected for the K most relevant code snippets.")
+    parser.add_argument("--less_memory_mode", action="store_true", default=False, help="If active the program will load some files "
+                        "just (partial) pre-filtered after each query input instead of complete in the beginning (slower)." # added
     return parser.parse_args()
 
 if __name__ == '__main__':
@@ -50,6 +52,7 @@ if __name__ == '__main__':
     config         = getattr(configs, 'config_' + args.model)()
     data_path      = args.data_path + args.dataset + '/'
     index_type     = args.index_type
+    less_memory    = args.less_memory_mode
     methname_vocab = data_loader.load_pickle(data_path + config['data_params']['vocab_methname'])
     token_vocab    = data_loader.load_pickle(data_path + config['data_params']['vocab_tokens'])
     indexer        = IndexCreator(args, config)
@@ -62,7 +65,6 @@ if __name__ == '__main__':
         indexer.create_index(stopwords)
 
     elif args.mode == 'search':
-        #data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], [])
         engine = deepCS_main.SearchEngine(args, config)
 
         ##### Define model ######
@@ -75,13 +77,16 @@ if __name__ == '__main__':
         
         assert config['training_params']['reload'] > 0, "Please specify the number of the optimal epoch checkpoint in config.py"
         engine.load_model(model, config['training_params']['reload'], f"./DeepCSKeras/output/{model.__class__.__name__}/models/")
-        #full_code_reprs    = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], _codebase_chunksize)
+        if not less_memory:
+            full_code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1)
+            full_codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1)
         vocab = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
         
         if index_type == "word_indices":
             methnames, tokens = indexer.load_index()
         else:
             index = indexer.load_index()
+            codebase, codereprs = [], []
         while True:
             try:
                 query     =     input('Input Query: ')
@@ -113,17 +118,35 @@ if __name__ == '__main__':
                 
             elif index_type == "inverted_index":
                 query_list = [indexer.replace_synonyms(w) for w in query_list]
-                result_line_sets = []
+                result_line_lists = []
                 porter = PorterStemmer()
                 for word in query_list:
                     if word in index:
-                        result_line_sets.append(index[word])
+                        result_line_lists.append(index[word])
                     elif porter.stem(word) in index:
-                        result_line_sets.append(index[word])
+                        result_line_lists.append(index[word])
                 ### TODO: aus den Sets das aussortieren, was in genug Sets vorkommt und das den Resultaten hinzufügen
+                cnt = Counter()
+                for list in result_line_lists:
+                    for line_nr in list:
+                        cnt[line_nr] += 1
+                #min_common = len(query_list) / 2 + len(query_list) % 2
+                result_line_numbers = cnt.most_common(10000 + 100 * n_results)
             else:
                 raise Exception(f'Unsupported index type: {index_type}')
-                
-            engine._code_reprs  = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, n_threads)
-            engine._codebase    = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, n_threads)
+            
+            if less_memory:
+                engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, n_threads)
+                engine._codebase   = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, n_threads)
+            else:
+                f = operator.itemgetter(*result_line_numbers)
+                chunk_size     = math.ceil(len(result_line_numbers) / n_threads)
+                codebase_lines = list(f(full_code_reprs))
+                for i in range(0, len(codebase_lines), chunk_size):
+                    codebase.append(codebase_lines[i:i + chunk_size])
+                vector_lines   = list(f(full_codebase))
+                for i in range(0, len(vector_lines),   chunk_size):
+                    codereprs.append(vector_lines[ i:i + chunk_size])
+                engine._code_reprs = codereprs
+                engine._codebase   = codebase
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results)
