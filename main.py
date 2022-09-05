@@ -137,11 +137,11 @@ if __name__ == '__main__':
             else:
                 raise Exception(f'Unsupported index type: {index_type}')
             
+            result_line_numbers = list(result_line_numbers)
             if less_memory:
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, n_threads)
                 engine._codebase   = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, n_threads)
             else:
-                result_line_numbers = list(result_line_numbers)
                 print(f"########## {type(result_line_numbers)}")
                 print(f"########## {type(result_line_numbers[0])}")
                 f = operator.itemgetter(*result_line_numbers)
