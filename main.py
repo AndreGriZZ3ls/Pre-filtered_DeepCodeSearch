@@ -115,8 +115,8 @@ if __name__ == '__main__':
                     if len(query_index_for_tokens & set(tokens[i])) >= min_common:
                     #if not query_index_for_tokens.isdisjoint(tokens[i]):
                         result_line_numbers.add(i)
-                print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
-                result_line_numbers = list(result_line_numbers)
+                
+                
                 
             elif index_type == "inverted_index":
                 query_list = [indexer.replace_synonyms(w) for w in query_list]
@@ -136,13 +136,14 @@ if __name__ == '__main__':
                 result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
             else:
                 raise Exception(f'Unsupported index type: {index_type}')
-            
+            result_line_numbers = list(result_line_numbers)
+            print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             if less_memory:
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, n_threads)
                 engine._codebase   = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, n_threads)
             else:
                 #print(f"########## {type(result_line_numbers[0])}")
-                result_line_numbers = list(result_line_numbers)
+                #result_line_numbers = list(result_line_numbers)
                 f = operator.itemgetter(*result_line_numbers)
                 chunk_size     = math.ceil(len(result_line_numbers) / n_threads)
                 codebase_lines = list(f(full_code_reprs))
