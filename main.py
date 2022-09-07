@@ -158,6 +158,12 @@ if __name__ == '__main__':
                 print(f"########## len(codereprs[0]) {len(codereprs[0])}")
                 print(f"########## type(codereprs[0][0]) {type(codereprs[0][0])}")
                 print(f"########## len(codereprs[0][0]) {len(codereprs[0][0])}")
+                print(f"########## type(codebase) {type(codebase)}")
+                print(f"########## len(codebase) {len(codebase)}")
+                print(f"########## type(codebase[0]) {type(codebase[0])}")
+                print(f"########## len(codebase[0]) {len(codebase[0])}")
+                print(f"########## type(codebase[0][0]) {type(codebase[0][0])}")
+                print(f"########## len(codebase[0][0]) {len(codebase[0][0])}")
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results)
