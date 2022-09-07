@@ -152,6 +152,12 @@ if __name__ == '__main__':
                 vector_lines   = list(f(full_codebase))
                 for i in range(0, len(vector_lines),   chunk_size):
                     codereprs.append(vector_lines[ i:i + chunk_size])
+                print(f"########## type(codereprs) {type(codereprs)}")
+                print(f"########## shape(codereprs) {shape(codereprs)}")
+                print(f"########## type(codereprs[0]) {type(codereprs[0])}")
+                print(f"########## shape(codereprs[0]) {shape(codereprs[0])}")
+                print(f"########## type(codereprs[0][0]) {type(codereprs[0][0])}")
+                print(f"########## len(codereprs[0][0]) {len(codereprs[0][0])}")
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results)
