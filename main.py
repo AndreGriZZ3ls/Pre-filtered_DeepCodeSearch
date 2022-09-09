@@ -55,7 +55,7 @@ def parse_args():
                         " 'idf' stands for inverted document frequency and measures the informativeness of each word "
                         " (incompatible with word_indices as index type).")
     parser.add_argument("--less_memory_mode", action="store_true", default=False, help="If active the program will load some files "
-                        "just (partial) pre-filtered after each query input instead of complete in the beginning (slower).") # added
+                        "just (partial) pre-filtered after each query input instead of complete in the beginning (slower).")
     return parser.parse_args()
 
 if __name__ == '__main__':
@@ -112,7 +112,7 @@ if __name__ == '__main__':
             query_list = list(set(query.split(' ')) - stopwords)
             len_query_without_stems = len(query_list)
             porter = PorterStemmer()
-            for word in query_list:
+            for word in tqdm(query_list):
                 query_list.append(porter.stem(word)) # include stems of query words
             print(f"Query without stop words (just relevant words): {query_list}")
             result_line_numbers = set()
