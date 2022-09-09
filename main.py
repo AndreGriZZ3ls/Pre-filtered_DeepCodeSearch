@@ -24,6 +24,7 @@ import codecs
 import argparse
 import operator
 import traceback
+from tqdm import tqdm
 from collections import Counter
 from nltk.stem import PorterStemmer
 
