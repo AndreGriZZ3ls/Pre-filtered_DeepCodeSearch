@@ -162,9 +162,9 @@ if __name__ == '__main__':
                     else:
                         for line_nr in list(set(line_list)): # iterate deduplicated list of code fragments
                             cnt[line_nr] += 1
-                result_line_numbers, irrelevant = zip(*cnt.most_common(n_results))
+                #result_line_numbers, irrelevant = zip(*cnt.most_common(n_results))
                 ##################################################################################################################
-                ##################################result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
+                result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
                 ##################################################################################################################
             
             result_line_numbers = list(result_line_numbers)
@@ -185,6 +185,8 @@ if __name__ == '__main__':
                     codereprs.append(vector_lines[ i:i + chunk_size])
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
-                print(len(codebase))
+                """print(len(codebase))
+                print(len(codebase[0]))
                 print(len(codereprs))
+                print(len(codereprs[0]))"""
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, )
