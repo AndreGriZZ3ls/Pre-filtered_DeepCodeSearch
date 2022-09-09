@@ -141,8 +141,10 @@ if __name__ == '__main__':
                 if similarity_mode in ['idf', 'tf_idf']:
                     cnt_tf = Counter()
                     number_of_code_fragments = len(codecs.open(data_path + config['data_params']['use_codebase'], encoding='utf8',errors='replace').readlines())
+                    print(f"number_of_code_fragments: {number_of_code_fragments}")
                 for word in query_list:
                     if word in index: # for each word of the processed query that the index contains: ...
+                        print(f"Word '{word}' found in index!  :D") 
                         result_line_lists.append(index[word]) # ... add the list of code fragments containing that word.
                 cnt = Counter()
                 for i, line_list in tqdm(enumerate(result_line_lists)): # iterate the code fragment list of each found query word:
@@ -154,6 +156,7 @@ if __name__ == '__main__':
                         for line_nr in lines:
                             cnt[line_nr] += idf * math.log10(1 + cnt_tf[line_nr]) # tf-idf = idf * log10(1 + tf)
                         cnt_tf.clear() # clear temporary counter for the next query word
+                    if i == 0: print(cnt.items())
                     elif similarity_mode == 'idf':
                         lines = list(set(line_list)) # deduplicated list of code fragments
                         idf   = math.log10(number_of_code_fragments / len(lines)) # idf = log10(N/df)
@@ -165,7 +168,8 @@ if __name__ == '__main__':
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(n_results))
                 ##################################################################################################################
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
-                result_line_numbers, irrelevant = zip(*cnt.most_common(10 * n_results))
+                result_line_numbers, irrelevant = zip(*cnt.most_common(11 * n_results))
+                print(irrelevant)
                 ##################################################################################################################
             
             result_line_numbers = list(result_line_numbers)

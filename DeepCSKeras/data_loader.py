@@ -28,6 +28,7 @@ def load_codebase(path, chunk_size):
     codes = codecs.open(path, encoding='utf8',errors='replace').readlines()
         #use codecs to read in case of encoding problem
     #if chunk_size < 0: return list(codes)
+    print(f"##### Type of codes: {type(codes)}")
     if chunk_size < 0: 
         codebase = list(codes[0:len(codes)])
     else:
