@@ -115,7 +115,9 @@ if __name__ == '__main__':
             porter = PorterStemmer()
             tmp = []
             for word in query_list:
-                tmp.append(porter.stem(word)) # include stems of query words
+                word_stem = porter.stem(word)
+                if word != word_stem:
+                    tmp.append(porter.stem(word)) # include stems of query words
             query_list += tmp
             print(f"Query without stop words (just relevant words): {query_list}")
             result_line_numbers = set()
@@ -153,7 +155,7 @@ if __name__ == '__main__':
                         idf   = math.log10(number_of_code_fragments / len(lines)) # idf = log10(N/df)
                         for line_nr in lines:
                             cnt[line_nr] += idf * math.log10(1 + cnt_tf[line_nr]) # tf-idf = idf * log10(1 + tf)
-                        cnt_tf.reset() # reset temporary counter for the next query word
+                        cnt_tf.clear() # clear temporary counter for the next query word
                     elif similarity_mode == 'idf':
                         lines = list(set(line_list)) # deduplicated list of code fragments
                         idf   = math.log10(number_of_code_fragments / len(lines)) # idf = log10(N/df)
