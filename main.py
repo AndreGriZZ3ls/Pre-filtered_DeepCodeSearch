@@ -186,4 +186,5 @@ if __name__ == '__main__':
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
                 print(len(codebase))
-            deepCS_main.search_and_print_results(engine, model, vocab, query, min(n_results, len(codebase)))
+                print(len(codereprs))
+            deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, )
