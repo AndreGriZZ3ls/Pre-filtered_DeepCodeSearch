@@ -113,8 +113,10 @@ if __name__ == '__main__':
             query_list = list(set(query.split(' ')) - stopwords)
             len_query_without_stems = len(query_list)
             porter = PorterStemmer()
-            for word in tqdm(query_list):
-                query_list.append(porter.stem(word)) # include stems of query words
+            tmp = []
+            for word in query_list:
+                tmp.append(porter.stem(word)) # include stems of query words
+            query_list += tmp
             print(f"Query without stop words (just relevant words): {query_list}")
             result_line_numbers = set()
             print("Processing...  Please wait.")
