@@ -29,7 +29,7 @@ def load_codebase(path, chunk_size):
         #use codecs to read in case of encoding problem
     #if chunk_size < 0: return list(codes)
     if chunk_size < 0: 
-        codebase = codes[0:len(codes)]
+        codebase = list(codes[0:len(codes)])
     else:
         for i in tqdm(range(0, len(codes), chunk_size)):
             codebase.append(codes[i:i + chunk_size])            
@@ -65,7 +65,7 @@ def load_code_reprs(path, chunk_size):
     vecs = h5f.root.vecs
     #if chunk_size < 0: return list(vecs)
     if chunk_size < 0:
-        codereprs = vecs[0:len(vecs)]
+        codereprs = list(vecs[0:len(vecs)])
     else:
         for i in tqdm(range(0, len(vecs), chunk_size)):
             codereprs.append(vecs[i:i + chunk_size])
