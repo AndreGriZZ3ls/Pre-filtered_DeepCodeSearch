@@ -164,7 +164,8 @@ if __name__ == '__main__':
                             cnt[line_nr] += 1
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(n_results))
                 ##################################################################################################################
-                result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
+                #result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
+                result_line_numbers, irrelevant = zip(*cnt.most_common(10 * n_results))
                 ##################################################################################################################
             
             result_line_numbers = list(result_line_numbers)
