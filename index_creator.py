@@ -83,12 +83,24 @@ class IndexCreator:
         assert os.path.exists(index_path + index_file), f"Index file {index_file} not found at {index_path}"
         return data_loader.load_pickle(index_path + index_file)
         
-    def add_to_index(self, index, lines, stopwords):
+    """def add_to_index(self, index, lines, stopwords):
         print("Adding lines to the index...   Please wait.")
         for i in tqdm(range(0, len(lines))):
         #for i in tqdm(range(0, 100)):
             line = list(set(lines[i]) - stopwords)
             for word in line:
+                word = replace_synonyms(word)
+                if word not in index:
+                    index[word] = [i]
+                else:
+                    index[word].append(i)"""
+                    
+    def add_to_index(self, index, lines, stopwords):
+        print("Adding lines to the index...   Please wait.")
+        for i, line in tqdm(enumerate(lines))):
+        #for i in tqdm(range(0, 100)):
+            for word in line:
+                if word in stopwords: continue
                 word = replace_synonyms(word)
                 if word not in index:
                     index[word] = [i]

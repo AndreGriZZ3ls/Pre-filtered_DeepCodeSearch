@@ -141,10 +141,8 @@ if __name__ == '__main__':
                 if similarity_mode in ['idf', 'tf_idf']:
                     cnt_tf = Counter()
                     number_of_code_fragments = len(codecs.open(data_path + config['data_params']['use_codebase'], encoding='utf8',errors='replace').readlines())
-                    print(f"number_of_code_fragments: {number_of_code_fragments}")
                 for word in query_list:
                     if word in index: # for each word of the processed query that the index contains: ...
-                        print(f"Word '{word}' found in index!  :D") 
                         result_line_lists.append(index[word]) # ... add the list of code fragments containing that word.
                 cnt = Counter()
                 for i, line_list in tqdm(enumerate(result_line_lists)): # iterate the code fragment list of each found query word:

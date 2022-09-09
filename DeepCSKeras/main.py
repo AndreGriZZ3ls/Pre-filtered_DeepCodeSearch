@@ -311,7 +311,7 @@ if __name__ == '__main__':
         engine.load_model(model, config['training_params']['reload'])
         engine._code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], engine._codebase_chunksize)
         engine._codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], engine._codebase_chunksize)
-        vocab = data_loader.load_pickle(data_path+config['data_params']['vocab_desc'])
+        vocab = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
         while True:
             if args.no_manual_input: # added:
                 query     = args.query
