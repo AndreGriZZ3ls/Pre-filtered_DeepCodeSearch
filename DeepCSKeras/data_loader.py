@@ -29,8 +29,11 @@ def load_codebase(path, chunk_size):
         #use codecs to read in case of encoding problem
     #if chunk_size < 0: return list(codes)
     print(f"##### Type of codes: {type(codes)}")
+    print(f"##### Type of codes[0]: {type(codes[0])}")
     if chunk_size < 0: 
         codebase = list(codes[0:len(codes)])
+        print(f"##### Type of codes: {type(codebase)}")
+        print(f"##### Type of codes[0]: {type(codebase[0])}")
     else:
         for i in tqdm(range(0, len(codes), chunk_size)):
             codebase.append(codes[i:i + chunk_size])            

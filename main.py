@@ -153,10 +153,11 @@ if __name__ == '__main__':
                             cnt_tf[line_nr] += 1 # count occurences of the query word in each of its code fragments
                         lines = list(cnt_tf.keys()) # deduplicated list of those code fragments
                         idf   = math.log10(number_of_code_fragments / len(lines)) # idf = log10(N/df)
+                        print(f"##### IDF = {idf}")
                         for line_nr in lines:
                             cnt[line_nr] += idf * math.log10(1 + cnt_tf[line_nr]) # tf-idf = idf * log10(1 + tf)
                         cnt_tf.clear() # clear temporary counter for the next query word
-                    if i == 0: print(cnt.items())
+                    #################################################if i == 0: print(cnt.items())
                     elif similarity_mode == 'idf':
                         lines = list(set(line_list)) # deduplicated list of code fragments
                         idf   = math.log10(number_of_code_fragments / len(lines)) # idf = log10(N/df)
