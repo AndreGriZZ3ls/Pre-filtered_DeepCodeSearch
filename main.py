@@ -140,7 +140,7 @@ if __name__ == '__main__':
                     if word in index: # for each word of the processed query that the index contains: ...
                         result_line_lists.append(index[word]) # ... add the list of code fragments containing that word.
                 cnt = Counter()
-                for i, line_list in enumerate(result_line_lists): # iterate the code fragment list of each found query word:
+                for i, line_list in tqdm(enumerate(result_line_lists)): # iterate the code fragment list of each found query word:
                     if similarity_mode == 'tf_idf':
                         for line_nr in line_list:
                             cnt_tf[line_nr] += 1 # count occurences of the query word in each of its code fragments
@@ -161,8 +161,7 @@ if __name__ == '__main__':
                 ##################################################################################################################
                 ##################################result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
                 ##################################################################################################################
-            else:
-                raise Exception(f'Unsupported index type: {index_type}')
+            
             result_line_numbers = list(result_line_numbers)
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             if less_memory:
