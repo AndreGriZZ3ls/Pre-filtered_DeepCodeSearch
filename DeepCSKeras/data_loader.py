@@ -27,13 +27,13 @@ def load_codebase(path, chunk_size):
     #codes=codecs.open(self.path+self.data_params['use_codebase']).readlines()
     codes = codecs.open(path, encoding='utf8',errors='replace').readlines()
         #use codecs to read in case of encoding problem
-    #if chunk_size < 0: return list(codes)
-    print(f"##### Length of codes: {len(codes)}")
-    print(f"##### Length of codes[0]: {len(codes[0])}")
-    if chunk_size < 0: 
-        codebase = list(codes[0:len(codes)])
-        print(f"##### Length of codes: {len(codebase)}")
-        print(f"##### Length of codes[0]: {len(codebase[0])}")
+    if chunk_size < 0: return codes
+    #print(f"##### Length of codes: {len(codes)}")
+    #print(f"##### Length of codes[0]: {len(codes[0])}")
+    #if chunk_size < 0: 
+    #    codebase = list(codes[0:len(codes)])
+        #print(f"##### Length of codes: {len(codebase)}")
+        #print(f"##### Length of codes[0]: {len(codebase[0])}")
     else:
         for i in tqdm(range(0, len(codes), chunk_size)):
             codebase.append(codes[i:i + chunk_size])            
@@ -67,9 +67,9 @@ def load_code_reprs(path, chunk_size):
     codereprs = []
     h5f  = tables.open_file(path)
     vecs = h5f.root.vecs
-    #if chunk_size < 0: return list(vecs)
-    if chunk_size < 0:
-        codereprs = list(vecs[0:len(vecs)])
+    if chunk_size < 0: return vecs
+    #if chunk_size < 0:
+    #    codereprs = list(vecs[0:len(vecs)])
     else:
         for i in tqdm(range(0, len(vecs), chunk_size)):
             codereprs.append(vecs[i:i + chunk_size])
