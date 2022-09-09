@@ -140,9 +140,7 @@ if __name__ == '__main__':
                 result_line_lists = []
                 if similarity_mode in ['idf', 'tf_idf']:
                     cnt_tf = Counter()
-                    print("--------------")
                     number_of_code_fragments = len(codecs.open(data_path + config['data_params']['use_codebase'], encoding='utf8',errors='replace').readlines())
-                    print("###################### DOne")
                 for word in query_list:
                     if word in index: # for each word of the processed query that the index contains: ...
                         result_line_lists.append(index[word]) # ... add the list of code fragments containing that word.
@@ -187,4 +185,4 @@ if __name__ == '__main__':
                     codereprs.append(vector_lines[ i:i + chunk_size])
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
-            deepCS_main.search_and_print_results(engine, model, vocab, query, n_results)
+            deepCS_main.search_and_print_results(engine, model, vocab, query, min(n_results, len(codebase)))
