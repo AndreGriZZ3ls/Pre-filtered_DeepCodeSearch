@@ -101,7 +101,7 @@ class IndexCreator:
         #for i in tqdm(range(0, 100)):
             for word in line:
                 if word in stopwords: continue
-                word = replace_synonyms(word)
+                word = self.replace_synonyms(word)
                 if word not in index:
                     index[word] = [i]
                 else:
