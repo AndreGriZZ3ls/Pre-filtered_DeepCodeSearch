@@ -97,7 +97,7 @@ class IndexCreator:
                     
     def add_to_index(self, index, lines, stopwords):
         print("Adding lines to the index...   Please wait.")
-        for i, line in tqdm(enumerate(lines))):
+        for i, line in tqdm(enumerate(lines)):
         #for i in tqdm(range(0, 100)):
             for word in line:
                 if word in stopwords: continue
