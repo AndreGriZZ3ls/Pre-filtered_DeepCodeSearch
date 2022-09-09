@@ -185,6 +185,7 @@ if __name__ == '__main__':
                     codereprs.append(vector_lines[ i:i + chunk_size])
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
+                print(chunk_size)
                 print(codebase_lines)
                 print(codebase)
                 print(vector_lines)
