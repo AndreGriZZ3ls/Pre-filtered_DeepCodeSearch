@@ -173,7 +173,7 @@ if __name__ == '__main__':
             
             result_line_numbers = list(result_line_numbers)
             #token_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_tokens'], result_line_numbers[0:10])
-            token_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_tokens'], [0:10])
+            token_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_tokens'], [*range(0, 11, 1)])
             inverted_token_vocab    = dict((v, k) for k, v in token_vocab.items())
             ft = lambda lst: [inverted_token_vocab.get(   i, 'UNK') for i in lst]
             print(f"Top 10 results {list(map(ft, token_indices))}")
