@@ -119,7 +119,8 @@ if __name__ == '__main__':
                 if word != word_stem:
                     tmp.append(porter.stem(word)) # include stems of query words
             query_list += tmp
-            print(f"Query without stop words (just relevant words): {query_list}")
+            query_list = [indexer.replace_synonyms(w) for w in query_list]
+            print(f"Query without stop words, replaced synonyms and possibly with added word stems: {query_list}")
             result_line_numbers = set()
             print("Processing...  Please wait.")
             if index_type == "word_indices":
@@ -136,7 +137,6 @@ if __name__ == '__main__':
                         result_line_numbers.add(i)
                 
             elif index_type == "inverted_index":
-                query_list = [indexer.replace_synonyms(w) for w in query_list]
                 result_line_lists = []
                 if similarity_mode in ['idf', 'tf_idf']:
                     cnt_tf = Counter()
@@ -145,7 +145,7 @@ if __name__ == '__main__':
                     if word in index: # for each word of the processed query that the index contains: ...
                         result_line_lists.append(index[word]) # ... add the list of code fragments containing that word.
                 cnt = Counter()
-                for i, line_list in tqdm(enumerate(result_line_lists)): # iterate the code fragment list of each found query word:
+                for line_list in tqdm(result_line_lists): # iterate the code fragment list of each found query word:
                     if similarity_mode == 'tf_idf':
                         for line_nr in line_list:
                             cnt_tf[line_nr] += 1 # count occurences of the query word in each of its code fragments
@@ -172,6 +172,10 @@ if __name__ == '__main__':
                 ##################################################################################################################
             
             result_line_numbers = list(result_line_numbers)
+            token_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_tokens'], result_line_numbers[0])
+            inverted_token_vocab    = dict((v, k) for k, v in token_vocab.items())
+            ft = lambda lst: [inverted_token_vocab.get(   i, 'UNK') for i in lst]
+            print(f"Top result {list(map(ft, token_indices))}")
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             if less_memory:
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, n_threads)
