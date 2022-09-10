@@ -194,7 +194,7 @@ if __name__ == '__main__':
                     codereprs.append(vector_lines[ i:i + chunk_size])
                 inverted_vocab    = dict((v, k) for k, v in vocab.items())
                 fv = lambda lst: [inverted_vocab.get(   i, 'UNK') for i in lst]
-                print(f"Top 10 results codereprs {list(map(fv, codereprs))}")
+                print(f"Top 10 results codereprs {list(map(fv, codereprs[0]))}")
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
                 print(codebase)
