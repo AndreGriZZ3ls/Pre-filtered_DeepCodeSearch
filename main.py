@@ -172,7 +172,8 @@ if __name__ == '__main__':
                 ##################################################################################################################
             
             result_line_numbers = list(result_line_numbers)
-            token_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_tokens'], result_line_numbers[0:10])
+            #token_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_tokens'], result_line_numbers[0:10])
+            token_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_tokens'], [0:10])
             inverted_token_vocab    = dict((v, k) for k, v in token_vocab.items())
             ft = lambda lst: [inverted_token_vocab.get(   i, 'UNK') for i in lst]
             print(f"Top 10 results {list(map(ft, token_indices))}")
@@ -197,7 +198,8 @@ if __name__ == '__main__':
                 print(f"Top 10 results codereprs {list(map(fv, codereprs[0]))}")
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
-                print(codebase)
+                #print(codebase)
+                print(full_codebase[-10:])
                 """print(len(codebase))
                 print(len(codebase[0]))
                 print(len(codereprs))
