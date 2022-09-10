@@ -177,6 +177,10 @@ if __name__ == '__main__':
             inverted_token_vocab    = dict((v, k) for k, v in token_vocab.items())
             ft = lambda lst: [inverted_token_vocab.get(   i, 'UNK') for i in lst]
             print(f"Top 10 results {list(map(ft, token_indices))}")
+            methname_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_methname'], [*range(0, 11, 1)])
+            inverted_methname_vocab    = dict((v, k) for k, v in methname_vocab.items())
+            fm = lambda lst: [inverted_methname_vocab.get(   i, 'UNK') for i in lst]
+            print(f"Top 10 results {list(map(fm, methname_indices))}")
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             if less_memory:
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, n_threads)
@@ -195,11 +199,11 @@ if __name__ == '__main__':
                     codereprs.append(vector_lines[ i:i + chunk_size])
                 inverted_vocab    = dict((v, k) for k, v in vocab.items())
                 fv = lambda lst: [inverted_vocab.get(   i, 'UNK') for i in lst]
-                print(f"Top 10 results codereprs {list(map(fv, codereprs[0]))}")
+                #print(f"Top 10 results codereprs {list(map(fv, codereprs[0]))}")
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
                 #print(codebase)
-                print(full_codebase[-10:])
+                print(full_codebase[0:10])
                 """print(len(codebase))
                 print(len(codebase[0]))
                 print(len(codereprs))
