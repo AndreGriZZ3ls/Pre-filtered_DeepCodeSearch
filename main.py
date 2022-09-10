@@ -185,16 +185,16 @@ if __name__ == '__main__':
                 #result_line_numbers = list(result_line_numbers)
                 f = operator.itemgetter(*result_line_numbers)
                 chunk_size     = math.ceil(len(result_line_numbers) / n_threads)
-                #codebase_lines = list(f(full_codebase))
-                codebase_lines = []
-                for line_nr in result_line_numbers:
-                    codebase_lines.append(full_codebase[line_nr])
-                print(f"Top 10 codebase {codebase_lines[0:10]}")
+                codebase_lines = list(f(full_codebase))
+                
                 for i in range(0, len(codebase_lines), chunk_size):
                     codebase.append(codebase_lines[i:i + chunk_size])
                 vector_lines   = list(f(full_code_reprs))
                 for i in range(0, len(vector_lines),   chunk_size):
                     codereprs.append(vector_lines[ i:i + chunk_size])
+                inverted_vocab    = dict((v, k) for k, v in vocab.items())
+                fv = lambda lst: [inverted_vocab.get(   i, 'UNK') for i in lst]
+                print(f"Top 10 results codereprs {list(map(fv, codereprs))}")
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
                 print(codebase)

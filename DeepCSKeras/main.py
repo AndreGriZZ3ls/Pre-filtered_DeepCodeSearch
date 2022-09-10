@@ -45,9 +45,9 @@ class SearchEngine:
         
     def load_model(self, model, epoch, model_path = None):
         if model_path == None: model_path = f"./output/{model.__class__.__name__}/models/"
-        assert os.path.exists( model_path + f"epo{epoch}_code.h5"),  f"Weights at epoch {epoch} not found"
-        assert os.path.exists( model_path + f"epo{epoch}_desc.h5"),  f"Weights at epoch {epoch} not found"
-        model.load(model_path + f"epo{epoch}_code.h5", model_path +  f"epo{epoch}_desc.h5")
+        assert os.path.exists( model_path + f"epo{epoch}_code.h5"), f"Weights at epoch {epoch} not found"
+        assert os.path.exists( model_path + f"epo{epoch}_desc.h5"), f"Weights at epoch {epoch} not found"
+        model.load(model_path + f"epo{epoch}_code.h5", model_path + f"epo{epoch}_desc.h5")
 
 
     ##### Training #####
