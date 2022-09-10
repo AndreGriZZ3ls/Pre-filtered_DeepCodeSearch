@@ -186,6 +186,7 @@ if __name__ == '__main__':
                 f = operator.itemgetter(*result_line_numbers)
                 chunk_size     = math.ceil(len(result_line_numbers) / n_threads)
                 codebase_lines = list(f(full_codebase))
+                print(f"Top 10 codebase {codebase_lines[0:10]}")
                 for i in range(0, len(codebase_lines), chunk_size):
                     codebase.append(codebase_lines[i:i + chunk_size])
                 vector_lines   = list(f(full_code_reprs))
