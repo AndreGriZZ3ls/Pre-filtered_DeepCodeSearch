@@ -120,7 +120,7 @@ if __name__ == '__main__':
                     tmp.append(porter.stem(word)) # include stems of query words
             query_list += tmp
             query_list = [indexer.replace_synonyms(w) for w in query_list]
-            print(f"Query without stop words, replaced synonyms and possibly with added word stems: {query_list}")
+            print(f"Query without stop words and possibly with replaced synonyms and added word stems: {query_list}")
             result_line_numbers = set()
             print("Processing...  Please wait.")
             if index_type == "word_indices":
@@ -185,7 +185,10 @@ if __name__ == '__main__':
                 #result_line_numbers = list(result_line_numbers)
                 f = operator.itemgetter(*result_line_numbers)
                 chunk_size     = math.ceil(len(result_line_numbers) / n_threads)
-                codebase_lines = list(f(full_codebase))
+                #codebase_lines = list(f(full_codebase))
+                codebase_lines = []
+                for line_nr in result_line_numbers:
+                    codebase_lines.append(full_codebase[line_nr])
                 print(f"Top 10 codebase {codebase_lines[0:10]}")
                 for i in range(0, len(codebase_lines), chunk_size):
                     codebase.append(codebase_lines[i:i + chunk_size])
