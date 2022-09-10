@@ -172,10 +172,10 @@ if __name__ == '__main__':
                 ##################################################################################################################
             
             result_line_numbers = list(result_line_numbers)
-            token_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_tokens'], result_line_numbers[0])
+            token_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_tokens'], result_line_numbers[0:10])
             inverted_token_vocab    = dict((v, k) for k, v in token_vocab.items())
             ft = lambda lst: [inverted_token_vocab.get(   i, 'UNK') for i in lst]
-            print(f"Top result {list(map(ft, token_indices))}")
+            print(f"Top 10 results {list(map(ft, token_indices))}")
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             if less_memory:
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, n_threads)
