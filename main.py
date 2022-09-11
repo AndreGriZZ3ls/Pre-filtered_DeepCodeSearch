@@ -100,7 +100,6 @@ if __name__ == '__main__':
         else:
             index = indexer.load_index()
             codebase, codereprs = [], []
-            number_of_code_fragments = len(codecs.open(data_path + config['data_params']['use_codebase'], encoding='utf8',errors='replace').readlines())
         while True:
             try:
                 query     =     input('Input Query: ')
@@ -140,6 +139,7 @@ if __name__ == '__main__':
             elif index_type == "inverted_index":
                 result_line_lists = []
                 cnt, cnt_tf = Counter(), Counter()
+                number_of_code_fragments = len(full_codebase)
                 for word in query_list:
                     if word in index: # for each word of the processed query that the index contains: ...
                         result_line_lists.append(index[word]) # ... add the list of code fragments containing that word.
@@ -217,7 +217,7 @@ if __name__ == '__main__':
                 engine._codebase   = codebase
                 #print(codebase)
                 #print(f"Top 10 codebase elements: {codebase[0]}")
-                print(f"codebase elements around 4098478: {full_codebase[4098470:4098485]}")
+                print("codebase elements around 4098478:"); print(full_codebase[4098470:4098485])
                 """print(len(codebase))
                 print(len(codebase[0]))
                 print(len(codereprs))
