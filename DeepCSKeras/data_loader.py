@@ -1,6 +1,7 @@
+import io
 import math
 import pickle
-import codecs
+#import io
 import tables
 import operator
 import numpy as np
@@ -24,9 +25,9 @@ def load_codebase(path, chunk_size):
     """
     logger.info('Loading codebase (chunk size = {}) ...'.format(chunk_size))
     codebase = []
-    #codes=codecs.open(self.path+self.data_params['use_codebase']).readlines()
-    codes = codecs.open(path, encoding='utf8',errors='replace').readlines()
-        #use codecs to read in case of encoding problem
+    #codes=io.open(self.path+self.data_params['use_codebase']).readlines()
+    codes = io.open(path, encoding='utf8', errors='replace').readlines()
+        #use io to read in case of encoding problem
     if chunk_size < 0: return codes
     #print(f"##### Length of codes: {len(codes)}")
     #print(f"##### Length of codes[0]: {len(codes[0])}")
@@ -47,9 +48,9 @@ def load_codebase_lines(path, lines, n_threads):
     logger.info(f'Loading {len(lines)} pre-filtered codebase lines ...')
     #codebase = [[]]
     codebase = []
-    #codes=codecs.open(self.path+self.data_params['use_codebase']).readlines()
-    codes = codecs.open(path, encoding='utf8',errors='replace').readlines()
-        #use codecs to read in case of encoding problem
+    #codes=io.open(self.path+self.data_params['use_codebase']).readlines()
+    codes = io.open(path, encoding='utf8',errors='replace').readlines()
+        #use io to read in case of encoding problem
     #for line in tqdm(lines):
     #    codebase[0].append(codes[line]) 
     #codebase.append([codes[line for line in lines]])
