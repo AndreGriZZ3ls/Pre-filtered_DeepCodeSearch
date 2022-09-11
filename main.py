@@ -191,7 +191,10 @@ if __name__ == '__main__':
                 #result_line_numbers = list(result_line_numbers)
                 f = operator.itemgetter(*result_line_numbers)
                 chunk_size     = math.ceil(len(result_line_numbers) / n_threads)
-                codebase_lines = list(f(full_codebase))
+                #codebase_lines = list(f(full_codebase))
+                codebase_lines = []
+                for line_nr in result_line_numbers:
+                    codebase_lines.append(full_codebase[line_nr])
                 vector_lines   = list(f(full_code_reprs))
                 print(f"First 10 codebase_lines elements: {codebase_lines[0:10]}")
                 
@@ -204,7 +207,7 @@ if __name__ == '__main__':
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
                 #print(codebase)
-                print(f"Top 10 codebase elements: {codebase[0:10]}")
+                print(f"Top 10 codebase elements: {codebase[0]}")
                 #print(f"First 10 codebase elements: {full_codebase[0:10]}")
                 """print(len(codebase))
                 print(len(codebase[0]))
