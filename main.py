@@ -100,6 +100,7 @@ if __name__ == '__main__':
         else:
             index = indexer.load_index()
             codebase, codereprs = [], []
+            number_of_code_fragments = len(codecs.open(data_path + config['data_params']['use_codebase'], encoding='utf8',errors='replace').readlines())
         while True:
             try:
                 query     =     input('Input Query: ')
@@ -138,13 +139,11 @@ if __name__ == '__main__':
                 
             elif index_type == "inverted_index":
                 result_line_lists = []
-                if similarity_mode in ['idf', 'tf_idf']:
-                    cnt_tf = Counter()
-                    number_of_code_fragments = len(codecs.open(data_path + config['data_params']['use_codebase'], encoding='utf8',errors='replace').readlines())
+                cnt, cnt_tf = Counter(), Counter()
                 for word in query_list:
                     if word in index: # for each word of the processed query that the index contains: ...
                         result_line_lists.append(index[word]) # ... add the list of code fragments containing that word.
-                cnt = Counter()
+                
                 for line_list in tqdm(result_line_lists): # iterate the code fragment list of each found query word:
                     if similarity_mode == 'tf_idf':
                         for line_nr in line_list:
@@ -175,10 +174,10 @@ if __name__ == '__main__':
             
             
             #print(result_line_numbers)
-            methname_indices = data_loader.load_hdf5(self.dataset_path + self.data_params['use_methname'], 0, -1)
-            token_indices    = data_loader.load_hdf5(self.dataset_path + self.data_params['use_tokens'],   0, -1)
-            print(f"############################# len(methname_indices): {len(methname_indices)}")
-            print(f"############################# len(token_indices): {len(token_indices)}")
+            full_methname_indices = data_loader.load_hdf5(data_path + config['data_params']['use_methname'], 0, -1)
+            full_token_indices    = data_loader.load_hdf5(data_path + config['data_params']['use_tokens'],   0, -1)
+            print(f"############################# len(methname_indices): {len(full_methname_indices)}")
+            print(f"############################# len(token_indices): {len(full_token_indices)}")
             print(f"############################# len(full_codebase): {len(full_codebase)}")
             #token_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_tokens'], result_line_numbers[0:10])
             #token_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_tokens'], [*range(0, 10, 1)])
