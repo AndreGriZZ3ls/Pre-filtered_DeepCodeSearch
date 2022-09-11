@@ -168,19 +168,20 @@ if __name__ == '__main__':
                 ##################################################################################################################
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
                 result_line_numbers, irrelevant = zip(*cnt.most_common(11 * n_results))
-                print(irrelevant)
+                #print(irrelevant)
                 ##################################################################################################################
             
             result_line_numbers = list(result_line_numbers)
+            print(result_line_numbers)
             #token_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_tokens'], result_line_numbers[0:10])
             token_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_tokens'], [*range(0, 11, 1)])
             inverted_token_vocab    = dict((v, k) for k, v in token_vocab.items())
             ft = lambda lst: [inverted_token_vocab.get(   i, 'UNK') for i in lst]
-            print(f"Top 10 results {list(map(ft, token_indices))}")
+            print(f"First 10 tokens {list(map(ft, token_indices))}")
             methname_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_methname'], [*range(0, 11, 1)])
             inverted_methname_vocab    = dict((v, k) for k, v in methname_vocab.items())
             fm = lambda lst: [inverted_methname_vocab.get(   i, 'UNK') for i in lst]
-            print(f"Top 10 results {list(map(fm, methname_indices))}")
+            print(f"First 10 methnames {list(map(fm, methname_indices))}")
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             if less_memory:
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, n_threads)
@@ -203,7 +204,7 @@ if __name__ == '__main__':
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
                 #print(codebase)
-                print(full_codebase[0:10])
+                print(f"First 10 codebase elements: {full_codebase[0:10]}")
                 """print(len(codebase))
                 print(len(codebase[0]))
                 print(len(codereprs))
