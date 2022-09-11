@@ -172,7 +172,14 @@ if __name__ == '__main__':
                 ##################################################################################################################
             
             result_line_numbers = list(result_line_numbers)
-            print(result_line_numbers)
+            
+            
+            #print(result_line_numbers)
+            methname_indices = data_loader.load_hdf5(self.dataset_path + self.data_params['use_methname'], 0, -1)
+            token_indices    = data_loader.load_hdf5(self.dataset_path + self.data_params['use_tokens'],   0, -1)
+            print(f"############################# len(methname_indices): {len(methname_indices)}")
+            print(f"############################# len(token_indices): {len(token_indices)}")
+            print(f"############################# len(full_codebase): {len(full_codebase)}")
             #token_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_tokens'], result_line_numbers[0:10])
             #token_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_tokens'], [*range(0, 10, 1)])
             token_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_tokens'], [4098478])
@@ -186,6 +193,8 @@ if __name__ == '__main__':
             fm = lambda lst: [inverted_methname_vocab.get(   i, 'UNK') for i in lst]
             #print(f"First 10 methnames: {list(map(fm, methname_indices))}")
             print(f"methname 4098478: {list(map(fm, methname_indices))}")
+            
+            
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             if less_memory:
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, n_threads)
@@ -209,7 +218,7 @@ if __name__ == '__main__':
                 engine._codebase   = codebase
                 #print(codebase)
                 #print(f"Top 10 codebase elements: {codebase[0]}")
-                print(f"codebase element 4098478: {full_codebase[4098478]}")
+                print(f"codebase elements around 4098478: {full_codebase[4098470:4098485]}")
                 """print(len(codebase))
                 print(len(codebase[0]))
                 print(len(codereprs))
