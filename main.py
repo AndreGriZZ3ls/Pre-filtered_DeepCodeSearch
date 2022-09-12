@@ -100,19 +100,16 @@ if __name__ == '__main__':
         else:
             index = indexer.load_index()
             codebase, codereprs = [], []
+        porter = PorterStemmer()
+        number_of_code_fragments = len(full_codebase)
         while True:
             try:
                 query     =     input('Input Query: ')
                 n_results = int(input('How many results? '))
             except Exception:
-                print("Exception while parsing your input:")
-                traceback.print_exc()
-                break
-            #engine._code_reprs = full_code_reprs
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
             len_query_without_stems = len(query_list)
-            porter = PorterStemmer()
             tmp = []
             for word in query_list:
                 word_stem = porter.stem(word)
@@ -139,7 +136,6 @@ if __name__ == '__main__':
             elif index_type == "inverted_index":
                 result_line_lists = []
                 cnt, cnt_tf = Counter(), Counter()
-                number_of_code_fragments = len(full_codebase)
                 for word in query_list:
                     if word in index: # for each word of the processed query that the index contains: ...
                         result_line_lists.append(index[word]) # ... add the list of code fragments containing that word.
@@ -150,11 +146,9 @@ if __name__ == '__main__':
                             cnt_tf[line_nr] += 1 # count occurences of the query word in each of its code fragments
                         lines = list(cnt_tf.keys()) # deduplicated list of those code fragments
                         idf   = math.log10(number_of_code_fragments / len(lines)) # idf = log10(N/df)
-                        #print(f"##### IDF = {idf}")
                         for line_nr in lines:
                             cnt[line_nr] += idf * math.log10(1 + cnt_tf[line_nr]) # tf-idf = idf * log10(1 + tf)
                         cnt_tf.clear() # clear temporary counter for the next query word
-                    #################################################if i == 0: print(cnt.items())
                     elif similarity_mode == 'idf':
                         lines = list(set(line_list)) # deduplicated list of code fragments
                         idf   = math.log10(number_of_code_fragments / len(lines)) # idf = log10(N/df)
@@ -163,64 +157,26 @@ if __name__ == '__main__':
                     else:
                         for line_nr in list(set(line_list)): # iterate deduplicated list of code fragments
                             cnt[line_nr] += 1
-                #result_line_numbers, irrelevant = zip(*cnt.most_common(n_results))
                 ##################################################################################################################
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
                 result_line_numbers, irrelevant = zip(*cnt.most_common(11 * n_results))
-                #print(irrelevant)
-                ##################################################################################################################
             
             result_line_numbers = list(result_line_numbers)
-            
-            
-            #print(result_line_numbers)
-            """full_methname_indices = data_loader.load_hdf5(data_path + config['data_params']['use_methname'], 0, -1)
-            full_token_indices    = data_loader.load_hdf5(data_path + config['data_params']['use_tokens'],   0, -1)
-            print(f"############################# len(methname_indices): {len(full_methname_indices)}")
-            print(f"############################# len(token_indices): {len(full_token_indices)}")
-            print(f"############################# len(full_codebase): {len(full_codebase)}")
-            print(f"############################# len(full_code_reprs): {len(full_code_reprs)}")"""
-            #token_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_tokens'], result_line_numbers[0:10])
-            #token_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_tokens'], [*range(0, 10, 1)])
-            token_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_tokens'], [4098478])
-            inverted_token_vocab    = dict((v, k) for k, v in token_vocab.items())
-            ft = lambda lst: [inverted_token_vocab.get(   i, 'UNK') for i in lst]
-            #print(f"First 10 tokens: {list(map(ft, token_indices))}")
-            print(f"token 4098478: {list(map(ft, token_indices))}")
-            #methname_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_methname'], [*range(0, 10, 1)])
-            methname_indices    = data_loader.load_hdf5_lines(data_path + config['data_params']['use_methname'], [4098478])
-            inverted_methname_vocab    = dict((v, k) for k, v in methname_vocab.items())
-            fm = lambda lst: [inverted_methname_vocab.get(   i, 'UNK') for i in lst]
-            #print(f"First 10 methnames: {list(map(fm, methname_indices))}")
-            print(f"methname 4098478: {list(map(fm, methname_indices))}")
-            
-            
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             if less_memory:
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, n_threads)
                 engine._codebase   = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, n_threads)
             else:
-                #print(f"########## {type(result_line_numbers[0])}")
-                #result_line_numbers = list(result_line_numbers)
                 f = operator.itemgetter(*result_line_numbers)
-                codebase_lines = list(f(full_codebase))
+                codebase_lines = list(f(full_codebase)) ###### TODO: ohne multithreding ausprobieren ###############################
                 vector_lines   = list(f(full_code_reprs))
-                #print(f"First 10 codebase_lines elements: {codebase_lines[0:10]}")
                 chunk_size     = math.ceil(len(result_line_numbers) / n_threads)
                 
                 for i in range(0, len(codebase_lines), chunk_size):
                     codebase.append(codebase_lines[i:i + chunk_size])
                     codereprs.append( vector_lines[i:i + chunk_size])
-                """inverted_vocab    = dict((v, k) for k, v in vocab.items())
-                fv = lambda lst: [inverted_vocab.get(   i, 'UNK') for i in lst]
-                print(f"Top 10 results codereprs {list(map(fv, codereprs[0]))}")"""
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
                 #print(codebase)
                 #print(f"Top 10 codebase elements: {codebase[0]}")
-                print("codebase elements around 4098478:"); print(full_codebase[4098478])
-                """print(len(codebase))
-                print(len(codebase[0]))
-                print(len(codereprs))
-                print(len(codereprs[0]))"""
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, )
