@@ -107,6 +107,9 @@ if __name__ == '__main__':
                 query     =     input('Input Query: ')
                 n_results = int(input('How many results? '))
             except Exception:
+                print("Exception while parsing your input: ")
+                traceback.print_exc()
+                break
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
             len_query_without_stems = len(query_list)
