@@ -149,7 +149,7 @@ if __name__ == '__main__':
                         lines = list(cnt_tf.keys()) # deduplicated list of those code fragments
                         idf   = math.log10(number_of_code_fragments / len(lines)) # idf = log10(N/df)
                         for line_nr in lines:
-                            cnt[line_nr] += idf * math.log10(1 + cnt_tf[line_nr]) # tf-idf = idf * log10(1 + tf)
+                            cnt[line_nr] += idf * math.log(1 + cnt_tf[line_nr]) # tf-idf = idf * log10(1 + tf)
                         cnt_tf.clear() # clear temporary counter for the next query word
                     elif similarity_mode == 'idf':
                         lines = list(set(line_list)) # deduplicated list of code fragments
