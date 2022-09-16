@@ -161,7 +161,7 @@ if __name__ == '__main__':
                             cnt[line_nr] += 1
                 ##################################################################################################################
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
-                result_line_numbers, irrelevant = zip(*cnt.most_common(50 * n_results))
+                result_line_numbers, irrelevant = zip(*cnt.most_common(200 * n_results))
             
             result_line_numbers = list(result_line_numbers)
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
