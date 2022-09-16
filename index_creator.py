@@ -45,7 +45,7 @@ class IndexCreator:
         word = word.replace('pop ', 'delete').replace('remove', 'delete').replace('begin', 'start').replace('run ', 'execute')
         word = word.replace(' halt', 'stop').replace('restart', 'continue').replace('append', 'add').replace('push ', 'add')
         word = word.replace('null ', 'none').replace('method', 'function').replace('concat', 'combine').replace(' break ', 'exit')
-        return word.replace(' implements ', 'extends').replace('runnable', 'executable').replace(' array ', '[').replace(' arrays ', '[').strip()
+        return word.replace(' implements ', 'extends').replace('runnable', 'executable').replace(' array ', '[]').replace(' arrays ', '[]').strip()
 
     def load_data(self):
         assert os.path.exists(self.dataset_path + self.data_params['use_methname']), f"Method names of real data not found."
@@ -59,17 +59,17 @@ class IndexCreator:
         if   self.index_type == "word_indices": return methname_indices, token_indices
         elif self.index_type == "inverted_index":
             print("Translating methname, token and api sequence word indices back to natural language...   Please wait.")
-            #inverted_methname_vocab = dict((v, k) for k, v in self.methname_vocab.items())
-            #inverted_token_vocab    = dict((v, k) for k, v in self.token_vocab.items())
+            inverted_methname_vocab = dict((v, k) for k, v in self.methname_vocab.items())
+            inverted_token_vocab    = dict((v, k) for k, v in self.token_vocab.items())
             inverted_apiseq_vocab   = dict((v, k) for k, v in self.apiseq_vocab.items())
-            #fm = lambda lst: [inverted_methname_vocab.get(i, 'UNK') for i in lst]
-            #ft = lambda lst: [inverted_token_vocab.get(   i, 'UNK') for i in lst]
+            fm = lambda lst: [inverted_methname_vocab.get(i, 'UNK') for i in lst]
+            ft = lambda lst: [inverted_token_vocab.get(   i, 'UNK') for i in lst]
             fa = lambda lst: [inverted_apiseq_vocab.get(  i, 'UNK') for i in lst]
-            #methnames = list(map(fm, methname_indices))
-            #tokens    = list(map(ft, token_indices))
-            apiseqs   = list(map(ft, apiseq_indices))
-            #return methnames, tokens, apiseqs
-            return None, None, apiseqs
+            methnames = list(map(fm, methname_indices))
+            tokens    = list(map(ft, token_indices))
+            apiseqs   = list(map(fa, apiseq_indices))
+            return methnames, tokens, apiseqs
+            #return None, None, apiseqs
             
         #print(type(self.methname_vocab.items()))
         #print(self.methname_vocab.items())
@@ -118,8 +118,8 @@ class IndexCreator:
         methnames, tokens, apiseqs = self.load_data()
         index = dict()
         if self.index_type == "inverted_index":
-            #self.add_to_index(index, methnames, stopwords)
-            #self.add_to_index(index, tokens   , stopwords)
+            self.add_to_index(index, methnames, stopwords)
+            self.add_to_index(index, tokens   , stopwords)
             self.add_to_index(index, apiseqs  , None)
         #items = list(index.items())
         #for i in range(0, 10):
