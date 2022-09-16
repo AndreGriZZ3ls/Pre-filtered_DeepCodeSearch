@@ -174,7 +174,7 @@ if __name__ == '__main__':
                 codebase_lines = list(f(full_codebase)) ###### TODO: ohne multithreding ausprobieren ###############################
                 vector_lines   = list(f(full_code_reprs))
                 #chunk_size     = math.ceil(len(result_line_numbers) / n_results)
-                chunk_size     = n_results)
+                chunk_size     = n_results
                 
                 for i in range(0, len(codebase_lines), chunk_size):
                     codebase.append(codebase_lines[i:i + chunk_size])
