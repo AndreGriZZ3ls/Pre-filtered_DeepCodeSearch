@@ -99,7 +99,6 @@ if __name__ == '__main__':
             methnames, tokens = indexer.load_index()
         else:
             index = indexer.load_index()
-            codebase, codereprs = [], []
         porter = PorterStemmer()
         number_of_code_fragments = len(full_codebase)
         while True:
@@ -113,7 +112,7 @@ if __name__ == '__main__':
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
             len_query_without_stems = len(query_list)
-            tmp = []
+            codebase, codereprs, tmp = [], [], []
             for word in query_list:
                 word_stem = porter.stem(word)
                 if word != word_stem:
