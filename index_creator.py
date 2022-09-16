@@ -35,6 +35,7 @@ class IndexCreator:
         self.index_dir    = args.index_dir
         self.methname_vocab   = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_methname'])
         self.token_vocab      = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_tokens'])
+        self.apiseq_vocab     = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_apiseq'])
         self.chunk_size       = 2000000
 
     def replace_synonyms(self, word):
@@ -44,25 +45,30 @@ class IndexCreator:
         word = word.replace('pop ', 'delete').replace('remove', 'delete').replace('begin', 'start').replace('run ', 'execute')
         word = word.replace(' halt', 'stop').replace('restart', 'continue').replace('append', 'add').replace('push ', 'add')
         word = word.replace('null ', 'none').replace('method', 'function').replace('concat', 'combine').replace(' break ', 'exit')
-        return word.replace(' implements ', 'extends').replace('runnable', 'executable').strip()
+        return word.replace(' implements ', 'extends').replace('runnable', 'executable').replace('array', '[]').strip()
 
     def load_data(self):
         assert os.path.exists(self.dataset_path + self.data_params['use_methname']), f"Method names of real data not found."
         assert os.path.exists(self.dataset_path + self.data_params['use_tokens']),   f"Tokens of real data not found."
+        assert os.path.exists(self.dataset_path + self.data_params['use_apiseq']),   f"API sequences of real data not found."
         #methname_indices = None #####
         #token_indices    = None #####
         methname_indices = data_loader.load_hdf5(self.dataset_path + self.data_params['use_methname'], 0, -1)
         token_indices    = data_loader.load_hdf5(self.dataset_path + self.data_params['use_tokens'],   0, -1)
+        apiseq_indices   = data_loader.load_hdf5(self.dataset_path + self.data_params['use_apiseq'],   0, -1)
         if   self.index_type == "word_indices": return methname_indices, token_indices
         elif self.index_type == "inverted_index":
-            print("Translating methname and token word indices back to natural language...   Please wait.")
+            print("Translating methname, token and api sequence word indices back to natural language...   Please wait.")
             inverted_methname_vocab = dict((v, k) for k, v in self.methname_vocab.items())
             inverted_token_vocab    = dict((v, k) for k, v in self.token_vocab.items())
+            inverted_apiseq_vocab   = dict((v, k) for k, v in self.apiseq_vocab.items())
             fm = lambda lst: [inverted_methname_vocab.get(i, 'UNK') for i in lst]
             ft = lambda lst: [inverted_token_vocab.get(   i, 'UNK') for i in lst]
+            fa = lambda lst: [inverted_apiseq_vocab.get(  i, 'UNK') for i in lst]
             methnames = list(map(fm, methname_indices))
             tokens    = list(map(ft, token_indices))
-            return methnames, tokens
+            apiseqs   = list(map(ft, apiseq_indices))
+            return methnames, tokens, apiseqs
             
         #print(type(self.methname_vocab.items()))
         #print(self.methname_vocab.items())
@@ -77,7 +83,9 @@ class IndexCreator:
         data_loader.save_pickle(index_path + index_file, index)
 
     def load_index(self):
-        if self.index_type == "word_indices": return self.load_data()
+        if self.index_type == "word_indices": 
+            methnames, tokens, irrelevant = self.load_data()
+            return methnames, tokens
         index_path = self.data_path + self.index_dir + '/'
         index_file = self.index_type + '.pkl'
         assert os.path.exists(index_path + index_file), f"Index file {index_file} not found at {index_path}"
@@ -85,22 +93,32 @@ class IndexCreator:
                     
     def add_to_index(self, index, lines, stopwords):
         print("Adding lines to the index...   Please wait.")
-        for i, line in enumerate(tqdm(lines)):
-            for word in line:
-                if word in stopwords: continue
-                word = self.replace_synonyms(word)
-                if word not in index:
-                    index[word] = [i]
-                else:
-                    index[word].append(i)
+        if stopwords != None:
+            for i, line in enumerate(tqdm(lines)):
+                for word in line:
+                    if word in stopwords: continue
+                    word = self.replace_synonyms(word)
+                    if word in index:
+                        index[word].append(i)
+                    else:
+                        index[word] = [i]
+        else:
+            for i, line in enumerate(tqdm(lines)):
+                for word in line:
+                    if word != '[]': continue
+                    if word in index:
+                        index[word].append(i)
+                    else:
+                        index[word] = [i]
 
     def create_index(self, stopwords):
         if self.index_type == "word_indices": print("Nothing to be done."); return
-        methnames, tokens = self.load_data()
+        methnames, tokens, apiseqs = self.load_data()
         index = dict()
         if self.index_type == "inverted_index":
             self.add_to_index(index, methnames, stopwords)
             self.add_to_index(index, tokens   , stopwords)
+            self.add_to_index(index, apiseqs  , None)
         #items = list(index.items())
         #for i in range(0, 10):
         #print(items[0])
