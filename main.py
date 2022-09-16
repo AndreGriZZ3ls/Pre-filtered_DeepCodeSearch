@@ -181,6 +181,6 @@ if __name__ == '__main__':
                     codereprs.append( vector_lines[i:i + chunk_size])
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
-                #print(codebase)
+                print(codebase.shape)
                 #print(f"Top 10 codebase elements: {codebase[0]}")
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, )
