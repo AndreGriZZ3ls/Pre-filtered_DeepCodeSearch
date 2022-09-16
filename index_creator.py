@@ -59,16 +59,17 @@ class IndexCreator:
         if   self.index_type == "word_indices": return methname_indices, token_indices
         elif self.index_type == "inverted_index":
             print("Translating methname, token and api sequence word indices back to natural language...   Please wait.")
-            inverted_methname_vocab = dict((v, k) for k, v in self.methname_vocab.items())
-            inverted_token_vocab    = dict((v, k) for k, v in self.token_vocab.items())
+            #inverted_methname_vocab = dict((v, k) for k, v in self.methname_vocab.items())
+            #inverted_token_vocab    = dict((v, k) for k, v in self.token_vocab.items())
             inverted_apiseq_vocab   = dict((v, k) for k, v in self.apiseq_vocab.items())
-            fm = lambda lst: [inverted_methname_vocab.get(i, 'UNK') for i in lst]
-            ft = lambda lst: [inverted_token_vocab.get(   i, 'UNK') for i in lst]
+            #fm = lambda lst: [inverted_methname_vocab.get(i, 'UNK') for i in lst]
+            #ft = lambda lst: [inverted_token_vocab.get(   i, 'UNK') for i in lst]
             fa = lambda lst: [inverted_apiseq_vocab.get(  i, 'UNK') for i in lst]
-            methnames = list(map(fm, methname_indices))
-            tokens    = list(map(ft, token_indices))
+            #methnames = list(map(fm, methname_indices))
+            #tokens    = list(map(ft, token_indices))
             apiseqs   = list(map(ft, apiseq_indices))
-            return methnames, tokens, apiseqs
+            #return methnames, tokens, apiseqs
+            return None, None, apiseqs
             
         #print(type(self.methname_vocab.items()))
         #print(self.methname_vocab.items())
