@@ -170,14 +170,16 @@ if __name__ == '__main__':
                 engine._codebase   = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, n_threads)
             else:
                 f = operator.itemgetter(*result_line_numbers)
-                codebase_lines = list(f(full_codebase)) ###### TODO: ohne multithreding ausprobieren ###############################
+                codebase.append( list(f(full_codebase))) ###### ohne multithreding ###############################
+                codereprs.append(list(f(full_code_reprs)))
+                """codebase_lines = list(f(full_codebase)) ###### TODO: ohne multithreding ausprobieren ###############################
                 vector_lines   = list(f(full_code_reprs))
                 #chunk_size     = math.ceil(len(result_line_numbers) / n_results)
                 chunk_size     = n_results
                 
                 for i in range(0, len(codebase_lines), chunk_size):
                     codebase.append(codebase_lines[i:i + chunk_size])
-                    codereprs.append( vector_lines[i:i + chunk_size])
+                    codereprs.append( vector_lines[i:i + chunk_size])"""
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
                 #print(len(codebase))
