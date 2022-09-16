@@ -45,7 +45,7 @@ class IndexCreator:
         word = word.replace('pop ', 'delete').replace('remove', 'delete').replace('begin', 'start').replace('run ', 'execute')
         word = word.replace(' halt', 'stop').replace('restart', 'continue').replace('append', 'add').replace('push ', 'add')
         word = word.replace('null ', 'none').replace('method', 'function').replace('concat', 'combine').replace(' break ', 'exit')
-        return word.replace(' implements ', 'extends').replace('runnable', 'executable').replace(' array ', '[]').replace(' arrays ', '[]'.strip()
+        return word.replace(' implements ', 'extends').replace('runnable', 'executable').replace(' array ', '[]').replace(' arrays ', '[]').strip()
 
     def load_data(self):
         assert os.path.exists(self.dataset_path + self.data_params['use_methname']), f"Method names of real data not found."
