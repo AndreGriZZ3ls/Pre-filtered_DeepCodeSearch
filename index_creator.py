@@ -106,8 +106,8 @@ class IndexCreator:
         else:
             for i, line in enumerate(tqdm(lines)):
                 for word in line:
-                    if word != '[': continue
-                    print("[ located!")
+                    if word != '[]': continue
+                    print("[] located!")
                     if word in index:
                         index[word].append(i)
                     else:
