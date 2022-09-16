@@ -162,7 +162,7 @@ if __name__ == '__main__':
                             cnt[line_nr] += 1
                 ##################################################################################################################
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
-                result_line_numbers, irrelevant = zip(*cnt.most_common(11 * n_results))
+                result_line_numbers, irrelevant = zip(*cnt.most_common(10 + n_results * n_results))
             
             result_line_numbers = list(result_line_numbers)
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
@@ -173,7 +173,7 @@ if __name__ == '__main__':
                 f = operator.itemgetter(*result_line_numbers)
                 codebase_lines = list(f(full_codebase)) ###### TODO: ohne multithreding ausprobieren ###############################
                 vector_lines   = list(f(full_code_reprs))
-                chunk_size     = math.ceil(len(result_line_numbers) / n_threads)
+                chunk_size     = math.ceil(len(result_line_numbers) / n_results)
                 
                 for i in range(0, len(codebase_lines), chunk_size):
                     codebase.append(codebase_lines[i:i + chunk_size])

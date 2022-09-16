@@ -71,7 +71,7 @@ class IndexCreator:
         if self.index_type == "word_indices": return
         index_path = self.data_path + self.index_dir + '/'
         index_file = self.index_type + '.pkl'
-        #os.makedirs(self.index_path, exist_ok = True)
+        #os.makedirs(index_path, exist_ok = True)
         assert os.path.exists(index_path + index_file), (
                               f"File for index storage not found. Please create an (empty) file named {index_file} in {index_path}")
         data_loader.save_pickle(index_path + index_file, index)
@@ -82,23 +82,10 @@ class IndexCreator:
         index_file = self.index_type + '.pkl'
         assert os.path.exists(index_path + index_file), f"Index file {index_file} not found at {index_path}"
         return data_loader.load_pickle(index_path + index_file)
-        
-    """def add_to_index(self, index, lines, stopwords):
-        print("Adding lines to the index...   Please wait.")
-        for i in tqdm(range(0, len(lines))):
-        #for i in tqdm(range(0, 100)):
-            line = list(set(lines[i]) - stopwords)
-            for word in line:
-                word = replace_synonyms(word)
-                if word not in index:
-                    index[word] = [i]
-                else:
-                    index[word].append(i)"""
                     
     def add_to_index(self, index, lines, stopwords):
         print("Adding lines to the index...   Please wait.")
-        for i, line in tqdm(enumerate(lines)):
-        #for i in tqdm(range(0, 100)):
+        for i, line in enumerate(tqdm(lines)):
             for word in line:
                 if word in stopwords: continue
                 word = self.replace_synonyms(word)
