@@ -171,7 +171,7 @@ if __name__ == '__main__':
                 engine._codebase   = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, n_threads)
             else:
                 f = operator.itemgetter(*result_line_numbers)
-                codebase_lines = list(f(full_codebase)) ###### TODO: ohne multithreding ausprobieren ###############################
+                codebase_lines = list(f(full_codebase))
                 vector_lines   = list(f(full_code_reprs))
                 chunk_size     = math.ceil(len(result_line_numbers) / max(10, n_results))
                 #chunk_size     = n_results
