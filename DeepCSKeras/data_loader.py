@@ -25,36 +25,21 @@ def load_codebase(path, chunk_size):
     """
     logger.info('Loading codebase (chunk size = {}) ...'.format(chunk_size))
     codebase = []
-    #codes=io.open(self.path+self.data_params['use_codebase']).readlines()
     codes = io.open(path, encoding='utf8', errors='replace').readlines()
-        #use io to read in case of encoding problem
     if chunk_size < 0: return codes
-    #print(f"##### Length of codes: {len(codes)}")
-    #print(f"##### Length of codes[0]: {len(codes[0])}")
-    #if chunk_size < 0: 
-    #    codebase = list(codes[0:len(codes)])
-        #print(f"##### Length of codes: {len(codebase)}")
-        #print(f"##### Length of codes[0]: {len(codebase[0])}")
     else:
         for i in tqdm(range(0, len(codes), chunk_size)):
             codebase.append(codes[i:i + chunk_size])            
     return codebase
 
 # added:
-def load_codebase_lines(path, lines, n_threads): 
+def load_codebase_lines(path, lines, chunk_size): 
     """load some codebase lines
     codefile: h5 file that stores raw code
     """
     logger.info(f'Loading {len(lines)} pre-filtered codebase lines ...')
-    #codebase = [[]]
     codebase = []
-    #codes=io.open(self.path+self.data_params['use_codebase']).readlines()
     codes = io.open(path, encoding='utf8',errors='replace').readlines()
-        #use io to read in case of encoding problem
-    #for line in tqdm(lines):
-    #    codebase[0].append(codes[line]) 
-    #codebase.append([codes[line for line in lines]])
-    chunk_size = math.ceil(len(lines) / n_threads)
     f = operator.itemgetter(*lines)
     codebase_lines = list(f(codes))
     for i in range(0, len(codebase_lines), chunk_size):
@@ -69,8 +54,6 @@ def load_code_reprs(path, chunk_size):
     h5f  = tables.open_file(path)
     vecs = h5f.root.vecs
     if chunk_size < 0: return vecs
-    #if chunk_size < 0:
-    #    codereprs = list(vecs[0:len(vecs)])
     else:
         for i in tqdm(range(0, len(vecs), chunk_size)):
             codereprs.append(vecs[i:i + chunk_size])
@@ -78,17 +61,12 @@ def load_code_reprs(path, chunk_size):
     return codereprs
 
 # added:
-def load_code_reprs_lines(path, lines, n_threads): 
+def load_code_reprs_lines(path, lines, chunk_size): 
     logger.info(f'Loading {len(lines)} pre-filtered code vectors ...')          
     """reads some of the vectors (2D numpy array) from a hdf5 file"""
-    #codereprs = [[]]
     codereprs = []
     h5f  = tables.open_file(path)
     vecs = h5f.root.vecs
-    #for line in tqdm(lines):
-    #    codereprs[0].append(vecs[line])
-    #codereprs.append([vecs[line for line in lines]])
-    chunk_size = math.ceil(len(lines) / n_threads)
     f = operator.itemgetter(*lines)
     vector_lines = list(f(vecs))
     for i in range(0, len(vector_lines), chunk_size):

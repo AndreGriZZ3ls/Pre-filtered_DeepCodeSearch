@@ -56,8 +56,6 @@ class IndexCreator:
         assert os.path.exists(self.dataset_path + self.data_params['use_methname']), f"Method names of real data not found."
         assert os.path.exists(self.dataset_path + self.data_params['use_tokens']),   f"Tokens of real data not found."
         assert os.path.exists(self.dataset_path + self.data_params['use_apiseq']),   f"API sequences of real data not found."
-        #methname_indices = None #####
-        #token_indices    = None #####
         methname_indices = data_loader.load_hdf5(self.dataset_path + self.data_params['use_methname'], 0, -1)
         token_indices    = data_loader.load_hdf5(self.dataset_path + self.data_params['use_tokens'],   0, -1)
         apiseq_indices   = data_loader.load_hdf5(self.dataset_path + self.data_params['use_apiseq'],   0, -1)
@@ -74,10 +72,6 @@ class IndexCreator:
             tokens    = list(map(ft, token_indices))
             apiseqs   = list(map(fa, apiseq_indices))
             return methnames, tokens, apiseqs
-            #return None, None, apiseqs
-            
-        #print(type(self.methname_vocab.items()))
-        #print(self.methname_vocab.items())
 
     def safe_index(self, index):
         if self.index_type == "word_indices": return
@@ -87,6 +81,7 @@ class IndexCreator:
         assert os.path.exists(index_path + index_file), (
                               f"File for index storage not found. Please create an (empty) file named {index_file} in {index_path}")
         data_loader.save_pickle(index_path + index_file, index)
+        print(f"Index successfully saved to: {index_path}{index_file}")
 
     def load_index(self):
         if self.index_type == "word_indices": 
@@ -95,6 +90,7 @@ class IndexCreator:
         index_path = self.data_path + self.index_dir + '/'
         index_file = self.index_type + '.pkl'
         assert os.path.exists(index_path + index_file), f"Index file {index_file} not found at {index_path}"
+        print(f"Loading index from: {index_path}{index_file}")
         return data_loader.load_pickle(index_path + index_file)
                     
     def add_to_index(self, index, lines, stopwords):
@@ -125,7 +121,5 @@ class IndexCreator:
             self.add_to_index(index, methnames, stopwords)
             self.add_to_index(index, tokens   , stopwords)
             self.add_to_index(index, apiseqs  , None)
-        #items = list(index.items())
-        #for i in range(0, 10):
-        #print(items[0])
+        
         self.safe_index(index)

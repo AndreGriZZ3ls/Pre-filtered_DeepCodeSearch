@@ -8,6 +8,7 @@ import traceback
 from tensorflow.keras.optimizers import RMSprop, Adam
 from scipy.stats import rankdata
 import math
+import time
 import numpy as np
 from tqdm import tqdm
 import argparse
@@ -264,7 +265,7 @@ def parse_args():
     parser.add_argument("--query",     type=str, default=None, help="user query to search for")    # added
     return parser.parse_args()
 
-
+# moved into a function:
 def search_and_print_results(engine, model, vocab, query, n_results):
     codes, sims = engine.search(model, vocab, query, n_results)
     zipped  = zip(codes, sims)
@@ -273,7 +274,7 @@ def search_and_print_results(engine, model, vocab, query, n_results):
     zipped  = list(zipped)[:n_results]
     results = '\n\n'.join(map(str, zipped)) # combine the result into a returning string
     print(results)
-
+#
 
 if __name__ == '__main__':
     args   = parse_args()
@@ -318,6 +319,8 @@ if __name__ == '__main__':
                 n_results = args.n_results
                 assert query     is not None, "A query input via the '--query' argument is required for 'no_manual_input' mode."
                 assert n_results is not None, "Please specify the number of results via the '--n_results' argument for 'no_manual_input' mode."
+                start      = time.time()
+                start_proc = time.process_time()
             else: #
                 try:
                     query     =     input('Input Query: ')
@@ -326,7 +329,11 @@ if __name__ == '__main__':
                     print("Exception while parsing your input: ")
                     traceback.print_exc()
                     break
+                start      = time.time()
+                start_proc = time.process_time()
                 query   = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             search_and_print_results(engine, model, vocab, query, n_results)
+            print('Total time:  {:5.3f}s'.format(time.time()-start))
+            print('System time: {:5.3f}s'.format(time.process_time()-start_proc))
             if args.no_manual_input:  # added:
                 break

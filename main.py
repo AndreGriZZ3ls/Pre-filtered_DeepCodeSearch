@@ -20,6 +20,7 @@ __copyright__ = "Copyright (c) 2022, Andre Warnecke"
 import os
 import sys
 import math
+import time
 import codecs
 import argparse
 import operator
@@ -50,11 +51,12 @@ def parse_args():
                         " to be created or used: The 'word_indices' mode utilizes parts of the dataset already existing for DeepCS "
                         " (simple but not usable for more accurete similarity measurements. For each meaningful word the "
                         " 'inverted_index' stores IDs of code fragment that contain it. ")
-    parser.add_argument("--similarity_mode", choices=["lexical","idf","tf_idf"], default='tf_idf', help="The metric used for "
+    parser.add_argument("--similarity_mode", choices=["lexical","tf_idf"], default='tf_idf', help="The metric used for "
                         " similarity calculation between query and code fragments: The 'lexical' similarity mode measures "
                         " the amount of words that query and code fragment have in common (rather simple and inaccurate). "
-                        " 'idf' stands for inverted document frequency and measures the informativeness of each word "
-                        " (incompatible with word_indices as index type).")
+                        " 'tf_idf' combines term frequency and inverted document frequency (both logarithmically damped) "
+                        " to weighten the informativeness of each word and measure the overall quality of match (best known "
+                        " metric but more time consuming; incompatible with word_indices as index type).")
     parser.add_argument("--less_memory_mode", action="store_true", default=False, help="If active the program will load some files "
                         "just (partial) pre-filtered after each query input instead of complete in the beginning (slower).")
     return parser.parse_args()
@@ -66,8 +68,6 @@ if __name__ == '__main__':
     index_type      = args.index_type
     similarity_mode = args.similarity_mode
     less_memory     = args.less_memory_mode
-    methname_vocab  = data_loader.load_pickle(data_path + config['data_params']['vocab_methname'])
-    token_vocab     = data_loader.load_pickle(data_path + config['data_params']['vocab_tokens'])
     indexer         = IndexCreator(args, config)
     stopwords       = set("a,about,after,also,an,and,another,are,around,as,at,be,because,been,before,being,between,both,but,by,came,can,create,come,could,did,do,does,each,every,from,get,got,had,has,have,he,her,here,him,himself,his,how,into,it,its,just,like,make,many,me,might,more,most,much,must,my,never,no,now,of,on,only,other,our,out,over,re,said,same,see,should,since,so,some,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,to,too,under,unk,UNK,up,use,very,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
 
@@ -78,41 +78,50 @@ if __name__ == '__main__':
         indexer.create_index(stopwords)
 
     elif args.mode == 'search':
+        ##### Initialize DeepCS search engine and model ######
         engine = deepCS_main.SearchEngine(args, config)
-
-        ##### Define model ######
-        model = getattr(models, args.model)(config) # initialize the model
+        model  = getattr(models, args.model)(config) # initialize the model
         model.build()
         model.summary(export_path = f"./output/{args.model}/")
-        
         optimizer = config.get('training_params', dict()).get('optimizer', 'adam')
         model.compile(optimizer = optimizer)
-        
         assert config['training_params']['reload'] > 0, "Please specify the number of the optimal epoch checkpoint in config.py"
         engine.load_model(model, config['training_params']['reload'], f"./DeepCSKeras/output/{model.__class__.__name__}/models/")
-        if not less_memory:
+        #####
+        porter = PorterStemmer()
+        vocab  = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
+        
+        if less_memory:
+            number_of_code_fragments = len(codes = io.open(data_path + config['data_params']['use_codebase'], encoding='utf8', errors='replace').readlines())
+        else:
             full_code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1)
             full_codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1)
-        vocab = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
+            number_of_code_fragments = len(full_codebase)
         
         if index_type == "word_indices":
+            methname_vocab  = data_loader.load_pickle(data_path + config['data_params']['vocab_methname'])
+            token_vocab     = data_loader.load_pickle(data_path + config['data_params']['vocab_tokens'])
             methnames, tokens = indexer.load_index()
         else:
             index = indexer.load_index()
-        porter = PorterStemmer()
-        number_of_code_fragments = len(full_codebase)
+        
         while True:
+            codebase, codereprs, tmp = [], [], []
+            result_line_numbers = set()
+            ##### Get user input ######
             try:
-                query     =     input('Input Query: ')
+                query     =     input('Input query: ')
                 n_results = int(input('How many results? '))
             except Exception:
                 print("Exception while parsing your input: ")
                 traceback.print_exc()
                 break
+            start      = time.time()
+            start_proc = time.process_time()
+            ##### Process user query ######
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
             len_query_without_stems = len(query_list)
-            codebase, codereprs, tmp = [], [], []
             for word in query_list:
                 word_stem = porter.stem(word)
                 if word != word_stem:
@@ -120,8 +129,8 @@ if __name__ == '__main__':
             query_list += tmp
             query_list = [indexer.replace_synonyms(w) for w in query_list]
             query_list = list(set(query_list) - stopwords)
-            print(f"Query without stop words and possibly with replaced synonyms and added word stems: {query_list}")
-            result_line_numbers = set()
+            print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
+            #####
             print("Processing...  Please wait.")
             if index_type == "word_indices":
                 query_index_for_methnames = set([methname_vocab.get(w, 0) for w in query_list]) # convert user input to word indices
@@ -146,43 +155,37 @@ if __name__ == '__main__':
                 for line_list in tqdm(result_line_lists): # iterate the code fragment list of each found query word:
                     if similarity_mode == 'tf_idf':
                         for line_nr in line_list:
-                            cnt_tf[line_nr] += 1 # count occurences of the query word in each of its code fragments
+                            cnt_tf[line_nr] += 1 # count occurrences of the query word in each of its code fragments
                         lines = list(cnt_tf.keys()) # deduplicated list of those code fragments
                         idf   = math.log10(number_of_code_fragments / len(lines)) # idf = log10(N/df)
                         for line_nr in lines:
-                            cnt[line_nr] += idf * math.log(1 + cnt_tf[line_nr]) # tf-idf = idf * log10(1 + tf)
+                            cnt[line_nr] += idf * math.log(1 + cnt_tf[line_nr]) # tf-idf = idf * log10(1 + tf); sum values for the same line
                         cnt_tf.clear() # clear temporary counter for the next query word
-                    elif similarity_mode == 'idf':
-                        lines = list(set(line_list)) # deduplicated list of code fragments
-                        idf   = math.log10(number_of_code_fragments / len(lines)) # idf = log10(N/df)
-                        for line_nr in lines:
-                            cnt[line_nr] += idf
-                    else:
+                    else: # lexical similarity:
                         for line_nr in list(set(line_list)): # iterate deduplicated list of code fragments
                             cnt[line_nr] += 1
                 ##################################################################################################################
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(100 * n_results))
                 result_line_numbers, irrelevant = zip(*cnt.most_common(max(1000, 100 * n_results)))
-            
             result_line_numbers = list(result_line_numbers)
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
+            
+            chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results))
+            #chunk_size = n_results
             if less_memory:
-                engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, n_threads)
-                engine._codebase   = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, n_threads)
+                engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, chunk_size)
+                engine._codebase   = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, chunk_size)
             else:
                 f = operator.itemgetter(*result_line_numbers)
                 codebase_lines = list(f(full_codebase))
                 vector_lines   = list(f(full_code_reprs))
-                chunk_size     = math.ceil(len(result_line_numbers) / max(10, n_results))
-                #chunk_size     = n_results
                 
                 for i in range(0, len(codebase_lines), chunk_size):
                     codebase.append(codebase_lines[i:i + chunk_size])
                     codereprs.append( vector_lines[i:i + chunk_size])
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
-                #print(len(codebase))
-                #for c in codebase: print(len(c))
-                #print(f"Top 10 codebase elements: {codebase[0]}")
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, )
+            print('Total time:  {:5.3f}s'.format(time.time()-start))
+            print('System time: {:5.3f}s'.format(time.process_time()-start_proc))
