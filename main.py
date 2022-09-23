@@ -61,9 +61,9 @@ def parse_args():
                         "just (partial) pre-filtered after each query input instead of complete in the beginning (slower).")
     return parser.parse_args()
     
-def chunk_of_iter(iter, length, chunk_size):
-    for n in range(0, length, chunk_size):
-        yield iter[n:min(n + chunk_size, length)]
+def chunk_of_iter(iterable, chunk_size):
+    chunks = [iter(iterable)] * chunk_size
+    return zip(*chunks)
 
 if __name__ == '__main__':
     args            = parse_args()
