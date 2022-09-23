@@ -193,20 +193,22 @@ if __name__ == '__main__':
             else:
                 #f = operator.itemgetter(*result_line_numbers)
                 #codebase_lines = list(f(full_codebase))
-                codebase_lines = map(full_codebase.__getitem__, result_line_numbers)
+                #codebase_lines = map(full_codebase.__getitem__, result_line_numbers)
+                codebase_lines = [full_codebase[index for index inresult_line_numbers]]
                 #vector_lines   = list(f(full_code_reprs))
-                vector_lines   = map(full_code_reprs.__getitem__, result_line_numbers)
+                #vector_lines   = map(full_code_reprs.__getitem__, result_line_numbers)
+                vector_lines   = [full_code_reprs[index for index inresult_line_numbers]]
                 print('Itemgetter time:  {:5.3f}s'.format(time.time()-start))
                 #codebase_lines = list(codebase_lines)
                 #vector_lines   = list(vector_lines)
                 print('To list time:  {:5.3f}s'.format(time.time()-start))
-                #for i in range(0, len(result_line_numbers), chunk_size):
-                for chunk in chunk_of_iter(codebase_lines, chunk_size):
-                    #codebase.append(codebase_lines[i:i + chunk_size])
-                    codebase.append(chunk)
-                    #codereprs.append( vector_lines[i:i + chunk_size])
-                for chunk in chunk_of_iter(vector_lines, chunk_size):
-                    codereprs.append(chunk)
+                for i in range(0, len(result_line_numbers), chunk_size):
+                #for chunk in chunk_of_iter(codebase_lines, chunk_size):
+                    codebase.append(codebase_lines[i:i + chunk_size])
+                    #codebase.append(chunk)
+                    codereprs.append( vector_lines[i:i + chunk_size])
+                #for chunk in chunk_of_iter(vector_lines, chunk_size):
+                    #codereprs.append(chunk)
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
                 print('Chunk time:  {:5.3f}s'.format(time.time()-start))
