@@ -96,10 +96,15 @@ class IndexCreator:
                     
     def add_to_index(self, index, lines, stopwords):
         print("Adding lines to the index...   Please wait.")
+        if stopwords:
+            f = lambda word: word in stopwords
+        else:
+            f = lambda word: word != '[]'
         for i, line in enumerate(tqdm(lines)):
             for word in line:
-                if   stopwords != None and word in stopwords: continue
-                elif stopwords == None and word != '[]':      continue
+                #if       stopwords and word in stopwords: continue
+                #elif not stopwords and word != '[]':      continue
+                if map(f, word): continue
                 word = self.replace_synonyms(word)
                 if word in index:
                     #index[word].append(i)
@@ -118,5 +123,11 @@ class IndexCreator:
             self.add_to_index(index, methnames, stopwords)
             self.add_to_index(index, tokens   , stopwords)
             self.add_to_index(index, apiseqs  , None)
+            number_of_code_fragments = len(methnames)
+            for line_counter in tqdm(index.keys()):
+                lines = list(line_counter.keys()) # deduplicated list of those code fragments
+                idf   = math.log10(number_of_code_fragments / len(lines)) # idf = log10(N/df)
+                for line_nr in lines:
+                    line_counter[line_nr] = idf * math.log(1 + line_counter[line_nr]) # tf-idf = idf * log10(1 + tf)
         
         self.safe_index(index)

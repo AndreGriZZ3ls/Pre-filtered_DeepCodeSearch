@@ -147,15 +147,16 @@ if __name__ == '__main__':
                 
             elif index_type == "inverted_index":
                 #result_line_lists = []
-                result_line_counters = []
+                """result_line_counters = []"""
                 #cnt, cnt_tf = Counter(), Counter()
                 cnt = Counter()
                 for word in query_list:
                     if word in index: # for each word of the processed query that the index contains: ...
                         #result_line_lists.append(index[word]) # ... add the list of code fragments containing that word.
-                        result_line_counters.append(index[word]) # ... add the list of code fragments containing that word.
+                        """result_line_counters.append(index[word]) # ... add the list of code fragments containing that word."""
+                        cnt += (index[word]) # sum tf-idf values for the same line
                 
-                #for line_list in tqdm(result_line_lists): # iterate the code fragment list of each found query word:
+                """#for line_list in tqdm(result_line_lists): # iterate the code fragment list of each found query word:
                 for line_counter in tqdm(result_line_counters): # iterate the code fragment counters of each found query word:
                     if similarity_mode == 'tf_idf':
                         #for line_nr in line_list:
@@ -170,7 +171,7 @@ if __name__ == '__main__':
                     else: # lexical similarity:
                         #for line_nr in list(set(line_list)): # iterate deduplicated list of code fragments
                         #    cnt[line_nr] += 1
-                        cnt = line_counter
+                        cnt += line_counter"""
                 ##################################################################################################################
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(100 * n_results))
