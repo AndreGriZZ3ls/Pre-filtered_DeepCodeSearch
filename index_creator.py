@@ -97,9 +97,9 @@ class IndexCreator:
     def add_to_index(self, index, lines, stopwords):
         print("Adding lines to the index...   Please wait.")
         if stopwords:
-            f = lambda word: bool(word in stopwords)
+            f = lambda word: word in stopwords
         else:
-            f = lambda word: bool(word != '[]')
+            f = lambda word: word != '[]'
         for i, line in enumerate(tqdm(lines)):
             for word in line:
                 #if       stopwords and word in stopwords: continue
