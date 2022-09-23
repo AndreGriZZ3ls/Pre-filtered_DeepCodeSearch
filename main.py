@@ -126,7 +126,7 @@ if __name__ == '__main__':
                 word_stem = porter.stem(word)
                 if word != word_stem:
                     tmp.append(porter.stem(word)) # include stems of query words
-            query_list += tmp
+            query_list.extend(tmp)
             query_list = [indexer.replace_synonyms(w) for w in query_list]
             query_list = list(set(query_list) - stopwords)
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
@@ -179,7 +179,7 @@ if __name__ == '__main__':
             result_line_numbers = list(set(result_line_numbers))
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             
-            chunk_size = math.ceil(0.75 * len(result_line_numbers) / max(10, n_results))
+            chunk_size = math.ceil(0.25 * len(result_line_numbers) / max(10, n_results))
             #chunk_size = n_results
             if less_memory:
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, chunk_size)
