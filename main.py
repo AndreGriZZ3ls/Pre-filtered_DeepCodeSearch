@@ -176,7 +176,7 @@ if __name__ == '__main__':
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(100 * n_results))
                 result_line_numbers, irrelevant = zip(*cnt.most_common(max(1000, 100 * n_results)))
-            result_line_numbers = list(result_line_numbers)
+            result_line_numbers = list(set(result_line_numbers))
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             
             chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results))
