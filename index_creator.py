@@ -104,7 +104,7 @@ class IndexCreator:
             for word in line:
                 #if       stopwords and word in stopwords: continue
                 #elif not stopwords and word != '[]':      continue
-                if map(f, word): continue
+                if f(word): continue
                 word = self.replace_synonyms(word)
                 if word in index:
                     #index[word].append(i)
