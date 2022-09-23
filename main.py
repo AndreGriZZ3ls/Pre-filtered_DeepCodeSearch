@@ -194,10 +194,10 @@ if __name__ == '__main__':
                 #f = operator.itemgetter(*result_line_numbers)
                 #codebase_lines = list(f(full_codebase))
                 #codebase_lines = map(full_codebase.__getitem__, result_line_numbers)
-                codebase_lines = [full_codebase[i for i inresult_line_numbers]]
+                codebase_lines = [full_codebase[i] for i in result_line_numbers]
                 #vector_lines   = list(f(full_code_reprs))
                 #vector_lines   = map(full_code_reprs.__getitem__, result_line_numbers)
-                vector_lines   = [full_code_reprs[i for i inresult_line_numbers]]
+                vector_lines   = [full_code_reprs[i] for i in result_line_numbers]
                 print('Itemgetter time:  {:5.3f}s'.format(time.time()-start))
                 #codebase_lines = list(codebase_lines)
                 #vector_lines   = list(vector_lines)
