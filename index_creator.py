@@ -98,8 +98,8 @@ class IndexCreator:
         print("Adding lines to the index...   Please wait.")
         for i, line in enumerate(tqdm(lines)):
             for word in line:
-                if stopwords != None and word in stopwords: continue
-                elif word != '[]': continue
+                if   stopwords != None and word in stopwords: continue
+                elif stopwords == None and word != '[]':      continue
                 word = self.replace_synonyms(word)
                 if word in index:
                     #index[word].append(i)
