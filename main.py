@@ -146,24 +146,31 @@ if __name__ == '__main__':
                         result_line_numbers.add(i)
                 
             elif index_type == "inverted_index":
-                result_line_lists = []
-                cnt, cnt_tf = Counter(), Counter()
+                #result_line_lists = []
+                result_line_counters = []
+                #cnt, cnt_tf = Counter(), Counter()
+                cnt, = Counter()
                 for word in query_list:
                     if word in index: # for each word of the processed query that the index contains: ...
-                        result_line_lists.append(index[word]) # ... add the list of code fragments containing that word.
+                        #result_line_lists.append(index[word]) # ... add the list of code fragments containing that word.
+                        result_line_counters.append(index[word]) # ... add the list of code fragments containing that word.
                 
-                for line_list in tqdm(result_line_lists): # iterate the code fragment list of each found query word:
+                #for line_list in tqdm(result_line_lists): # iterate the code fragment list of each found query word:
+                for line_counter in tqdm(result_line_counters): # iterate the code fragment counters of each found query word:
                     if similarity_mode == 'tf_idf':
-                        for line_nr in line_list:
-                            cnt_tf[line_nr] += 1 # count occurrences of the query word in each of its code fragments
-                        lines = list(cnt_tf.keys()) # deduplicated list of those code fragments
+                        #for line_nr in line_list:
+                        #    cnt_tf[line_nr] += 1 # count occurrences of the query word in each of its code fragments
+                        #lines = list(cnt_tf.keys()) # deduplicated list of those code fragments
+                        lines = list(line_counter.keys()) # deduplicated list of those code fragments
                         idf   = math.log10(number_of_code_fragments / len(lines)) # idf = log10(N/df)
                         for line_nr in lines:
-                            cnt[line_nr] += idf * math.log(1 + cnt_tf[line_nr]) # tf-idf = idf * log10(1 + tf); sum values for the same line
-                        cnt_tf.clear() # clear temporary counter for the next query word
+                        #    cnt[line_nr] += idf * math.log(1 + cnt_tf[line_nr]) # tf-idf = idf * log10(1 + tf); sum values for the same line
+                            cnt[line_nr] += idf * math.log(1 + line_counter[line_nr]) # tf-idf = idf * log10(1 + tf); sum values for the same line
+                        #cnt_tf.clear() # clear temporary counter for the next query word
                     else: # lexical similarity:
-                        for line_nr in list(set(line_list)): # iterate deduplicated list of code fragments
-                            cnt[line_nr] += 1
+                        #for line_nr in list(set(line_list)): # iterate deduplicated list of code fragments
+                        #    cnt[line_nr] += 1
+                        cnt = line_counter
                 ##################################################################################################################
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(100 * n_results))

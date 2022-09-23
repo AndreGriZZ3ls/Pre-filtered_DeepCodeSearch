@@ -20,6 +20,7 @@ import math
 import codecs
 import numpy as np
 from tqdm import tqdm
+from collections import Counter
 
 from DeepCSKeras import data_loader
 from DeepCSKeras import configs
@@ -95,23 +96,19 @@ class IndexCreator:
                     
     def add_to_index(self, index, lines, stopwords):
         print("Adding lines to the index...   Please wait.")
-        if stopwords != None:
-            for i, line in enumerate(tqdm(lines)):
-                for word in line:
-                    if word in stopwords: continue
-                    word = self.replace_synonyms(word)
-                    if word in index:
-                        index[word].append(i)
-                    else:
-                        index[word] = [i]
-        else:
-            for i, line in enumerate(tqdm(lines)):
-                for word in line:
-                    if word != '[]': continue
-                    if word in index:
-                        index[word].append(i)
-                    else:
-                        index[word] = [i]
+        for i, line in enumerate(tqdm(lines)):
+            for word in line:
+                if stopwords == None and word in stopwords: continue
+                elif word != '[]': continue
+                word = self.replace_synonyms(word)
+                if word in index:
+                    #index[word].append(i)
+                    index[word][i] += 1
+                else:
+                    #index[word] = [i]
+                    cnt = Counter()
+                    cnt[i] += 1
+                    index[word] = cnt
 
     def create_index(self, stopwords):
         if self.index_type == "word_indices": print("Nothing to be done."); return
