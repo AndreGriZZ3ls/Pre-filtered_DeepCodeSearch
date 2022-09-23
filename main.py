@@ -97,7 +97,7 @@ if __name__ == '__main__':
         vocab  = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
         
         if less_memory:
-            number_of_code_fragments = len(codes = io.open(data_path + config['data_params']['use_codebase'], encoding='utf8', errors='replace').readlines())
+            number_of_code_fragments = len(io.open(data_path + config['data_params']['use_codebase'], encoding='utf8', errors='replace').readlines())
         else:
             full_code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1)
             full_codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1)
