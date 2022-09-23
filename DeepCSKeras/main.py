@@ -220,8 +220,7 @@ class SearchEngine:
         chunk_sims = np.squeeze(chunk_sims, axis = 1)
     #2. choose top results
         negsims = np.negative(chunk_sims)
-        #maxinds = np.argpartition(negsims, kth = n_results - 1)
-        maxinds = np.argpartition(negsims, kth = n_results + 1)
+        maxinds = np.argpartition(negsims, kth = n_results - 1)
         maxinds = maxinds[:n_results]        
         chunk_codes = [self._codebase[i][k] for k in maxinds]
         chunk_sims  = chunk_sims[maxinds]
