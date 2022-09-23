@@ -179,7 +179,7 @@ if __name__ == '__main__':
             result_line_numbers = list(set(result_line_numbers))
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             
-            chunk_size = math.ceil(0.5 * len(result_line_numbers) / max(10, n_results))
+            chunk_size = math.ceil(0.75 * len(result_line_numbers) / max(10, n_results))
             #chunk_size = n_results
             if less_memory:
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, chunk_size)
