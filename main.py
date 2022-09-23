@@ -149,7 +149,7 @@ if __name__ == '__main__':
                 #result_line_lists = []
                 result_line_counters = []
                 #cnt, cnt_tf = Counter(), Counter()
-                cnt, = Counter()
+                cnt = Counter()
                 for word in query_list:
                     if word in index: # for each word of the processed query that the index contains: ...
                         #result_line_lists.append(index[word]) # ... add the list of code fragments containing that word.
