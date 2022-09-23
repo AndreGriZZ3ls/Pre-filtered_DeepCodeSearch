@@ -193,8 +193,8 @@ if __name__ == '__main__':
                 #vector_lines   = list(f(full_code_reprs))
                 vector_lines   = map(full_code_reprs.__getitem__, result_line_numbers)
                 print('Itemgetter time:  {:5.3f}s'.format(time.time()-start))
-                codebase_lines = list(codebase_lines)
-                vector_lines   = list(vector_lines)
+                codebase_lines = [*codebase_lines]
+                vector_lines   = [*vector_lines]
                 print('To list time:  {:5.3f}s'.format(time.time()-start))
                 for i in range(0, len(codebase_lines), chunk_size):
                     codebase.append(codebase_lines[i:i + chunk_size])
