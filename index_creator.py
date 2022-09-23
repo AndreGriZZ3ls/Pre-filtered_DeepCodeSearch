@@ -108,7 +108,7 @@ class IndexCreator:
                 word = self.replace_synonyms(word)
                 if word in index:
                     #index[word].append(i)
-                    index[word][i] += 1
+                    index[word][i] += 1 # counts term frequence
                 else:
                     #index[word] = [i]
                     cnt = Counter()
@@ -124,10 +124,10 @@ class IndexCreator:
             self.add_to_index(index, tokens   , stopwords)
             self.add_to_index(index, apiseqs  , None)
             number_of_code_fragments = len(methnames)
-            for line_counter in tqdm(index.keys()):
-                lines = list(line_counter.keys()) # deduplicated list of those code fragments
-                idf   = math.log10(number_of_code_fragments / len(lines)) # idf = log10(N/df)
-                for line_nr in lines:
+            for line_counter in tqdm(index.values()):
+                lines = list(line_counter.keys()) # deduplicated list of code fragments
+                idf   = math.log10(number_of_code_fragments / len(lines)) # inverse document frequence = log10(N/df)
+                for line_nr in lines: # replace currently stored term frequence by tf-idf:
                     line_counter[line_nr] = idf * math.log(1 + line_counter[line_nr]) # tf-idf = idf * log10(1 + tf)
         
         self.safe_index(index)
