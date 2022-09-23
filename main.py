@@ -60,6 +60,10 @@ def parse_args():
     parser.add_argument("--less_memory_mode", action="store_true", default=False, help="If active the program will load some files "
                         "just (partial) pre-filtered after each query input instead of complete in the beginning (slower).")
     return parser.parse_args()
+    
+def chunk_of_iter(iter, length, chunk_size):
+    for n in range(0, length, chunk_size):
+        yield iter[n:min(n + chunk_size, length)]
 
 if __name__ == '__main__':
     args            = parse_args()
@@ -196,9 +200,13 @@ if __name__ == '__main__':
                 #codebase_lines = list(codebase_lines)
                 #vector_lines   = list(vector_lines)
                 print('To list time:  {:5.3f}s'.format(time.time()-start))
-                for i in range(0, len(result_line_numbers), chunk_size):
-                    codebase.append(codebase_lines[i:i + chunk_size])
-                    codereprs.append( vector_lines[i:i + chunk_size])
+                #for i in range(0, len(result_line_numbers), chunk_size):
+                for chunk in chunk_of_iter(codebase_lines, len(result_line_numbers), chunk_size):
+                    #codebase.append(codebase_lines[i:i + chunk_size])
+                    codebase.append(chunk)
+                    #codereprs.append( vector_lines[i:i + chunk_size])
+                for chunk in chunk_of_iter(vector_lines, len(result_line_numbers), chunk_size):
+                    codereprs.append(chunk)
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
                 print('Chunk time:  {:5.3f}s'.format(time.time()-start))
