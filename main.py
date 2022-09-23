@@ -189,9 +189,11 @@ if __name__ == '__main__':
                 codebase_lines = list(f(full_codebase))
                 vector_lines   = list(f(full_code_reprs))
                 
-                for i in range(0, len(codebase_lines), chunk_size):
+                """for i in range(0, len(codebase_lines), chunk_size):
                     codebase.append(codebase_lines[i:i + chunk_size])
-                    codereprs.append( vector_lines[i:i + chunk_size])
+                    codereprs.append( vector_lines[i:i + chunk_size])"""
+                codebase.append(codebase_lines)
+                codereprs.append( vector_lines)
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, )
