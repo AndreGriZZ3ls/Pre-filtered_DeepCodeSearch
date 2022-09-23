@@ -117,7 +117,7 @@ if __name__ == '__main__':
                 traceback.print_exc()
                 break
             start      = time.time()
-            start_proc = time.process_time()
+            #start_proc = time.process_time()
             ##### Process user query ######
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
@@ -130,6 +130,7 @@ if __name__ == '__main__':
             query_list = [indexer.replace_synonyms(w) for w in query_list]
             query_list = list(set(query_list) - stopwords)
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
+            print('Query processing time:  {:5.3f}s'.format(time.time()-start))
             #####
             print("Processing...  Please wait.")
             if index_type == "word_indices":
@@ -155,7 +156,7 @@ if __name__ == '__main__':
                         #result_line_lists.append(index[word]) # ... add the list of code fragments containing that word.
                         """result_line_counters.append(index[word]) # ... add the list of code fragments containing that word."""
                         cnt += (index[word]) # sum tf-idf values for each identical line and merge counters in general
-                
+                print('Sum counters time:  {:5.3f}s'.format(time.time()-start))
                 """#for line_list in tqdm(result_line_lists): # iterate the code fragment list of each found query word:
                 for line_counter in tqdm(result_line_counters): # iterate the code fragment counters of each found query word:
                     if similarity_mode == 'tf_idf':
@@ -177,6 +178,7 @@ if __name__ == '__main__':
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(100 * n_results))
                 result_line_numbers, irrelevant = zip(*cnt.most_common(max(1000, 100 * n_results)))
             result_line_numbers = list(set(result_line_numbers))
+            print('Most relevant lines time:  {:5.3f}s'.format(time.time()-start))
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             
             chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results))
@@ -185,17 +187,16 @@ if __name__ == '__main__':
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, chunk_size)
                 engine._codebase   = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, chunk_size)
             else:
-                #f = operator.itemgetter(*result_line_numbers)
-                #codebase_lines = list(f(full_codebase))
-                codebase_lines = full_codebase[result_line_numbers]
-                #vector_lines   = list(f(full_code_reprs))
-                vector_lines   = full_code_reprs[result_line_numbers]
-                
+                f = operator.itemgetter(*result_line_numbers)
+                codebase_lines = list(f(full_codebase))
+                vector_lines   = list(f(full_code_reprs))
+                print('Itemgetter time:  {:5.3f}s'.format(time.time()-start))
                 for i in range(0, len(codebase_lines), chunk_size):
                     codebase.append(codebase_lines[i:i + chunk_size])
                     codereprs.append( vector_lines[i:i + chunk_size])
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
+                print('Chunk time:  {:5.3f}s'.format(time.time()-start))
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, )
             print('Total time:  {:5.3f}s'.format(time.time()-start))
-            print('System time: {:5.3f}s'.format(time.process_time()-start_proc))
+            #print('System time: {:5.3f}s'.format(time.process_time()-start_proc))
