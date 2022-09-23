@@ -201,11 +201,11 @@ if __name__ == '__main__':
                 #vector_lines   = list(vector_lines)
                 print('To list time:  {:5.3f}s'.format(time.time()-start))
                 #for i in range(0, len(result_line_numbers), chunk_size):
-                for chunk in chunk_of_iter(codebase_lines, len(result_line_numbers), chunk_size):
+                for chunk in chunk_of_iter(codebase_lines, chunk_size):
                     #codebase.append(codebase_lines[i:i + chunk_size])
                     codebase.append(chunk)
                     #codereprs.append( vector_lines[i:i + chunk_size])
-                for chunk in chunk_of_iter(vector_lines, len(result_line_numbers), chunk_size):
+                for chunk in chunk_of_iter(vector_lines, chunk_size):
                     codereprs.append(chunk)
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
