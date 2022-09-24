@@ -61,7 +61,12 @@ def parse_args():
     parser.add_argument("--less_memory_mode", action="store_true", default=False, help="If active the program will load some files "
                         "just (partial) pre-filtered after each query input instead of complete in the beginning (slower).")
     return parser.parse_args()
+   
+def generate_sublist(list, indices):
+    g = lambda lst: (lst[i] for i in indices)
+    yield g(list)
     
+   
 def chunk_of_iter(iterable, chunk_size):
     chunks = [iter(iterable)] * chunk_size
     return zip(*chunks)
@@ -195,10 +200,10 @@ if __name__ == '__main__':
                 #f = operator.itemgetter(*result_line_numbers)
                 #codebase_lines = list(f(full_codebase))
                 #codebase_lines = map(full_codebase.__getitem__, result_line_numbers)
-                codebase_lines = [full_codebase[i] for i in result_line_numbers]
+                codebase_lines = generate_sublist(full_codebase, result_line_numbers)
                 #vector_lines   = list(f(full_code_reprs))
                 #vector_lines   = map(full_code_reprs.__getitem__, result_line_numbers)
-                vector_lines   = [full_code_reprs[i] for i in result_line_numbers]
+                vector_lines   = generate_sublist(full_code_reprs, result_line_numbers)
                 print('Itemgetter time:  {:5.3f}s'.format(time.time()-start))
                 #codebase_lines = list(codebase_lines)
                 #vector_lines   = list(vector_lines)
