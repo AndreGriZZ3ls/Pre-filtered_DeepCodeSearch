@@ -26,6 +26,7 @@ import codecs
 import argparse
 import operator
 import traceback
+import numpy as np
 from tqdm import tqdm
 from collections import Counter
 from nltk.stem import PorterStemmer
@@ -104,8 +105,8 @@ if __name__ == '__main__':
         if less_memory:
             number_of_code_fragments = len(io.open(data_path + config['data_params']['use_codebase'], encoding='utf8', errors='replace').readlines())
         else:
-            full_code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1)
-            full_codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1)
+            full_code_reprs = np.array(data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1))
+            full_codebase   = np.array(data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1))
             number_of_code_fragments = len(full_codebase)
         
         if index_type == "word_indices":
@@ -200,10 +201,10 @@ if __name__ == '__main__':
                 #f = operator.itemgetter(*result_line_numbers)
                 #codebase_lines = list(f(full_codebase))
                 #codebase_lines = map(full_codebase.__getitem__, result_line_numbers)
-                codebase_lines = generate_sublist(full_codebase, result_line_numbers)
+                codebase_lines = full_codebase[result_line_numbers]
                 #vector_lines   = list(f(full_code_reprs))
                 #vector_lines   = map(full_code_reprs.__getitem__, result_line_numbers)
-                vector_lines   = generate_sublist(full_code_reprs, result_line_numbers)
+                vector_lines   = full_code_reprs[result_line_numbers]
                 print('Itemgetter time:  {:5.3f}s'.format(time.time()-start))
                 #codebase_lines = list(codebase_lines)
                 #vector_lines   = list(vector_lines)
