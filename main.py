@@ -198,10 +198,10 @@ if __name__ == '__main__':
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, chunk_size)
                 engine._codebase   = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, chunk_size)
             else:
-                #f = operator.itemgetter(*result_line_numbers)
-                #codebase_lines = list(f(full_codebase))
+                f = operator.itemgetter(*result_line_numbers)
+                codebase_lines = list(f(full_codebase))
                 #codebase_lines = map(full_codebase.__getitem__, result_line_numbers)
-                codebase_lines = full_codebase[result_line_numbers]
+                #codebase_lines = full_codebase[result_line_numbers]
                 #vector_lines   = list(f(full_code_reprs))
                 #vector_lines   = map(full_code_reprs.__getitem__, result_line_numbers)
                 vector_lines   = full_code_reprs[result_line_numbers]
