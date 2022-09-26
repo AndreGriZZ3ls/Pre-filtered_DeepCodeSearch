@@ -167,7 +167,7 @@ if __name__ == '__main__':
                     if word in index: # for each word of the processed query that the index contains: ...
                         #result_line_lists.append(index[word]) # ... add the list of code fragments containing that word.
                         """result_line_counters.append(index[word]) # ... add the list of code fragments containing that word."""
-                        cnt += Counter(index[word].most_common(max(1000, 100 * n_results))) # sum tf-idf values for each identical line and merge counters in general
+                        cnt += index[word].most_common(max(1000, 100 * n_results)) # sum tf-idf values for each identical line and merge counters in general
                 print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
                 """#for line_list in tqdm(result_line_lists): # iterate the code fragment list of each found query word:
                 for line_counter in tqdm(result_line_counters): # iterate the code fragment counters of each found query word:
