@@ -52,8 +52,8 @@ def load_code_reprs(path, chunk_size):
     """reads vectors (2D numpy array) from a hdf5 file"""
     codereprs = []
     h5f  = tables.open_file(path)
+    if chunk_size < 0: return np.array(h5f.root.vecs)
     vecs = h5f.root.vecs
-    if chunk_size < 0: return vecs
     else:
         for i in tqdm(range(0, len(vecs), chunk_size)):
             codereprs.append(vecs[i:i + chunk_size])

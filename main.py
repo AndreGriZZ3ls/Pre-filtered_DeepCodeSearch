@@ -80,7 +80,7 @@ if __name__ == '__main__':
     similarity_mode = args.similarity_mode
     less_memory     = args.less_memory_mode
     indexer         = IndexCreator(args, config)
-    stopwords       = set("a,about,after,also,an,and,another,are,around,as,at,be,because,been,before,being,between,both,but,by,came,can,create,come,could,did,do,does,each,every,from,get,got,had,has,have,he,her,here,him,himself,his,how,into,it,its,just,like,make,many,me,might,more,most,much,must,my,never,no,now,of,on,only,other,our,out,over,re,said,same,see,should,since,so,some,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,to,too,under,unk,UNK,up,use,very,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
+    stopwords       = set("a,about,after,also,an,and,another,are,around,as,at,be,because,been,before,being,between,both,but,by,came,can,create,come,could,did,do,does,each,every,from,get,got,had,has,have,he,her,here,him,himself,his,how,in,into,it,its,just,like,make,many,me,might,more,most,much,must,my,never,no,now,of,on,only,other,our,out,over,re,said,same,see,should,since,so,some,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,to,too,under,unk,UNK,up,use,very,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
 
     _codebase_chunksize = 2000000
     n_threads = 8 # number of threads for parallelization of less performance intensive program parts
@@ -105,7 +105,8 @@ if __name__ == '__main__':
         if less_memory:
             number_of_code_fragments = len(io.open(data_path + config['data_params']['use_codebase'], encoding='utf8', errors='replace').readlines())
         else:
-            full_code_reprs = np.array(data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1))
+            full_code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1)
+            #full_code_reprs = np.array(data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1))
             #full_codebase   = np.array(data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1))
             full_codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1)
             number_of_code_fragments = len(full_codebase)
@@ -142,7 +143,6 @@ if __name__ == '__main__':
             query_list = [indexer.replace_synonyms(w) for w in query_list]
             query_list = list(set(query_list) - stopwords)
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
-            print('Query processing time:  {:5.3f}s'.format(time.time()-start))
             #####
             print("Processing...  Please wait.")
             if index_type == "word_indices":
@@ -167,8 +167,8 @@ if __name__ == '__main__':
                     if word in index: # for each word of the processed query that the index contains: ...
                         #result_line_lists.append(index[word]) # ... add the list of code fragments containing that word.
                         """result_line_counters.append(index[word]) # ... add the list of code fragments containing that word."""
-                        cnt += (index[word]) # sum tf-idf values for each identical line and merge counters in general
-                print('Sum counters time:  {:5.3f}s'.format(time.time()-start))
+                        cnt += Counter(index[word].most_common(max(1000, 100 * n_results))) # sum tf-idf values for each identical line and merge counters in general
+                print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
                 """#for line_list in tqdm(result_line_lists): # iterate the code fragment list of each found query word:
                 for line_counter in tqdm(result_line_counters): # iterate the code fragment counters of each found query word:
                     if similarity_mode == 'tf_idf':
@@ -189,8 +189,10 @@ if __name__ == '__main__':
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(100 * n_results))
                 result_line_numbers, irrelevant = zip(*cnt.most_common(max(1000, 100 * n_results)))
-            result_line_numbers = list(set(result_line_numbers))
-            print('Most relevant lines time:  {:5.3f}s'.format(time.time()-start))
+                for i in range(0, 100):
+                    print(irrelevant[i])
+            result_line_numbers = list(result_line_numbers)
+            print('Time to calculate most relevant lines:  {:5.3f}s'.format(time.time()-start))
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             
             chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results))
@@ -206,10 +208,8 @@ if __name__ == '__main__':
                 #vector_lines   = list(f(full_code_reprs))
                 #vector_lines   = map(full_code_reprs.__getitem__, result_line_numbers)
                 vector_lines   = full_code_reprs[result_line_numbers]
-                print('Itemgetter time:  {:5.3f}s'.format(time.time()-start))
                 #codebase_lines = list(codebase_lines)
                 #vector_lines   = list(vector_lines)
-                print('To list time:  {:5.3f}s'.format(time.time()-start))
                 for i in range(0, len(result_line_numbers), chunk_size):
                 #for chunk in chunk_of_iter(codebase_lines, chunk_size):
                     codebase.append(codebase_lines[i:i + chunk_size])
@@ -219,7 +219,6 @@ if __name__ == '__main__':
                     #codereprs.append(chunk)
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
-                print('Chunk time:  {:5.3f}s'.format(time.time()-start))
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, )
-            print('Total time:  {:5.3f}s'.format(time.time()-start))
+            print('>>>>>>>>>>>>> Total time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
             #print('System time: {:5.3f}s'.format(time.process_time()-start_proc))
