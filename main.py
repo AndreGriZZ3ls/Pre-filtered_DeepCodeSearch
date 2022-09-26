@@ -129,7 +129,9 @@ if __name__ == '__main__':
                 print("Exception while parsing your input: ")
                 traceback.print_exc()
                 break
-            start      = time.time()
+            start        = time.time()
+            max_filtered = max(1000, 50 * n_results)
+            min_filtered = max(200, 20 * n_results)
             #start_proc = time.process_time()
             ##### Process user query ######
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
@@ -167,7 +169,7 @@ if __name__ == '__main__':
                     if word in index: # for each word of the processed query that the index contains: ...
                         #result_line_lists.append(index[word]) # ... add the list of code fragments containing that word.
                         """result_line_counters.append(index[word]) # ... add the list of code fragments containing that word."""
-                        cnt += Counter(dict(index[word].most_common(max(1000, 100 * n_results)))) # sum tf-idf values for each identical line and merge counters in general
+                        cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general
                 print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
                 """#for line_list in tqdm(result_line_lists): # iterate the code fragment list of each found query word:
                 for line_counter in tqdm(result_line_counters): # iterate the code fragment counters of each found query word:
@@ -188,9 +190,9 @@ if __name__ == '__main__':
                 ##################################################################################################################
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(100 * n_results))
-                result_line_numbers, irrelevant = zip(*cnt.most_common(max(1000, 100 * n_results)))
-                #for i in range(0, 100):
-                #    print(irrelevant[i])
+                result_line_numbers, irrelevant = zip(*cnt.most_common(max_filtered))
+                for i in range(0, 1000):
+                    print(irrelevant[i])
             result_line_numbers = list(result_line_numbers)
             print('Time to calculate most relevant lines:  {:5.3f}s'.format(time.time()-start))
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
