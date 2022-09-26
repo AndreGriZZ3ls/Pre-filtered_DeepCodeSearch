@@ -190,9 +190,6 @@ if __name__ == '__main__':
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
                 #result_line_numbers, irrelevant = zip(*cnt.most_common(100 * n_results))
                 result_line_numbers, irrelevant = zip(*cnt.most_common(max(1000, 100 * n_results)))
-                print(f"Type of cnt: {type(cnt)}")
-                print(f"Type of result_line_numbers: {type(result_line_numbers)}")
-                print(f"Type of irrelevant: {type(irrelevant)}")
                 for i in range(0, 100):
                     print(irrelevant[i])
             result_line_numbers = list(result_line_numbers)
