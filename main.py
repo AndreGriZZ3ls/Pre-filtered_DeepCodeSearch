@@ -53,12 +53,12 @@ def parse_args():
                         " to be created or used: The 'word_indices' mode utilizes parts of the dataset already existing for DeepCS "
                         " (simple but not usable for more accurete similarity measurements. For each meaningful word the "
                         " 'inverted_index' stores IDs of code fragment that contain it. ")
-    parser.add_argument("--similarity_mode", choices=["lexical","tf_idf"], default='tf_idf', help="The metric used for "
+    """parser.add_argument("--similarity_mode", choices=["lexical","tf_idf"], default='tf_idf', help="The metric used for "
                         " similarity calculation between query and code fragments: The 'lexical' similarity mode measures "
                         " the amount of words that query and code fragment have in common (rather simple and inaccurate). "
                         " 'tf_idf' combines term frequency and inverted document frequency (both logarithmically damped) "
                         " to weighten the informativeness of each word and measure the overall quality of match (best known "
-                        " metric but more time consuming; incompatible with word_indices as index type).")
+                        " metric but more time consuming; incompatible with word_indices as index type).")"""
     parser.add_argument("--less_memory_mode", action="store_true", default=False, help="If active the program will load some files "
                         "just (partial) pre-filtered after each query input instead of complete in the beginning (slower).")
     return parser.parse_args()
@@ -73,17 +73,16 @@ def chunk_of_iter(iterable, chunk_size):
     return zip(*chunks)
 
 if __name__ == '__main__':
-    args            = parse_args()
-    config          = getattr(configs, 'config_' + args.model)()
-    data_path       = args.data_path + args.dataset + '/'
-    index_type      = args.index_type
-    similarity_mode = args.similarity_mode
-    less_memory     = args.less_memory_mode
-    indexer         = IndexCreator(args, config)
-    stopwords       = set("a,about,after,also,an,and,another,are,around,as,at,be,because,been,before,being,between,both,but,by,came,can,create,come,could,did,do,does,each,every,from,get,got,had,has,have,he,her,here,him,himself,his,how,in,into,it,its,just,like,make,many,me,might,more,most,much,must,my,never,no,now,of,on,only,other,our,out,over,re,said,same,see,should,since,so,some,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,to,too,under,unk,UNK,up,use,very,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
-
+    args        = parse_args()
+    config      = getattr(configs, 'config_' + args.model)()
+    data_path   = args.data_path + args.dataset + '/'
+    index_type  = args.index_type
+    less_memory = args.less_memory_mode
+    indexer     = IndexCreator(args, config)
+    stopwords   = set("a,about,after,also,an,and,another,are,around,as,at,be,because,been,before,being,between,both,but,by,came,can,create,come,could,did,do,does,each,every,from,get,got,had,has,have,he,her,here,him,himself,his,how,in,into,it,its,just,like,make,many,me,might,more,most,much,must,my,never,no,now,of,on,only,other,our,out,over,re,said,same,see,should,since,so,some,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,to,too,under,unk,UNK,up,use,very,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
+    n_threads   = 8 # number of threads for parallelization of less performance intensive program parts
     _codebase_chunksize = 2000000
-    n_threads = 8 # number of threads for parallelization of less performance intensive program parts
+    #tf_idf_threshold    = 2.89 
 
     if args.mode == 'create_index':
         indexer.create_index(stopwords)
@@ -159,6 +158,7 @@ if __name__ == '__main__':
                     if len(query_index_for_tokens & set(tokens[i])) >= min_common:
                     #if not query_index_for_tokens.isdisjoint(tokens[i]):
                         result_line_numbers.add(i)
+                result_line_numbers = list(result_line_numbers)
                 
             elif index_type == "inverted_index":
                 #result_line_lists = []
@@ -188,12 +188,16 @@ if __name__ == '__main__':
                         #    cnt[line_nr] += 1
                         cnt += line_counter"""
                 ##################################################################################################################
-                #result_line_numbers, irrelevant = zip(*cnt.most_common(10000 + 100 * n_results))
-                #result_line_numbers, irrelevant = zip(*cnt.most_common(100 * n_results))
-                result_line_numbers, irrelevant = zip(*cnt.most_common(max_filtered))
-                for i in range(0, 1000):
-                    print(irrelevant[i])
-            result_line_numbers = list(result_line_numbers)
+                #result_line_numbers, values = zip(*cnt.most_common(10000 + 100 * n_results))
+                #result_line_numbers, values = zip(*cnt.most_common(100 * n_results))
+                result_line_numbers, values = zip(*cnt.most_common(max_filtered))
+                threshold = values[0]
+                last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val == threshold)
+                #for i in range(0, 1000):
+                #    print(values[i])
+                result_line_numbers = list(result_line_numbers)
+                if last_threshold_index >= min_filtered:
+                    result_line_numbers = result_line_numbers[:last_threshold_index]
             print('Time to calculate most relevant lines:  {:5.3f}s'.format(time.time()-start))
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             
