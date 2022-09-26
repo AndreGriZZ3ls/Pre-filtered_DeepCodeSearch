@@ -53,10 +53,9 @@ def load_code_reprs(path, chunk_size):
     codereprs = []
     #if chunk_size < 0: return np.array(tables.open_file(path).root.vecs)
     h5f  = tables.open_file(path, 'r')
-    if chunk_size < 0: 
-        filters = tables.Filters(complib = 'blosc', complevel = 5)
-        return h5f.root.chunk_array
     vecs = h5f.root.vecs
+    print(f"Type of vecs: {type(vecs)}")
+    if chunk_size < 0: return np.array(vecs)
     for i in tqdm(range(0, len(vecs), chunk_size)):
         codereprs.append(vecs[i:i + chunk_size])
     h5f.close()

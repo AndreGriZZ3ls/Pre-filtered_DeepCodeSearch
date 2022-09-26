@@ -106,7 +106,6 @@ if __name__ == '__main__':
             number_of_code_fragments = len(io.open(data_path + config['data_params']['use_codebase'], encoding='utf8', errors='replace').readlines())
         else:
             full_code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1)
-            print(f"Type of full_code_reprs: {type(full_code_reprs)}")
             #full_code_reprs = np.array(data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1))
             #full_codebase   = np.array(data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1))
             full_codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1)
