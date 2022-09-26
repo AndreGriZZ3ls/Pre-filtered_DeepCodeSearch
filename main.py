@@ -82,7 +82,7 @@ if __name__ == '__main__':
     stopwords   = set("a,about,after,also,an,and,another,are,around,as,at,be,because,been,before,being,between,both,but,by,came,can,create,come,could,did,do,does,each,every,from,get,got,had,has,have,he,her,here,him,himself,his,how,in,into,it,its,just,like,make,many,me,might,more,most,much,must,my,never,no,now,of,on,only,other,our,out,over,re,said,same,see,should,since,so,some,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,to,too,under,unk,UNK,up,use,very,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
     n_threads   = 8 # number of threads for parallelization of less performance intensive program parts
     _codebase_chunksize = 2000000
-    #tf_idf_threshold    = 2.89 
+    tf_idf_threshold    = 2.89 
 
     if args.mode == 'create_index':
         indexer.create_index(stopwords)
@@ -130,7 +130,7 @@ if __name__ == '__main__':
                 break
             start        = time.time()
             max_filtered = max(1000, 50 * n_results)
-            min_filtered = max(200, 20 * n_results)
+            min_filtered = max(500, 25 * n_results)
             #start_proc = time.process_time()
             ##### Process user query ######
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
@@ -191,13 +191,16 @@ if __name__ == '__main__':
                 #result_line_numbers, values = zip(*cnt.most_common(10000 + 100 * n_results))
                 #result_line_numbers, values = zip(*cnt.most_common(100 * n_results))
                 result_line_numbers, values = zip(*cnt.most_common(max_filtered))
-                threshold = values[0]
-                last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val == threshold)
+                #threshold = values[0]
+                #last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val == threshold)
+                last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val >= tf_idf_threshold)
                 #for i in range(0, 1000):
                 #    print(values[i])
                 result_line_numbers = list(result_line_numbers)
                 if last_threshold_index >= min_filtered:
                     result_line_numbers = result_line_numbers[:last_threshold_index]
+                else:
+                    result_line_numbers = result_line_numbers[:min_filtered]
             print('Time to calculate most relevant lines:  {:5.3f}s'.format(time.time()-start))
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             
