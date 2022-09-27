@@ -332,7 +332,13 @@ if __name__ == '__main__':
                 start      = time.time()
                 start_proc = time.process_time()
                 query   = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
-            search_and_print_results(engine, model, vocab, query, n_results)
+            codes, sims = engine.search(model, vocab, query, n_results)
+            zipped  = zip(codes, sims)
+            zipped  = sorted(zipped, reverse = True, key = lambda x:x[1])
+            zipped  = engine.postproc(zipped)
+            zipped  = list(zipped)[:n_results]
+            results = '\n\n'.join(map(str, zipped)) # combine the result into a returning string
+            print(results)
             print('Total time:  {:5.3f}s'.format(time.time()-start))
             print('System time: {:5.3f}s'.format(time.process_time()-start_proc))
             if args.no_manual_input:  # added:

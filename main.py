@@ -101,14 +101,11 @@ if __name__ == '__main__':
         porter = PorterStemmer()
         vocab  = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
         
-        if less_memory:
-            number_of_code_fragments = len(io.open(data_path + config['data_params']['use_codebase'], encoding='utf8', errors='replace').readlines())
-        else:
+        if not less_memory:
             full_code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1)
             #full_code_reprs = np.array(data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1))
             #full_codebase   = np.array(data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1))
             full_codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1)
-            number_of_code_fragments = len(full_codebase)
         
         if index_type == "word_indices":
             methname_vocab  = data_loader.load_pickle(data_path + config['data_params']['vocab_methname'])
@@ -129,9 +126,9 @@ if __name__ == '__main__':
                 traceback.print_exc()
                 break
             start        = time.time()
+            start_proc   = time.process_time()
             max_filtered = max(1000, 50 * n_results)
-            min_filtered = max(500, 25 * n_results)
-            #start_proc = time.process_time()
+            min_filtered = max(500,  25 * n_results)
             ##### Process user query ######
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
@@ -170,7 +167,7 @@ if __name__ == '__main__':
                         #result_line_lists.append(index[word]) # ... add the list of code fragments containing that word.
                         """result_line_counters.append(index[word]) # ... add the list of code fragments containing that word."""
                         cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general
-                print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
+                '''print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))'''
                 """#for line_list in tqdm(result_line_lists): # iterate the code fragment list of each found query word:
                 for line_counter in tqdm(result_line_counters): # iterate the code fragment counters of each found query word:
                     if similarity_mode == 'tf_idf':
@@ -201,7 +198,7 @@ if __name__ == '__main__':
                     result_line_numbers = result_line_numbers[:last_threshold_index]
                 else:
                     result_line_numbers = result_line_numbers[:min_filtered]
-            print('Time to calculate most relevant lines:  {:5.3f}s'.format(time.time()-start))
+            '''print('Time to calculate most relevant lines:  {:5.3f}s'.format(time.time()-start))'''
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             
             chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results))
@@ -229,5 +226,5 @@ if __name__ == '__main__':
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, )
-            print('>>>>>>>>>>>>> Total time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
-            #print('System time: {:5.3f}s'.format(time.process_time()-start_proc))
+            print('Total time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
+            print('System time: {:5.3f}s'.format(time.process_time()-start_proc))
