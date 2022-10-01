@@ -22,6 +22,7 @@ import io
 import sys
 import math
 import time
+import glob
 import codecs
 import argparse
 import operator
@@ -114,18 +115,26 @@ if __name__ == '__main__':
             index = indexer.load_index()
         
         while True:
-            try:
-                os.remove('__pycache__/*.pyc')
-                print('Info: index_creator cache cleared.')
-            except:
-                print('Info: index_creator cache is not present --> nothing to be cleared.')
-                pass
-            try:
-                os.remove('DeepCSKeras/__pycache__/*.pyc')
-                print('Info: DeepCSKeras cache cleared.')
-            except:
-                print('Info: DeepCSKeras cache is not present --> nothing to be cleared.')
-                pass
+            fileList = glob.glob('__pycache__/*.pyc')
+            if not fileList: print('Info: index_creator cache is not present --> nothing to be cleared.')
+            for filePath in fileList:
+                try:
+                    os.remove(filePath)
+                    print('Info: index_creator cache cleared.')
+                except:
+                    print(f"Exception while trying to clear cache file '{filePath}'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
+                    traceback.print_exc()
+                    pass
+            fileList = glob.glob('DeepCSKeras/__pycache__/*.pyc')
+            if not fileList: print('Info: DeepCSKeras cache is not present --> nothing to be cleared.')
+            for filePath in fileList:
+                try:
+                    os.remove(filePath)
+                    print('Info: DeepCSKeras cache cleared.')
+                except:
+                    print(f"Exception while trying to clear cache file '{filePath}'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
+                    traceback.print_exc()
+                    pass
             
             codebase, codereprs, tmp = [], [], []
             result_line_numbers = set()
