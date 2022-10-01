@@ -22,7 +22,8 @@ import io
 import sys
 import math
 import time
-import glob
+#import glob
+import shutil
 import codecs
 import argparse
 import operator
@@ -115,26 +116,40 @@ if __name__ == '__main__':
             index = indexer.load_index()
         
         while True:
-            fileList = glob.glob('__pycache__/*.pyc')
-            if not fileList: print('Info: index_creator cache is not present --> nothing to be cleared.')
-            for filePath in fileList:
+            """file_list = glob.glob('__pycache__/*.pyc')
+            if not file_list: print('Info: index_creator cache is not present --> nothing to be cleared.')
+            for file in file_list:
                 try:
-                    os.remove(filePath)
-                    print('Info: index_creator cache cleared.')
+                    os.remove(file)
+                    print('Info: Cleared index_creator cache.')
                 except:
-                    print(f"Exception while trying to clear cache file '{filePath}'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
+                    print(f"Exception while trying to clear cache file '{file}'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
                     traceback.print_exc()
                     pass
-            fileList = glob.glob('DeepCSKeras/__pycache__/*.pyc')
-            if not fileList: print('Info: DeepCSKeras cache is not present --> nothing to be cleared.')
-            for filePath in fileList:
+            file_list = glob.glob('DeepCSKeras/__pycache__/*.pyc')
+            if not file_list: print('Info: DeepCSKeras cache is not present --> nothing to be cleared.')
+            for file in file_list:
                 try:
-                    os.remove(filePath)
-                    print('Info: DeepCSKeras cache cleared.')
+                    os.remove(file)
+                    print('Info: Cleared a DeepCSKeras cache file.')
                 except:
-                    print(f"Exception while trying to clear cache file '{filePath}'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
+                    print(f"Exception while trying to clear cache file '{file}'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
                     traceback.print_exc()
-                    pass
+                    pass"""
+            try:
+                shutil.rmtree('__pycache__')
+                print('Info: Cleared index_creator cache.')
+            except:
+                print("Exception while trying to clear cache directory '__pycache__'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
+                traceback.print_exc()
+                pass
+            try:
+                shutil.rmtree('DeepCSKeras/__pycache__')
+                print('Info: Cleared DeepCSKeras cache.')
+            except:
+                print("Exception while trying to clear cache directory 'DeepCSKeras/__pycache__'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
+                traceback.print_exc()
+                pass
             
             codebase, codereprs, tmp = [], [], []
             result_line_numbers = set()

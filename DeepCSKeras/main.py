@@ -9,7 +9,8 @@ from tensorflow.keras.optimizers import RMSprop, Adam
 from scipy.stats import rankdata
 import math
 import time
-import glob
+#import glob
+import shutil
 import numpy as np
 from tqdm import tqdm
 import argparse
@@ -315,16 +316,23 @@ if __name__ == '__main__':
         engine._codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], engine._codebase_chunksize)
         vocab = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
         while True:
-            fileList = glob.glob('__pycache__/*.pyc')
-            if not fileList: print('Info: DeepCSKeras cache is not present --> nothing to be cleared.')
-            for filePath in fileList:
+            """file_list = glob.glob('__pycache__/*.pyc')
+            if not file_list: print('Info: DeepCSKeras cache is not present --> nothing to be cleared.')
+            for file in file_list:
                 try:
-                    os.remove(filePath)
+                    os.remove(file)
                     print('Info: DeepCSKeras cache cleared.')
                 except:
-                    print(f"Exception while trying to clear cache file '{filePath}'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
+                    print(f"Exception while trying to clear cache file '{file}'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
                     traceback.print_exc()
-                    pass
+                    pass"""
+            try:
+                shutil.rmtree('__pycache__')
+                print('Info: Cleared DeepCSKeras cache.')
+            except:
+                print("Exception while trying to clear cache directory '__pycache__'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
+                traceback.print_exc()
+                pass
                     
             if args.no_manual_input: # added:
                 query     = args.query
