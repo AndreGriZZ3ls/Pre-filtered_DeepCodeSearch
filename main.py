@@ -63,14 +63,13 @@ def parse_args():
                         "just (partial) pre-filtered after each query input instead of complete in the beginning (slower).")
     return parser.parse_args()
    
-def generate_sublist(list, indices):
+'''def generate_sublist(list, indices):
     g = lambda lst: (lst[i] for i in indices)
     yield g(list)
     
-   
 def chunk_of_iter(iterable, chunk_size):
     chunks = [iter(iterable)] * chunk_size
-    return zip(*chunks)
+    return zip(*chunks)'''
 
 if __name__ == '__main__':
     args        = parse_args()
@@ -115,6 +114,19 @@ if __name__ == '__main__':
             index = indexer.load_index()
         
         while True:
+            try:
+                os.remove('__pycache__/*.pyc')
+                print('Info: index_creator cache cleared.')
+            except:
+                print('Info: index_creator cache is not present --> nothing to be cleared.')
+                pass
+            try:
+                os.remove('DeepCSKeras/__pycache__/*.pyc')
+                print('Info: DeepCSKeras cache cleared.')
+            except:
+                print('Info: DeepCSKeras cache is not present --> nothing to be cleared.')
+                pass
+            
             codebase, codereprs, tmp = [], [], []
             result_line_numbers = set()
             ##### Get user input ######
@@ -132,14 +144,13 @@ if __name__ == '__main__':
             ##### Process user query ######
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
-            len_query_without_stems = len(query_list)
+            #len_query_without_stems = len(query_list)
             for word in query_list:
                 word_stem = porter.stem(word)
-                if word != word_stem:
+                if word != word_stem and word_stem not in stopwords:
                     tmp.append(porter.stem(word)) # include stems of query words
             query_list.extend(tmp)
             query_list = [indexer.replace_synonyms(w) for w in query_list]
-            query_list = list(set(query_list) - stopwords)
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
             #####
             print("Processing...  Please wait.")

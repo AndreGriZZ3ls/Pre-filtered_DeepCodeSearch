@@ -314,6 +314,12 @@ if __name__ == '__main__':
         engine._codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], engine._codebase_chunksize)
         vocab = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
         while True:
+            try:
+                os.remove('__pycache__/*.pyc')
+                print('Info: DeepCSKeras cache cleared.')
+            except:
+                print('Info: DeepCSKeras cache is not present --> nothing to be cleared.')
+                pass
             if args.no_manual_input: # added:
                 query     = args.query
                 n_results = args.n_results
