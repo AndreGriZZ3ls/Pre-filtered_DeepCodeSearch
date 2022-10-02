@@ -1,5 +1,6 @@
 import io
 import math
+import time
 import pickle
 #import io
 import tables
@@ -19,12 +20,16 @@ def save_pickle(filename, index):
     pickle.dump(index, open(filename, 'wb'), pickle.HIGHEST_PROTOCOL) #
 
 ##### Data Set #####
+#def load_codebase(path, chunk_size, chunk_number = -1):
 def load_codebase(path, chunk_size):
     """load codebase
     codefile: h5 file that stores raw code
     """
     logger.info('Loading codebase (chunk size = {}) ...'.format(chunk_size))
     codebase = []
+    #if chunk_number > -1:
+    #    offset = chunk_size * chunk_number
+    #    return io.open(path, encoding='utf8', errors='replace').readlines()[offset:offset + chunk_size]
     codes = io.open(path, encoding='utf8', errors='replace').readlines()
     if chunk_size < 0: return codes
     else:
@@ -33,18 +38,24 @@ def load_codebase(path, chunk_size):
     return codebase
 
 # added:
+def get_lines_generator(iterable, lines):
+    return (line for i, line in enumerate(iterable) if i in lines) #
+
+# added:
 def load_codebase_lines(path, lines, chunk_size): 
     """load some codebase lines
     codefile: h5 file that stores raw code
     """
     logger.info(f'Loading {len(lines)} pre-filtered codebase lines ...')
-    codebase = []
-    codes = io.open(path, encoding='utf8',errors='replace').readlines()
-    f = operator.itemgetter(*lines)
-    codebase_lines = list(f(codes))
-    for i in range(0, len(codebase_lines), chunk_size):
-        codebase.append(codebase_lines[i:i + chunk_size])
-    return codebase #
+    codes = io.open(path, encoding='utf8',errors='replace')
+    #codes = io.open(path, encoding='utf8',errors='replace').readlines()
+    #f = operator.itemgetter(*lines)
+    #codebase_lines = list(f(codes))
+        codebase       = []
+        codebase_lines = get_lines_generator(codes, lines)
+        for i in range(0, len(lines), chunk_size):
+            codebase.append(codebase_lines[i:i + chunk_size])
+        return codebase #
 
 ### Results Data ###
 def load_code_reprs(path, chunk_size):
@@ -64,14 +75,19 @@ def load_code_reprs(path, chunk_size):
 def load_code_reprs_lines(path, lines, chunk_size): 
     logger.info(f'Loading {len(lines)} pre-filtered code vectors ...')          
     """reads some of the vectors (2D numpy array) from a hdf5 file"""
-    codereprs = []
+    start = time.time()
     h5f  = tables.open_file(path)
     vecs = h5f.root.vecs
-    f = operator.itemgetter(*lines)
-    vector_lines = list(f(vecs))
-    for i in range(0, len(vector_lines), chunk_size):
+    print('Should not take any time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
+    #f    = operator.itemgetter(*lines)
+    codereprs    = []
+    vector_lines = get_lines_generator(vecs, lines)
+    print('get_lines_generator time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
+    #vector_lines = list(f(vecs))
+    for i in range(0, len(lines), chunk_size):
         codereprs.append(vector_lines[i:i + chunk_size])
     h5f.close()
+    print('Total load_code_reprs_lines time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
     return codereprs #
 
 def save_code_reprs(vecs, path):

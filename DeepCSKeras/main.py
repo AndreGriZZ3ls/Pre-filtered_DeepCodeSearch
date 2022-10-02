@@ -2,6 +2,7 @@ import os
 os.environ['NUMEXPR_MAX_THREADS'] = '128'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
+import gc
 import sys
 import random
 import traceback
@@ -147,10 +148,10 @@ class SearchEngine:
 
         # load valid dataset:
         if self._eval_sets is None:
-            methnames = data_loader.load_hdf5(self.data_path+self.data_params['valid_methname'], 0, poolsize)
-            apiseqs   = data_loader.load_hdf5(self.data_path+self.data_params['valid_apiseq'],   0, poolsize)
-            tokens    = data_loader.load_hdf5(self.data_path+self.data_params['valid_tokens'],   0, poolsize)
-            descs     = data_loader.load_hdf5(self.data_path+self.data_params['valid_desc'],     0, poolsize) 
+            methnames = data_loader.load_hdf5(self.data_path + self.data_params['valid_methname'], 0, poolsize)
+            apiseqs   = data_loader.load_hdf5(self.data_path + self.data_params['valid_apiseq'],   0, poolsize)
+            tokens    = data_loader.load_hdf5(self.data_path + self.data_params['valid_tokens'],   0, poolsize)
+            descs     = data_loader.load_hdf5(self.data_path + self.data_params['valid_desc'],     0, poolsize) 
             self._eval_sets = {'methnames':methnames, 'apiseqs':apiseqs, 'tokens':tokens, 'descs':descs}
             
         accs, mrrs, maps, ndcgs = [], [], [], []
@@ -207,32 +208,47 @@ class SearchEngine:
         desc_repr   = normalize(desc_repr).T # [dim x 1]
         codes, sims = [], []
         threads     = []
-        for i, code_reprs_chunk in enumerate(self._code_reprs):
+        ################ Reload code each time (to simulate usage of database):
+        _code_reprs = data_loader.load_code_reprs(self.data_path + self.data_params['use_codevecs'], self._codebase_chunksize)
+        ################
+        #for i, code_reprs_chunk in enumerate(self._code_reprs):
+        for i, code_reprs_chunk in enumerate(_code_reprs): 
             t = threading.Thread(target=self.search_thread, args = (codes, sims, desc_repr, code_reprs_chunk, i, n_results))
             threads.append(t)
         for t in threads:
             t.start()
         for t in threads:# wait until all sub-threads finish
             t.join()
+        ################
+        del _code_reprs
+        gc.collect()
+        ################
         return codes, sims
                 
     def search_thread(self, codes, sims, desc_repr, code_reprs, i, n_results):        
     #1. compute similarity
         chunk_sims = np.dot(code_reprs, desc_repr) # [pool_size x 1] 
+        ################
+        del code_reprs
+        gc.collect()
+        ################
         chunk_sims = np.squeeze(chunk_sims, axis = 1)
     #2. choose top results
         negsims = np.negative(chunk_sims)
         maxinds = np.argpartition(negsims, kth = n_results - 1)
         maxinds = maxinds[:n_results]        
-        chunk_codes = [self._codebase[i][k] for k in maxinds]
+        #chunk_codes = [self._codebase[i][k] for k in maxinds] # TODO: Just load data specified by maxinds --> see: Reading (and selecting) data in a table -> Table.where()
+        chunk_codes = load_codebase_lines(self.data_path + self.data_params['use_codebase'], maxinds, self._codebase_chunksize)
         chunk_sims  = chunk_sims[maxinds]
         codes.extend(chunk_codes)
         sims.extend( chunk_sims)
         
     def postproc(self,codes_sims):
         codes_, sims_ = zip(*codes_sims)
-        codes = [code for code in codes_]
-        sims  = [sim  for sim  in sims_ ]
+        #codes = [code for code in codes_]
+        #sims  = [sim  for sim  in sims_ ]
+        codes = list(codes_)
+        sims  = list(sims_ )
         final_codes = []
         final_sims  = []
         n = len(codes_sims)        
@@ -309,11 +325,22 @@ if __name__ == '__main__':
         data_loader.save_code_reprs(vecs, data_path + config['data_params']['use_codevecs'])
         
     elif args.mode == 'search':
+        try:
+            shutil.rmtree('__pycache__')
+            print('Info: Cleared DeepCSKeras cache.')
+        except FileNotFoundError:
+            print('Info: DeepCSKeras cache is not present --> nothing to be cleared.')
+            pass
+        except:
+            print("Exception while trying to clear cache directory '__pycache__'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
+            traceback.print_exc()
+            pass
+            
         # search code based on a desc:
         assert config['training_params']['reload'] > 0, "Please specify the number of epoch of the optimal checkpoint in config.py"
         engine.load_model(model, config['training_params']['reload'])
-        engine._code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], engine._codebase_chunksize)
-        engine._codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], engine._codebase_chunksize)
+        #engine._code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], engine._codebase_chunksize)
+        #engine._codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], engine._codebase_chunksize)
         vocab = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
         while True:
             """file_list = glob.glob('__pycache__/*.pyc')
@@ -326,13 +353,6 @@ if __name__ == '__main__':
                     print(f"Exception while trying to clear cache file '{file}'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
                     traceback.print_exc()
                     pass"""
-            try:
-                shutil.rmtree('__pycache__')
-                print('Info: Cleared DeepCSKeras cache.')
-            except:
-                print("Exception while trying to clear cache directory '__pycache__'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
-                traceback.print_exc()
-                pass
                     
             if args.no_manual_input: # added:
                 query     = args.query
@@ -359,6 +379,10 @@ if __name__ == '__main__':
             zipped  = list(zipped)[:n_results]
             results = '\n\n'.join(map(str, zipped)) # combine the result into a returning string
             print(results)
+            ################
+            del codes, sims, zipped, results
+            gc.collect()
+            ################
             print('Total time:  {:5.3f}s'.format(time.time()-start))
             print('System time: {:5.3f}s'.format(time.process_time()-start_proc))
             if args.no_manual_input:  # added:

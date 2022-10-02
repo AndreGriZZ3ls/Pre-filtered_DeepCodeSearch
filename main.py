@@ -61,8 +61,11 @@ def parse_args():
                         " 'tf_idf' combines term frequency and inverted document frequency (both logarithmically damped) "
                         " to weighten the informativeness of each word and measure the overall quality of match (best known "
                         " metric but more time consuming; incompatible with word_indices as index type).")"""
-    parser.add_argument("--less_memory_mode", action="store_true", default=False, help="If active the program will load some files "
-                        "just (partial) pre-filtered after each query input instead of complete in the beginning (slower).")
+    parser.add_argument("--memory_mode", choices=["performance","less_memory","database"], default="database", help="'performance': "
+                        " [fastest, very memory intensive] All data are loaded just one time at program start and kept in memory  "
+                        " for fast access. 'less_memory': [slower] The program will just load pre-filtered elements of some files "
+                        " after each query input instead of loading them completely in the beginning. The entire index including "
+                        " tf-idf weight counter objects is cept in memory. 'database': [slowest, least memory usage]  ") # TODO: complete
     return parser.parse_args()
    
 '''def generate_sublist(list, indices):
@@ -78,7 +81,7 @@ if __name__ == '__main__':
     config      = getattr(configs, 'config_' + args.model)()
     data_path   = args.data_path + args.dataset + '/'
     index_type  = args.index_type
-    less_memory = args.less_memory_mode
+    memory_mode = args.memory_mode
     indexer     = IndexCreator(args, config)
     stopwords   = set("a,about,after,also,an,and,another,are,around,as,at,be,because,been,before,being,between,both,but,by,came,can,create,come,could,did,do,does,each,every,from,get,got,had,has,have,he,her,here,him,himself,his,how,in,into,it,its,just,like,make,many,me,might,more,most,much,must,my,never,no,now,of,on,only,other,our,out,over,re,said,same,see,should,since,so,some,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,to,too,under,unk,UNK,up,use,very,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
     n_threads   = 8 # number of threads for parallelization of less performance intensive program parts
@@ -89,6 +92,28 @@ if __name__ == '__main__':
         indexer.create_index(stopwords)
 
     elif args.mode == 'search':
+        try:
+            shutil.rmtree('__pycache__')
+            print('Info: Cleared index_creator cache.')
+        except FileNotFoundError:
+            print('Info: index_creator cache is not present --> nothing to be cleared.')
+            pass
+        except:
+            print("Exception while trying to clear cache directory '__pycache__'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
+            traceback.print_exc()
+            pass
+            
+        try:
+            shutil.rmtree('DeepCSKeras/__pycache__')
+            print('Info: Cleared DeepCSKeras cache.')
+        except FileNotFoundError:
+            print('Info: DeepCSKeras cache is not present --> nothing to be cleared.')
+            pass
+        except:
+            print("Exception while trying to clear cache directory 'DeepCSKeras/__pycache__'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
+            traceback.print_exc()
+            pass
+            
         ##### Initialize DeepCS search engine and model ######
         engine = deepCS_main.SearchEngine(args, config)
         model  = getattr(models, args.model)(config) # initialize the model
@@ -102,18 +127,18 @@ if __name__ == '__main__':
         porter = PorterStemmer()
         vocab  = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
         
-        if not less_memory:
-            full_code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1)
+        if memory_mode == "performance":
+            full_code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1) # TODO: Just load data specified by result_line_numbers --> see: Reading (and selecting) data in a table -> Table.where()
             #full_code_reprs = np.array(data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1))
             #full_codebase   = np.array(data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1))
-            full_codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1)
+            full_codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1) # TODO: Just load data specified by result_line_numbers --> see: Reading (and selecting) data in a table -> Table.where()
         
         if index_type == "word_indices":
             methname_vocab  = data_loader.load_pickle(data_path + config['data_params']['vocab_methname'])
             token_vocab     = data_loader.load_pickle(data_path + config['data_params']['vocab_tokens'])
             methnames, tokens = indexer.load_index()
         else:
-            index = indexer.load_index()
+            index = indexer.load_index()  # TODO: Just load data specified by querywords --> see: Reading (and selecting) data in a table -> Table.where()
         
         while True:
             """file_list = glob.glob('__pycache__/*.pyc')
@@ -136,20 +161,6 @@ if __name__ == '__main__':
                     print(f"Exception while trying to clear cache file '{file}'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
                     traceback.print_exc()
                     pass"""
-            try:
-                shutil.rmtree('__pycache__')
-                print('Info: Cleared index_creator cache.')
-            except:
-                print("Exception while trying to clear cache directory '__pycache__'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
-                traceback.print_exc()
-                pass
-            try:
-                shutil.rmtree('DeepCSKeras/__pycache__')
-                print('Info: Cleared DeepCSKeras cache.')
-            except:
-                print("Exception while trying to clear cache directory 'DeepCSKeras/__pycache__'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
-                traceback.print_exc()
-                pass
             
             codebase, codereprs, tmp = [], [], []
             result_line_numbers = set()
@@ -238,7 +249,7 @@ if __name__ == '__main__':
             
             chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results))
             #chunk_size = n_results
-            if less_memory:
+            if memory_mode != "performance":
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, chunk_size)
                 engine._codebase   = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, chunk_size)
             else:
