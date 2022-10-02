@@ -128,10 +128,10 @@ if __name__ == '__main__':
         vocab  = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
         
         if memory_mode == "performance":
-            full_code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1) # TODO: Just load data specified by result_line_numbers --> see: Reading (and selecting) data in a table -> Table.where()
+            full_code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1)
             #full_code_reprs = np.array(data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1))
             #full_codebase   = np.array(data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1))
-            full_codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1) # TODO: Just load data specified by result_line_numbers --> see: Reading (and selecting) data in a table -> Table.where()
+            full_codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1)
         
         if index_type == "word_indices":
             methname_vocab  = data_loader.load_pickle(data_path + config['data_params']['vocab_methname'])

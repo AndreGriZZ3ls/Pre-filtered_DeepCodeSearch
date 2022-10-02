@@ -212,8 +212,7 @@ class SearchEngine:
         if not self._code_reprs:
             self._code_reprs = data_loader.load_code_reprs(self.data_path + self.data_params['use_codevecs'], self._codebase_chunksize)
         ################
-        #for i, code_reprs_chunk in enumerate(self._code_reprs):
-        for i, code_reprs_chunk in enumerate(_code_reprs): 
+        for i, code_reprs_chunk in enumerate(self._code_reprs):
             t = threading.Thread(target=self.search_thread, args = (codes, sims, desc_repr, code_reprs_chunk, i, n_results))
             threads.append(t)
         for t in threads:
@@ -221,8 +220,9 @@ class SearchEngine:
         for t in threads:# wait until all sub-threads finish
             t.join()
         ################
-        del _code_reprs
+        del self._code_reprs
         gc.collect()
+        self._code_reprs = None
         ################
         return codes, sims
                 
@@ -385,6 +385,7 @@ if __name__ == '__main__':
             ################
             del codes, sims, zipped, results
             gc.collect()
+            engine._codebase = None
             ################
             print('Total time:  {:5.3f}s'.format(time.time()-start))
             print('System time: {:5.3f}s'.format(time.process_time()-start_proc))
