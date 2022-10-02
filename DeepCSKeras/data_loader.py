@@ -78,7 +78,6 @@ def load_code_reprs_lines(path, lines, chunk_size):
     start = time.time()
     h5f  = tables.open_file(path)
     vecs = h5f.root.vecs
-    print('Should not take any time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
     #f    = operator.itemgetter(*lines)
     codereprs    = []
     vector_lines = list(get_lines_generator(vecs, lines))

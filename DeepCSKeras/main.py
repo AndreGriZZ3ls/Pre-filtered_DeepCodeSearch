@@ -209,7 +209,8 @@ class SearchEngine:
         codes, sims = [], []
         threads     = []
         ################ Reload code each time (to simulate usage of database):
-        _code_reprs = data_loader.load_code_reprs(self.data_path + self.data_params['use_codevecs'], self._codebase_chunksize)
+        if not self._code_reprs:
+            self._code_reprs = data_loader.load_code_reprs(self.data_path + self.data_params['use_codevecs'], self._codebase_chunksize)
         ################
         #for i, code_reprs_chunk in enumerate(self._code_reprs):
         for i, code_reprs_chunk in enumerate(_code_reprs): 
@@ -236,9 +237,11 @@ class SearchEngine:
     #2. choose top results
         negsims = np.negative(chunk_sims)
         maxinds = np.argpartition(negsims, kth = n_results - 1)
-        maxinds = maxinds[:n_results]        
-        #chunk_codes = [self._codebase[i][k] for k in maxinds] # TODO: Just load data specified by maxinds --> see: Reading (and selecting) data in a table -> Table.where()
-        chunk_codes = load_codebase_lines(self.data_path + self.data_params['use_codebase'], maxinds, self._codebase_chunksize)
+        maxinds = maxinds[:n_results]  
+        if self._codebase:
+            chunk_codes = [self._codebase[i][k] for k in maxinds]
+        else:
+            chunk_codes = load_codebase_lines(self.data_path + self.data_params['use_codebase'], maxinds, self._codebase_chunksize)
         chunk_sims  = chunk_sims[maxinds]
         codes.extend(chunk_codes)
         sims.extend( chunk_sims)
