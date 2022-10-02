@@ -52,7 +52,7 @@ def load_codebase_lines(path, lines, chunk_size):
     #f = operator.itemgetter(*lines)
     #codebase_lines = list(f(codes))
     codebase       = []
-    codebase_lines = get_lines_generator(codes, lines)
+    codebase_lines = list(get_lines_generator(codes, lines))
     for i in range(0, len(lines), chunk_size):
         codebase.append(codebase_lines[i:i + chunk_size])
     return codebase #
@@ -81,7 +81,7 @@ def load_code_reprs_lines(path, lines, chunk_size):
     print('Should not take any time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
     #f    = operator.itemgetter(*lines)
     codereprs    = []
-    vector_lines = get_lines_generator(vecs, lines)
+    vector_lines = list(get_lines_generator(vecs, lines))
     print('get_lines_generator time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
     #vector_lines = list(f(vecs))
     for i in range(0, len(lines), chunk_size):
