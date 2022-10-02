@@ -51,11 +51,11 @@ def load_codebase_lines(path, lines, chunk_size):
     #codes = io.open(path, encoding='utf8',errors='replace').readlines()
     #f = operator.itemgetter(*lines)
     #codebase_lines = list(f(codes))
-        codebase       = []
-        codebase_lines = get_lines_generator(codes, lines)
-        for i in range(0, len(lines), chunk_size):
-            codebase.append(codebase_lines[i:i + chunk_size])
-        return codebase #
+    codebase       = []
+    codebase_lines = get_lines_generator(codes, lines)
+    for i in range(0, len(lines), chunk_size):
+        codebase.append(codebase_lines[i:i + chunk_size])
+    return codebase #
 
 ### Results Data ###
 def load_code_reprs(path, chunk_size):
