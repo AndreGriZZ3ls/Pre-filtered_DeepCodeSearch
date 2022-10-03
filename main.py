@@ -188,7 +188,7 @@ if __name__ == '__main__':
             query_list = [indexer.replace_synonyms(w) for w in query_list]
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
             #####
-            print("Processing...  Please wait.")
+            #print("Processing...  Please wait.")
             if index_type == "word_indices":
                 query_index_for_methnames = set([methname_vocab.get(w, 0) for w in query_list]) # convert user input to word indices
                 query_index_for_tokens    = set([token_vocab.get(   w, 0) for w in query_list])
