@@ -53,6 +53,7 @@ def load_codebase_lines(path, lines, chunk_size):
     #codebase_lines = list(f(codes))
     codebase       = []
     codebase_lines = list(get_lines_generator(codes, lines))
+    if chunk_size < 0: return codebase_lines
     for i in range(0, len(lines), chunk_size):
         codebase.append(codebase_lines[i:i + chunk_size])
     return codebase #
