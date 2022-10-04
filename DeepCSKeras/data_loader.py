@@ -69,7 +69,7 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
         for line in lines:
             line += offset
     #codebase_lines = list(get_lines_generator(codes, lines))
-    codebase_lines = codes.read_coordinates(lines)
+    codebase_lines = codes[lines]
     if chunk_number > -1: return codebase_lines # TODO: fix (under this condition include chunk_number to correct lines)
     for i in range(0, len(lines), chunk_size):
         codebase.append(codebase_lines[i:i + chunk_size])
@@ -99,7 +99,7 @@ def load_code_reprs_lines(path, lines, chunk_size):
     #f    = operator.itemgetter(*lines)
     codereprs    = []
     #vector_lines = list(get_lines_generator(vecs, lines))
-    vector_lines = vecs.read_coordinates(lines)
+    vector_lines = vecs[lines]
     print('get_lines_generator time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
     #vector_lines = list(f(vecs))
     for i in range(0, len(lines), chunk_size):
@@ -113,7 +113,7 @@ def save_code_reprs(vecs, path):
     fvec    = tables.open_file(path, 'w')
     atom    = tables.Atom.from_dtype(npvecs.dtype)
     filters = tables.Filters(complib = 'blosc', complevel = 5)
-    ds      = fvec.create_carray(fvec.root, 'vecs', atom, npvecs.shape,filters=filters)
+    ds      = fvec.create_carray(fvec.root, 'vecs', atom, npvecs.shape, filters=filters)
     ds[:]   = npvecs
     fvec.close()
 
