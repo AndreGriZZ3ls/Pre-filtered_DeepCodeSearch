@@ -20,10 +20,16 @@ def save_pickle(path, index):
     pickle.dump(index, open(path, 'wb'), pickle.HIGHEST_PROTOCOL) #
     
 def load_index_counters(path, word_list):
-    
+    h5f   = tables.open_file(path)
+    index = h5f.root.index
     
 def save_index(path, index):
-    
+    h5f     = tables.open_file(path)
+    atom    = tables.Atom.from_dtype(npvecs.dtype) # TODO
+    filters = tables.Filters(complib = 'blosc', complevel = 5)
+    ds      = h5f.create_carray(h5f.root, 'index', atom, npvecs.shape, filters=filters) # TODO
+    ds[:]   = npvecs  # TODO
+    h5f.close()
 
 ##### Data Set #####
 #def load_codebase(path, chunk_size, chunk_number = -1):
