@@ -12,12 +12,18 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s: %(name)s: %(levelname)s: %(message)s")
 
 
-def load_pickle(filename):
-    return pickle.load(open(filename, 'rb')) 
+def load_pickle(path):
+    return pickle.load(open(path, 'rb')) 
 
 # added:
-def save_pickle(filename, index):
-    pickle.dump(index, open(filename, 'wb'), pickle.HIGHEST_PROTOCOL) #
+def save_pickle(path, index):
+    pickle.dump(index, open(path, 'wb'), pickle.HIGHEST_PROTOCOL) #
+    
+def load_index_counters(path, word_list):
+    
+    
+def save_index(path, index):
+    
 
 ##### Data Set #####
 #def load_codebase(path, chunk_size, chunk_number = -1):
@@ -42,7 +48,7 @@ def get_lines_generator(iterable, lines):
     return (line for i, line in enumerate(iterable) if i in lines) #
 
 # added:
-def load_codebase_lines(path, lines, chunk_size): 
+def load_codebase_lines(path, lines, chunk_size, chunk_number = -1): 
     """load some codebase lines
     codefile: h5 file that stores raw code
     """
@@ -52,8 +58,13 @@ def load_codebase_lines(path, lines, chunk_size):
     #f = operator.itemgetter(*lines)
     #codebase_lines = list(f(codes))
     codebase       = []
-    codebase_lines = list(get_lines_generator(codes, lines))
-    if chunk_size < 0: return codebase_lines
+    if chunk_number > 0:
+        offset = chunk_number * chunk_size
+        for line in lines:
+            line += offset
+    #codebase_lines = list(get_lines_generator(codes, lines))
+    codebase_lines = codes.read_coordinates(lines)
+    if chunk_number > -1: return codebase_lines # TODO: fix (under this condition include chunk_number to correct lines)
     for i in range(0, len(lines), chunk_size):
         codebase.append(codebase_lines[i:i + chunk_size])
     return codebase #
@@ -81,7 +92,8 @@ def load_code_reprs_lines(path, lines, chunk_size):
     vecs = h5f.root.vecs
     #f    = operator.itemgetter(*lines)
     codereprs    = []
-    vector_lines = list(get_lines_generator(vecs, lines))
+    #vector_lines = list(get_lines_generator(vecs, lines))
+    vector_lines = vecs.read_coordinates(lines)
     print('get_lines_generator time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
     #vector_lines = list(f(vecs))
     for i in range(0, len(lines), chunk_size):

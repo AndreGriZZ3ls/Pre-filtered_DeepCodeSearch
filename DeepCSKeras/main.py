@@ -241,7 +241,7 @@ class SearchEngine:
         if self._codebase:
             chunk_codes = [self._codebase[i][k] for k in maxinds]
         else:
-            chunk_codes = data_loader.load_codebase_lines(self.data_path + self.data_params['use_codebase'], maxinds, -1)
+            chunk_codes = data_loader.load_codebase_lines(self.data_path + self.data_params['use_codebase'], maxinds, self._codebase_chunksize, i)
         chunk_sims  = chunk_sims[maxinds]
         codes.extend(chunk_codes)
         sims.extend( chunk_sims)
