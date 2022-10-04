@@ -25,6 +25,7 @@ def load_index_counters(path, word_list):
     
 def save_index(path, index):
     h5f     = tables.open_file(path, 'w')
+    table   = h5file.create_table("/", 'readout', Particle, "Readout example")
     atom    = tables.Atom.from_dtype(npvecs.dtype) # TODO
     filters = tables.Filters(complib = 'blosc', complevel = 5)
     ds      = h5f.create_carray(h5f.root, 'index', atom, npvecs.shape, filters=filters) # TODO
@@ -99,7 +100,7 @@ def load_code_reprs_lines(path, lines, chunk_size):
     #f    = operator.itemgetter(*lines)
     codereprs    = []
     #vector_lines = list(get_lines_generator(vecs, lines))
-    print(f'vecs.shape: {vecs.shape()}')
+    print(f'vecs.shape: {vecs.shape}')
     vector_lines = vecs[lines]
     print('get_lines_generator time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
     #vector_lines = list(f(vecs))
