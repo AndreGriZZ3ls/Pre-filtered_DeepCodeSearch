@@ -100,8 +100,8 @@ def load_code_reprs_lines(path, lines, chunk_size):
     #f    = operator.itemgetter(*lines)
     codereprs    = []
     #vector_lines = list(get_lines_generator(vecs, lines))
-    print(f'vecs.shape: {vecs.shape}')
-    vector_lines = vecs[lines]
+    #print(f'vecs.shape: {vecs.shape}')
+    vector_lines = vecs[lines, ...]
     print('get_lines_generator time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
     #vector_lines = list(f(vecs))
     for i in range(0, len(lines), chunk_size):
