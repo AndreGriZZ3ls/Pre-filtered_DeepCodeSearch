@@ -69,8 +69,8 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
         offset = chunk_number * chunk_size
         for line in lines:
             line += offset
-    #codebase_lines = list(get_lines_generator(codes, lines))
-    codebase_lines = codes[lines]
+    codebase_lines = list(get_lines_generator(codes, lines))
+    #codebase_lines = codes[lines]
     if chunk_number > -1: return codebase_lines # TODO: fix (under this condition include chunk_number to correct lines)
     for i in range(0, len(lines), chunk_size):
         codebase.append(codebase_lines[i:i + chunk_size])
