@@ -1,9 +1,9 @@
 *.pyc
 *.jsonl
 epo*
-!epo1000*
 *.all.txt
 *index*.pkl
+allData/
 train.apiseq.h5
 train.desc.h5
 train.methname.h5
