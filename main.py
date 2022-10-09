@@ -215,8 +215,8 @@ if __name__ == '__main__':
                     if word in index: # for each word of the processed query that the index contains: ...
                         #result_line_lists.append(index[word]) # ... add the list of code fragments containing that word.
                         """result_line_counters.append(index[word]) # ... add the list of code fragments containing that word."""
-                        cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general
-                '''#print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))'''
+                        cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general '''
+                '''print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))'''
                 """#for line_list in tqdm(result_line_lists): # iterate the code fragment list of each found query word:
                 for line_counter in tqdm(result_line_counters): # iterate the code fragment counters of each found query word:
                     if similarity_mode == 'tf_idf':
@@ -246,8 +246,8 @@ if __name__ == '__main__':
                 if last_threshold_index >= min_filtered:
                     result_line_numbers = result_line_numbers[:last_threshold_index]
                 else:
-                    result_line_numbers = result_line_numbers[:min_filtered]
-            '''#print('Time to calculate most relevant lines:  {:5.3f}s'.format(time.time()-start))'''
+                    result_line_numbers = result_line_numbers[:min_filtered] '''
+            '''print('Time to calculate most relevant lines:  {:5.3f}s'.format(time.time()-start))'''
             '''print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             
             chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results))
@@ -276,4 +276,4 @@ if __name__ == '__main__':
                 engine._codebase   = codebase
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, )
             print('Total time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
-            print('System time: {:5.3f}s'.format(time.process_time()-start_proc))'''
+            print('System time: {:5.3f}s'.format(time.process_time()-start_proc)) '''
