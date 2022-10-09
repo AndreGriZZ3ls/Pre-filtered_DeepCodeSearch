@@ -58,7 +58,7 @@ class JointEmbeddingModel:
         methname_f_dropout = dropout(methname_f_rnn)
         methname_b_dropout = dropout(methname_b_rnn)
         # 3.maxpooling
-        maxpool       = Lambda(lambda x: K.max(x, axis=1, keepdims=False), output_shape=lambda x: (x[0], x[2]),name='maxpool_methname')
+        maxpool       = Lambda(lambda x: K.max(x, axis=1, keepdims=False), output_shape=lambda x: (x[0], x[2]), name='maxpool_methname')
         methname_pool = Concatenate(name = 'concat_methname_lstms')([maxpool(methname_f_dropout), maxpool(methname_b_dropout)])
         activation    = Activation('tanh',name = 'active_methname')
         methname_repr = activation(methname_pool)
