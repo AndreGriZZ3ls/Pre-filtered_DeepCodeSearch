@@ -215,9 +215,9 @@ if __name__ == '__main__':
                     if word in index: # for each word of the processed query that the index contains: ...
                         #result_line_lists.append(index[word]) # ... add the list of code fragments containing that word.
                         """result_line_counters.append(index[word]) # ... add the list of code fragments containing that word."""
-                        cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general '''
-                '''print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))'''
-                """#for line_list in tqdm(result_line_lists): # iterate the code fragment list of each found query word:
+                        cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general ''' """
+                #print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
+                for line_list in tqdm(result_line_lists): # iterate the code fragment list of each found query word:
                 for line_counter in tqdm(result_line_counters): # iterate the code fragment counters of each found query word:
                     if similarity_mode == 'tf_idf':
                         #for line_nr in line_list:
@@ -232,11 +232,11 @@ if __name__ == '__main__':
                     else: # lexical similarity:
                         #for line_nr in list(set(line_list)): # iterate deduplicated list of code fragments
                         #    cnt[line_nr] += 1
-                        cnt += line_counter"""
+                        cnt += line_counter""" '''
                 ##################################################################################################################
                 #result_line_numbers, values = zip(*cnt.most_common(10000 + 100 * n_results))
                 #result_line_numbers, values = zip(*cnt.most_common(100 * n_results))
-                '''result_line_numbers, values = zip(*cnt.most_common(max_filtered))
+                result_line_numbers, values = zip(*cnt.most_common(max_filtered))
                 #threshold = values[0]
                 #last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val == threshold)
                 last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val >= tf_idf_threshold)
@@ -246,9 +246,9 @@ if __name__ == '__main__':
                 if last_threshold_index >= min_filtered:
                     result_line_numbers = result_line_numbers[:last_threshold_index]
                 else:
-                    result_line_numbers = result_line_numbers[:min_filtered] '''
-            '''print('Time to calculate most relevant lines:  {:5.3f}s'.format(time.time()-start))'''
-            '''print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
+                    result_line_numbers = result_line_numbers[:min_filtered]
+            #print('Time to calculate most relevant lines:  {:5.3f}s'.format(time.time()-start))
+            print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             
             chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results))
             #chunk_size = n_results
