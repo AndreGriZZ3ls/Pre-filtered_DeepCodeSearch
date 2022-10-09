@@ -7,7 +7,7 @@ import logging
 import operator
 import numpy as np
 from tqdm import tqdm
-from unqlite import UnQLite
+from unqlite import UnQLite, UNQLITE_OPEN_CREATE, UNQLITE_OPEN_READONLY
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s: %(name)s: %(levelname)s: %(message)s")
 
