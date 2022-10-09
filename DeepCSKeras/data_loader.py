@@ -2,15 +2,32 @@ import io
 import math
 import time
 import pickle
-#import io
 import tables
+import logging
 import operator
 import numpy as np
 from tqdm import tqdm
-import logging
+from unqlite import UnQLite
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s: %(name)s: %(levelname)s: %(message)s")
 
+######## database #########
+def eval_to_db():
+    dataparts = ["apiseq", "methname", "rawcode", "tokens"]
+    for part in dataparts:
+        source = io.open("./DeepCSKeras/data/codesearchnet/eval.{}.txt".format(part), "r", encoding='utf8', errors='replace')
+        db     = UnQLite(filename = './DeepCSKeras/data/{}.db', flags = UNQLITE_OPEN_CREATE, open_database = True)
+        lines  = source.readlines()
+        for i, line in enumerate(lines):
+            db[str(i)] = line.strip()
+        source.close()
+        db.close()
+        
+    for part in dataparts: # test:
+        db     = UnQLite(filename = './DeepCSKeras/data/{}.db', flags = UNQLITE_OPEN_READONLY, open_database = True)
+        print(db['99'])
+        print('177' in db)
+        db.close()
 
 def load_pickle(path):
     return pickle.load(open(path, 'rb')) 

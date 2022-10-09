@@ -87,6 +87,9 @@ if __name__ == '__main__':
     n_threads   = 8 # number of threads for parallelization of less performance intensive program parts
     _codebase_chunksize = 2000000
     tf_idf_threshold    = 2.79 
+    
+    data_loader.eval_to_db()
+    return
 
     if args.mode == 'create_index':
         indexer.create_index(stopwords)
