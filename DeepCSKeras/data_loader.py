@@ -29,7 +29,7 @@ def eval_to_db(data_path, conf):
         a = [a_vocab.get(w, 0) for w in   apiseq[i].strip().lower().split(' ')]
         m = [m_vocab.get(w, 0) for w in methname[i].strip().lower().split(' ')]
         t = [t_vocab.get(w, 0) for w in   tokens[i].strip().lower().split(' ')]
-        collec.update(i, {'a': a, 'm': m, 't': t})
+        collec.store({'a': a, 'm': m, 't': t})
     apiseq_f.close()
     methname_f.close()
     tokens_f.close()
@@ -41,7 +41,7 @@ def eval_to_db(data_path, conf):
     collec    = db.collection("rawcode")
     collec.create()
     for i, line in enumerate(rawcode):
-        collec.update(i, {'r': line.strip()})
+        collec.store({'r': line.strip()})
     rawcode_f.close()
     db.close()
     
@@ -49,10 +49,10 @@ def eval_to_db(data_path, conf):
     db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
     collec = db.collection("processed")
     print(collec.last_record_id())
-    #print(collec.fetch(99)[0])
+    print(collec.fetch(99)[0])
     collec = db.collection("rawcode")
     print(collec.last_record_id())
-    #print(collec.fetch(99)[0])
+    print(collec.fetch(99)[0])
     db.close()
     
 def data_to_db(data_path, conf):
