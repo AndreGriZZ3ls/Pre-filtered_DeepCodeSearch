@@ -44,11 +44,24 @@ def data_to_db(data_path, conf):
     length = 177
     for part in dataparts:
         collec = db.collection(part)
+        if part == "apiseq": continue ####################################
         if part == "rawcode":
             data = list(load_codebase( data_path + conf['data_params']['use_codebase'], -1))
             length += len(data)
             for i, line in tqdm(enumerate(data)):
                 collec.store({str(i + 177): line.strip()})
+        elif part == "methname":
+            """del collec[1014918 + 174]
+            del collec[1014918 + 175]
+            if collec.exists(str(1014918 + 176):
+                del collec[1014918 + 176]
+            if collec.exists(str(1014918 + 177):
+                del collec[1014918 + 177]
+                print("PROBLEM !!!!!!!!!!!!!!!!!!!!!")
+                return"""
+            data = load_hdf5(data_path + conf['data_params'][f'use_{part}'], 0, -1)
+            for i in tqdm(range(1014915, len(data))):
+                collec.update({str(i + 177): data[i]})
         else:
             data = load_hdf5(data_path + conf['data_params'][f'use_{part}'], 0, -1)
             for i, line in tqdm(enumerate(data)):
