@@ -27,7 +27,8 @@ def eval_to_db(data_path, conf):
             vocab   = load_pickle(data_path + conf['data_params'][f'vocab_{part}'])
             for i, line in enumerate(lines):
                 data = [vocab.get(w, 0) for w in line.strip().lower().split(' ')]
-                collec.store({str(i): np.array(data)})
+                #collec.store({str(i): np.array(data)})
+                collec.store({str(i): data})
         source.close()
     db.close()
        
