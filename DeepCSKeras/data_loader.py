@@ -28,7 +28,7 @@ def eval_to_db():
     db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
     for part in dataparts: # test:
         collec = db.collection(part)
-        print(collec.fetch(99).get('v'))
+        print(collec.fetch(99)[0])
     db.close()
 
 def load_pickle(path):
