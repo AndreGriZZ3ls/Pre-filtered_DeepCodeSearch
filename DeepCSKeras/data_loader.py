@@ -42,29 +42,25 @@ def eval_to_db(data_path, conf):
     
 def data_to_db(data_path, conf):
     dataparts = ["apiseq", "methname", "rawcode", "tokens"]
-    db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
-    length = 177
     for part in dataparts:
+        db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
         collec = db.collection(part)
         if part == "rawcode":
             data = list(load_codebase( data_path + conf['data_params']['use_codebase'], -1))
-            length += len(data)
             for i, line in tqdm(enumerate(data)):
                 collec.store({str(i + 177): line.strip()})
         else:
             data = load_hdf5(data_path + conf['data_params'][f'use_{part}'], 0, -1)
             for i, line in tqdm(enumerate(data)):
                 collec.store({str(i + 177): line})
-    db.close()
-        
-    # test:
-    db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
-    for part in dataparts:
-        collec = db.collection(part)
+        db.close()
+        # test:
+        db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
         print(collec.fetch(177)[0])
         print(collec.fetch(16000000)[0])
-        print(collec.values()[length - 2])
-    db.close()
+        print(collec.fetch(collec.last_record_id())[0])
+        print(collec.last_record_id())
+        db.close()
 
 def load_pickle(path):
     return pickle.load(open(path, 'rb')) 
@@ -192,6 +188,7 @@ def load_hdf5(vecfile, start_offset, chunk_size):
         len, pos = index[offset]['length'], index[offset]['pos']
         sents.append(data[pos:pos + len])
     table.close()
+    print(f">>>>>>>>>>>> type(sents[0]): {type(sents[0])} | type(sents[0][0]): {type(sents[0][0])}"
     return sents 
     
 # added:
