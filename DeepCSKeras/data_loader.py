@@ -29,7 +29,7 @@ def eval_to_db():
     for part in dataparts: # test:
         collec = db.collection(part)
         list = collec.fetch(99)
-        print(f"length: {len(list)}; list[0]: ", list[0])
+        print(f"length: {len(list)}; list[0]: ", list[0], " | list[1]: ", list[1])
     db.close()
 
 def load_pickle(path):
