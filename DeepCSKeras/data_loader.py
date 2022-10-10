@@ -47,11 +47,11 @@ def data_to_db(data_path, conf):
         if part == "rawcode":
             data = list(load_codebase( data_path + conf['data_params']['use_codebase'], -1))
             length += len(data)
-            for i, line in enumerate(data):
+            for i, line in tqdm(enumerate(data)):
                 collec.store({str(i + 177): line.strip()})
         else:
             data = load_hdf5(data_path + conf['data_params'][f'use_{part}'], 0, -1)
-            for i, line in enumerate(data):
+            for i, line in tqdm(enumerate(data)):
                 collec.store({str(i + 177): line})
     db.close()
         
