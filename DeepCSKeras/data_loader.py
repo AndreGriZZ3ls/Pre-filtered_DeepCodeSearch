@@ -16,7 +16,7 @@ def eval_to_db():
     dataparts = ["apiseq", "methname", "rawcode", "tokens"]
     for part in dataparts:
         source = io.open("./DeepCSKeras/data/codesearchnet/eval.{}.txt".format(part), "r", encoding='utf8', errors='replace')
-        db     = UnQLite(filename = './DeepCSKeras/data/{}.udb', open_database = True)
+        db     = UnQLite(filename = './DeepCSKeras/data/{}.udb'.format(part), open_database = True)
         lines  = source.readlines()
         for i, line in enumerate(lines):
             db[str(i)] = line.strip()
@@ -24,7 +24,7 @@ def eval_to_db():
         db.close()
         
     for part in dataparts: # test:
-        db     = UnQLite(filename = './DeepCSKeras/data/{}.udb', open_database = True)
+        db     = UnQLite(filename = './DeepCSKeras/data/{}.udb'.format(part), open_database = True)
         print(db['99'])
         print('177' in db)
         db.close()
