@@ -21,7 +21,7 @@ def eval_to_db():
         collec = db.collection(part)
         collec.create()
         for line in lines:
-            collec.store('v': line.strip()})
+            collec.store({'v': line.strip()})
         source.close()
     db.close()
         
