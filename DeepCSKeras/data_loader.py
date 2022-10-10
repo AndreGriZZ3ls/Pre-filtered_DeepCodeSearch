@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s: %(name)s: %(levelna
 ######## database #########
 def eval_to_db():
     dataparts = ["apiseq", "methname", "rawcode", "tokens"]
-    db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
+    """db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
     for part in dataparts:
         source = io.open("./DeepCSKeras/data/codesearchnet/eval.{}.txt".format(part), "r", encoding='utf8', errors='replace')
         lines  = source.readlines()
@@ -23,12 +23,12 @@ def eval_to_db():
         for line in lines:
             collec.store({'v': line.strip()})
         source.close()
-    db.close()
+    db.close()"""
         
     db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
     for part in dataparts: # test:
         collec = db.collection(part)
-        print(collec.fetch(99)['v'])
+        print(collec.fetch(99).get('v'))
     db.close()
 
 def load_pickle(path):
