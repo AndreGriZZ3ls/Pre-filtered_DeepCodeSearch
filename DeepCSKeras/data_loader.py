@@ -11,25 +11,56 @@ from unqlite import UnQLite
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s: %(name)s: %(levelname)s: %(message)s")
 
-######## database #########
-def eval_to_db():
+######## database setup #########
+def eval_to_db(data_path, conf):
     dataparts = ["apiseq", "methname", "rawcode", "tokens"]
     db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
-    db.flush()
+    db.flush() # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< WARNING: This deletes the ENTIRE database!
     for part in dataparts:
         source = io.open("./DeepCSKeras/data/codesearchnet/eval.{}.txt".format(part), "r", encoding='utf8', errors='replace')
         lines  = source.readlines()
         collec = db.collection(part)
         collec.create()
-        for i, line in enumerate(lines):
-            collec.store({str(i): line.strip()})
+        if part == "rawcode":
+            for i, line in enumerate(lines):
+                collec.store({str(i): line.strip()})
+        else:
+            vocab   = load_pickle(data_path + conf['data_params'][f'vocab_{part}'])
+            convert = lambda words: [vocab.get(w, 0) for w in words]
+            for i, line in enumerate(lines):
+                data = list(map(convert, line.strip().lower().split(' ')))
+                collec.store({str(i + 177): data})
         source.close()
     db.close()
-        
+       
+    # test:
     db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
-    for part in dataparts: # test:
+    for part in dataparts:
         collec = db.collection(part)
         print(collec.fetch(99)[0])
+    db.close()
+    
+def data_to_db(data_path, conf):
+    dataparts = ["apiseq", "methname", "rawcode", "tokens"]
+    db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
+    for part in dataparts:
+        collec = db.collection(part)
+        if part == "rawcode":
+            data = list(load_codebase( data_path + conf['data_params']['use_codebase'], -1))
+            for i, line in enumerate(data):
+                collec.store({str(i + 177): line.strip()})
+        else:
+            data = load_hdf5(data_path + conf['data_params'][f'use_{part}'], 0, -1)
+            for i, line in enumerate(data):
+                collec.store({str(i + 177): line})
+    db.close()
+        
+    # test:
+    db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
+    for part in dataparts:
+        collec = db.collection(part)
+        print(collec.fetch(177)[0])
+        print(collec.fetch(16000000)[0])
     db.close()
 
 def load_pickle(path):
