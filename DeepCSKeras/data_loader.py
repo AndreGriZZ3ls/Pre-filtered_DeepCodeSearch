@@ -15,11 +15,11 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s: %(name)s: %(levelna
 def eval_to_db(data_path, conf):
     dataparts = ["apiseq", "methname", "rawcode", "tokens"]
     db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
-    db.flush() # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< WARNING: This deletes the ENTIRE database!
     for part in dataparts:
         source = io.open("./DeepCSKeras/data/codesearchnet/eval.{}.txt".format(part), "r", encoding='utf8', errors='replace')
         lines  = source.readlines()
         collec = db.collection(part)
+        del collec
         collec.create()
         if part == "rawcode":
             for i, line in enumerate(lines):
@@ -29,7 +29,7 @@ def eval_to_db(data_path, conf):
             convert = lambda words: [vocab.get(w, 0) for w in words]
             for i, line in enumerate(lines):
                 data = list(map(convert, line.strip().lower().split(' ')))
-                collec.store({str(i + 177): data})
+                collec.store({str(i): data})
         source.close()
     db.close()
        
