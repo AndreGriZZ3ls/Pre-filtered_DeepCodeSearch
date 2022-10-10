@@ -15,11 +15,11 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s: %(name)s: %(levelna
 def eval_to_db():
     dataparts = ["apiseq", "methname", "rawcode", "tokens"]
     db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
+    db.flush()
     for part in dataparts:
         source = io.open("./DeepCSKeras/data/codesearchnet/eval.{}.txt".format(part), "r", encoding='utf8', errors='replace')
         lines  = source.readlines()
         collec = db.collection(part)
-        collec.flush()
         collec.create()
         for i, line in enumerate(lines):
             collec.store({str(i): line.strip()})
