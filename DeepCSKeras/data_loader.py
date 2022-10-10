@@ -19,7 +19,6 @@ def eval_to_db(data_path, conf):
         source = io.open("./DeepCSKeras/data/codesearchnet/eval.{}.txt".format(part), "r", encoding='utf8', errors='replace')
         lines  = source.readlines()
         collec = db.collection(part)
-        del collec
         collec.create()
         if part == "rawcode":
             for i, line in enumerate(lines):
