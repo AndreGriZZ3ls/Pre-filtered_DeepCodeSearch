@@ -25,9 +25,8 @@ def eval_to_db(data_path, conf):
                 collec.store({str(i): line.strip()})
         else:
             vocab   = load_pickle(data_path + conf['data_params'][f'vocab_{part}'])
-            convert = lambda words: [vocab.get(w, 0) for w in words]
             for i, line in enumerate(lines):
-                data = list(map(convert, line.strip().lower().split(' ')))
+                data = [vocab.get(w, 0) for w in line.strip().lower().split(' ')]
                 collec.store({str(i): data})
         source.close()
     db.close()
