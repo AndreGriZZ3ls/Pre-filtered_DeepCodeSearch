@@ -49,10 +49,10 @@ def eval_to_db(data_path, conf):
     db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
     collec = db.collection("processed")
     print(collec.last_record_id())
-    print(collec.fetch(99))
+    print(collec.all()['m'])
     collec = db.collection("rawcode")
     print(collec.last_record_id())
-    print(collec.fetch(99))
+    print(collec.fetch(99)['r'])
     db.close()
     
 def data_to_db(data_path, conf):
