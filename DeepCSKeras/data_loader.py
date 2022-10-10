@@ -18,7 +18,8 @@ def eval_to_db():
     for part in dataparts:
         source = io.open("./DeepCSKeras/data/codesearchnet/eval.{}.txt".format(part), "r", encoding='utf8', errors='replace')
         lines  = source.readlines()
-        collec = db.collection(part).create()
+        collec = db.collection(part)
+        collec.create()
         for i, line in enumerate(lines):
             collec.store({str(i): line.strip()})
         source.close()
