@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s: %(name)s: %(levelna
 
 ######## database setup #########
 def eval_to_db(data_path, conf):
-    db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
+    """db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
     apiseq_f   = io.open("./DeepCSKeras/data/codesearchnet/eval.apiseq.txt",   "r", encoding='utf8', errors='replace')
     methname_f = io.open("./DeepCSKeras/data/codesearchnet/eval.methname.txt", "r", encoding='utf8', errors='replace')
     tokens_f   = io.open("./DeepCSKeras/data/codesearchnet/eval.tokens.txt",   "r", encoding='utf8', errors='replace')
@@ -43,16 +43,16 @@ def eval_to_db(data_path, conf):
     for i, line in enumerate(rawcode):
         collec.store({'r': line.strip()})
     rawcode_f.close()
-    db.close()
+    db.close()"""
     
     # test:
     db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
     collec = db.collection("processed")
     print(collec.last_record_id())
-    print(collec.fetch(99)[0])
+    print(collec.fetch(99))
     collec = db.collection("rawcode")
     print(collec.last_record_id())
-    print(collec.fetch(99)[0])
+    print(collec.fetch(99))
     db.close()
     
 def data_to_db(data_path, conf):
