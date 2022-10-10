@@ -40,7 +40,7 @@ def eval_to_db(data_path, conf):
     
 def data_to_db(data_path, conf):
     dataparts = ["apiseq", "methname", "rawcode", "tokens"]
-    db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
+    """db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
     length = 177
     for part in dataparts:
         collec = db.collection(part)
@@ -53,15 +53,16 @@ def data_to_db(data_path, conf):
             data = load_hdf5(data_path + conf['data_params'][f'use_{part}'], 0, -1)
             for i, line in tqdm(enumerate(data)):
                 collec.store({str(i + 177): line})
-    db.close()
+    db.close()"""
         
     # test:
     db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
     for part in dataparts:
         collec = db.collection(part)
-        print(collec.fetch(177)[0])
-        print(collec.fetch(16000000)[0])
-        print(collec.values()[length - 2])
+        print(collec.last_record_id())
+        #print(collec.fetch(177)[0])
+        #print(collec.fetch(16000000)[0])
+        #print(collec.values()[length - 2])
     db.close()
 
 def load_pickle(path):
