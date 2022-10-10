@@ -188,7 +188,7 @@ def load_hdf5(vecfile, start_offset, chunk_size):
         len, pos = index[offset]['length'], index[offset]['pos']
         sents.append(data[pos:pos + len])
     table.close()
-    print(f">>>>>>>>>>>> type(sents[0]): {type(sents[0])} | type(sents[0][0]): {type(sents[0][0])}"
+    print(f">>>>>>>>>>>> type(sents[0]): {type(sents[0])} | type(sents[0][0]): {type(sents[0][0])}")
     return sents 
     
 # added:
