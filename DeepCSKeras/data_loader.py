@@ -61,7 +61,7 @@ def data_to_db(data_path, conf):
                 return"""
             data = load_hdf5(data_path + conf['data_params'][f'use_{part}'], 0, -1)
             for i in tqdm(range(1014915, len(data))):
-                collec.update({str(i + 177): data[i]})
+                collec.update(str(i + 177), data[i])
         else:
             data = load_hdf5(data_path + conf['data_params'][f'use_{part}'], 0, -1)
             for i, line in tqdm(enumerate(data)):
