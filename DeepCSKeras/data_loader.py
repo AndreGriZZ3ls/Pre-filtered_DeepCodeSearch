@@ -15,27 +15,43 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s: %(name)s: %(levelna
 def eval_to_db(data_path, conf):
     dataparts = ["apiseq", "methname", "rawcode", "tokens"]
     db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
-    for part in dataparts:
-        source = io.open("./DeepCSKeras/data/codesearchnet/eval.{}.txt".format(part), "r", encoding='utf8', errors='replace')
-        lines  = source.readlines()
-        collec = db.collection(part)
-        collec.create()
-        if part == "rawcode":
-            for i, line in enumerate(lines):
-                collec.store({str(i): line.strip()})
-        else:
-            vocab   = load_pickle(data_path + conf['data_params'][f'vocab_{part}'])
-            for i, line in enumerate(lines):
-                data = [vocab.get(w, 0) for w in line.strip().lower().split(' ')]
-                collec.store({str(i): data})
-        source.close()
+    apiseq_f   = io.open("./DeepCSKeras/data/codesearchnet/eval.apiseq.txt".format(part),   "r", encoding='utf8', errors='replace')
+    methname_f = io.open("./DeepCSKeras/data/codesearchnet/eval.methname.txt".format(part), "r", encoding='utf8', errors='replace')
+    tokens_f   = io.open("./DeepCSKeras/data/codesearchnet/eval.tokens.txt".format(part),   "r", encoding='utf8', errors='replace')
+    apiseq     = apiseq_f.readlines()
+    methname   = methname_f.readlines()
+    tokens     = tokens_f.readlines()
+    a_vocab    = load_pickle(data_path + conf['data_params'][f'vocab_apiseq'])
+    m_vocab    = load_pickle(data_path + conf['data_params'][f'vocab_methname'])
+    t_vocab    = load_pickle(data_path + conf['data_params'][f'vocab_tokens'])
+    collec     = db.collection("processed")
+    collec.create()
+    for i in range(0, len(apiseq)):
+        a = [a_vocab.get(w, 0) for w in   apiseq[i].strip().lower().split(' ')]
+        m = [m_vocab.get(w, 0) for w in methname[i].strip().lower().split(' ')]
+        t = [t_vocab.get(w, 0) for w in   tokens[i].strip().lower().split(' ')]
+        collec.update(i, {'a': a, 'm': m, 't': t})
+    apiseq_f.close()
+    methname_f.close()
+    tokens_f.close()
     db.close()
-       
+    
+    db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
+    rawcode_f = io.open("./DeepCSKeras/data/codesearchnet/eval.rawcode.txt".format(part), "r", encoding='utf8', errors='replace')
+    rawcode   = rawcode_f.readlines()
+    collec    = db.collection("rawcode")
+    collec.create()
+    for i, line in enumerate(rawcode):
+        collec.update(i, {'r': line.strip()})
+    rawcode_f.close()
+    db.close()
+    
     # test:
     db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
-    for part in dataparts:
-        collec = db.collection(part)
-        print(collec.fetch(99)[0])
+    collec = db.collection("processed")
+    print(collec.fetch(99)[0])
+    collec = db.collection("rawcode")
+    print(collec.fetch(99)[0])
     db.close()
     
 def data_to_db(data_path, conf):
