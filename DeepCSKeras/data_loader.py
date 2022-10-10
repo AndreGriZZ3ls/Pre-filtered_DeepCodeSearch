@@ -13,11 +13,10 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s: %(name)s: %(levelna
 
 ######## database setup #########
 def eval_to_db(data_path, conf):
-    dataparts = ["apiseq", "methname", "rawcode", "tokens"]
     db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
-    apiseq_f   = io.open("./DeepCSKeras/data/codesearchnet/eval.apiseq.txt".format(part),   "r", encoding='utf8', errors='replace')
-    methname_f = io.open("./DeepCSKeras/data/codesearchnet/eval.methname.txt".format(part), "r", encoding='utf8', errors='replace')
-    tokens_f   = io.open("./DeepCSKeras/data/codesearchnet/eval.tokens.txt".format(part),   "r", encoding='utf8', errors='replace')
+    apiseq_f   = io.open("./DeepCSKeras/data/codesearchnet/eval.apiseq.txt",   "r", encoding='utf8', errors='replace')
+    methname_f = io.open("./DeepCSKeras/data/codesearchnet/eval.methname.txt", "r", encoding='utf8', errors='replace')
+    tokens_f   = io.open("./DeepCSKeras/data/codesearchnet/eval.tokens.txt",   "r", encoding='utf8', errors='replace')
     apiseq     = apiseq_f.readlines()
     methname   = methname_f.readlines()
     tokens     = tokens_f.readlines()
@@ -37,7 +36,7 @@ def eval_to_db(data_path, conf):
     db.close()
     
     db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
-    rawcode_f = io.open("./DeepCSKeras/data/codesearchnet/eval.rawcode.txt".format(part), "r", encoding='utf8', errors='replace')
+    rawcode_f = io.open("./DeepCSKeras/data/codesearchnet/eval.rawcode.txt", "r", encoding='utf8', errors='replace')
     rawcode   = rawcode_f.readlines()
     collec    = db.collection("rawcode")
     collec.create()
