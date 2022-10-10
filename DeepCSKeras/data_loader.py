@@ -41,10 +41,12 @@ def eval_to_db(data_path, conf):
 def data_to_db(data_path, conf):
     dataparts = ["apiseq", "methname", "rawcode", "tokens"]
     db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
+    length = 177
     for part in dataparts:
         collec = db.collection(part)
         if part == "rawcode":
             data = list(load_codebase( data_path + conf['data_params']['use_codebase'], -1))
+            length += len(data)
             for i, line in enumerate(data):
                 collec.store({str(i + 177): line.strip()})
         else:
@@ -59,6 +61,7 @@ def data_to_db(data_path, conf):
         collec = db.collection(part)
         print(collec.fetch(177)[0])
         print(collec.fetch(16000000)[0])
+        print(collec.values()[length - 2])
     db.close()
 
 def load_pickle(path):
