@@ -46,13 +46,12 @@ def eval_to_db(data_path, conf):
         #print(collec.fetch(99)[0])
         start = time.time()
         data = collec.all()
-        print(data[collec.last_record_id()])
         print(data[collec.last_record_id()][0])
         #data_arrays = [pickle.loads(d[0].decode(errors='replace')) for d in data]
-        data_arrays = [np.fromiter(d[0], dtype = np.int) for d in data]
-        print('store time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
-        print(f"len(data_arrays): {len(data_arrays)} | type(data_arrays): {type(data_arrays)} | type(data_arrays)[0]: {type(data_arrays)[0]}")
-        print(data_arrays[176])
+        if part != "rawcode": data_arrays = [np.fromiter(d[0], dtype = np.int) for d in data]
+        print('load time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
+        if part != "rawcode": print(f"len(data_arrays): {len(data_arrays)} | type(data_arrays): {type(data_arrays)} | type(data_arrays)[0]: {type(data_arrays)[0]}")
+        if part != "rawcode": print(data_arrays[176])
     db.close()
     
 def data_to_db(data_path, conf):
