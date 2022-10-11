@@ -101,14 +101,6 @@ class IndexCreator:
         print("Adding lines to the index...   Please wait.")
         if stopwords:
             f      = lambda word: word in stopwords
-            tmp    = []
-            porter = PorterStemmer()
-            for i, line in enumerate(tqdm(lines)):
-                for word in line:
-                    word_stem = porter.stem(word)
-                    if word != word_stem and word_stem not in stopwords:
-                        tmp.append(porter.stem(word)) # include stems of query words
-                line.extend(tmp)
         else:
             f = lambda word: word != '[]'
         for i, line in enumerate(tqdm(lines)):
@@ -116,6 +108,9 @@ class IndexCreator:
                 #if       stopwords and word in stopwords: continue
                 #elif not stopwords and word != '[]':      continue
                 if f(word): continue
+                porter = PorterStemmer()
+                word = self.replace_synonyms(word)
+                word = porter.stem(word)
                 word = self.replace_synonyms(word)
                 if word in index:
                     #index[word].append(i)
