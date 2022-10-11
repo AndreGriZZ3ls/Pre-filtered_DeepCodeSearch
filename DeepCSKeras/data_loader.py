@@ -26,12 +26,13 @@ def eval_to_db(data_path, conf):
         else:
             vocab   = load_pickle(data_path + conf['data_params'][f'vocab_{part}'])
             for i, line in enumerate(lines):
-                data = [vocab.get(w, 0).astype(np.int) for w in line.strip().lower().split(' ')]
+                data = [vocab.get(w, 0) for w in line.strip().lower().split(' ')]
                 #collec.store({str(i): np.array(data)})
                 data_arr = np.array(data, dtype = np.int)
                 collec.store({str(i): data_arr})
         source.close()
         print(type(data_arr))
+        print(type(data_arr[0]))
     db.close()
        
     # test:
