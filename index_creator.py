@@ -100,8 +100,9 @@ class IndexCreator:
     def add_to_index(self, index, lines, stopwords):
         print("Adding lines to the index...   Please wait.")
         if stopwords:
-            f = lambda word: word in stopwords
-            tmp = []
+            f      = lambda word: word in stopwords
+            tmp    = []
+            porter = PorterStemmer()
             for word in lines:
                 word_stem = porter.stem(word)
                 if word != word_stem and word_stem not in stopwords:
