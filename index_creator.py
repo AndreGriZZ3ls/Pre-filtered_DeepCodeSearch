@@ -85,6 +85,7 @@ class IndexCreator:
                               f"File for index storage not found. Please create an (empty) file named {index_file} in {index_path}")
         data_loader.save_pickle(index_path + index_file, index)
         print(f"Index successfully saved to: {index_path}{index_file}")
+        data_loader.save_index(self.index_type, index) # database
 
     def load_index(self):
         if self.index_type == "word_indices": 
