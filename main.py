@@ -93,6 +93,7 @@ if __name__ == '__main__':
     if args.mode == 'populate_database':
         #data_loader.eval_to_db(data_path, config)
         #data_loader.data_to_db(data_path, config)
+        print('Info: Populating the database was sucessful.')
     
     elif args.mode == 'create_index':
         indexer.create_index(stopwords)
