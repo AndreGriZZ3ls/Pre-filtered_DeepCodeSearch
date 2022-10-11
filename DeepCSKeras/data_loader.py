@@ -46,16 +46,19 @@ def eval_to_db(data_path, conf):
         #print(collec.fetch(99)[0])
         start = time.time()
         data = collec.all()
+        print('load time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
         print(data[collec.last_record_id()][0])
         #data_arrays = [pickle.loads(d[0].decode(errors='replace')) for d in data]
         if part != "rawcode": data_arrays = [np.fromiter(d[0], dtype = np.int) for d in data]
-        print('load time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
-        if part != "rawcode": print(f"len(data_arrays): {len(data_arrays)} | type(data_arrays): {type(data_arrays)} | type(data_arrays)[0]: {type(data_arrays)[0]}")
+        print('to arrays time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
+        if part != "rawcode": print(f"len(data_arrays): {len(data_arrays)} | type(data_arrays[0]): {type(data_arrays[0])} | type(data_arrays[0][0]): {type(data_arrays[0][0])}")
         if part != "rawcode": print(data_arrays[176])
     db.close()
     
 def data_to_db(data_path, conf):
-    dataparts = ["apiseq", "methname", "rawcode", "tokens"]
+    #dataparts = ["apiseq", "methname", "rawcode", "tokens"]
+    dataparts = ["apiseq"]
+    #dataparts = ["methname", "rawcode", "tokens"]
     for part in dataparts:
         db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
         collec = db.collection(part)
@@ -76,6 +79,13 @@ def data_to_db(data_path, conf):
         print(collec.last_record_id())
         start = time.time()
         data = collec.all()
+        print('load time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
+        print(data[collec.last_record_id()][0])
+        #data_arrays = [pickle.loads(d[0].decode(errors='replace')) for d in data]
+        if part != "rawcode": data_arrays = [np.fromiter(d[0], dtype = np.int) for d in data]
+        print('to arrays time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
+        if part != "rawcode": print(f"len(data_arrays): {len(data_arrays)} | type(data_arrays[0]): {type(data_arrays[0])} | type(data_arrays[0][0]): {type(data_arrays[0][0])}")
+        if part != "rawcode": print(data_arrays[collec.last_record_id()])
         db.close()
 
 def load_pickle(path):
