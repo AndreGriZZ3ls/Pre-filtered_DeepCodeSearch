@@ -88,8 +88,8 @@ if __name__ == '__main__':
     _codebase_chunksize = 2000000
     tf_idf_threshold    = 2.79 
     
-    data_loader.eval_to_db(data_path, config)
-    #data_loader.data_to_db(data_path, config)
+    #data_loader.eval_to_db(data_path, config)
+    data_loader.data_to_db(data_path, config)
     '''
 
     if args.mode == 'create_index':
