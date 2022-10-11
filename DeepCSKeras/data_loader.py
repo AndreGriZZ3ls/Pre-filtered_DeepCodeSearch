@@ -30,7 +30,8 @@ def eval_to_db(data_path, conf):
                 data = [vocab.get(w, 0) for w in line.strip().lower().split(' ')]
                 #collec.store({str(i): data})
                 data_arr = np.array(data, dtype = np.int)
-                collec.store({str(i): pickle.dumps(data_arr, protocol = 2)})
+                collec.store({str(i): data_arr.tolist()})
+                #collec.store({str(i): pickle.dumps(data_arr, pickle.HIGHEST_PROTOCOL)})
             print('store time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
             print(pickle.dumps(data_arr, pickle.HIGHEST_PROTOCOL))
         source.close()
@@ -46,10 +47,11 @@ def eval_to_db(data_path, conf):
         data = collec.all()
         print(data[collec.last_record_id()])
         print(data[collec.last_record_id()][0])
-        data_arrays = [pickle.loads(d[0].decode(errors='replace')) for d in data]
+        #data_arrays = [pickle.loads(d[0].decode(errors='replace')) for d in data]
+        data_arrays = [np.fromiter(d[0]) for d in data]
         print('store time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
         print(f"len(data_arrays): {len(data_arrays)} | type(data_arrays): {type(data_arrays)} | type(data_arrays)[0]: {type(data_arrays)[0]}")
-        print(data_arrays[99])
+        print(data_arrays[176])
     db.close()
     
 def data_to_db(data_path, conf):
