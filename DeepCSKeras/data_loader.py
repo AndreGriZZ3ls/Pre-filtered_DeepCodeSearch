@@ -86,6 +86,7 @@ def data_to_db(data_path, conf):
         start = time.time()
         data = []
         for row in collec.iterator():
+            print(row)
             data.append(row)
         print('load time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
         print(data[collec.last_record_id()][0])
