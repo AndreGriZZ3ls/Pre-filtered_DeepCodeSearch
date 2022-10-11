@@ -108,7 +108,7 @@ class IndexCreator:
                     word_stem = porter.stem(word)
                     if word != word_stem and word_stem not in stopwords:
                         tmp.append(porter.stem(word)) # include stems of query words
-                lien.extend(tmp)
+                line.extend(tmp)
         else:
             f = lambda word: word != '[]'
         for i, line in enumerate(tqdm(lines)):
