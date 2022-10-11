@@ -84,7 +84,7 @@ def data_to_db(data_path, conf):
         #print(collec.fetch(collec.last_record_id())[0])
         print(collec.last_record_id())
         start = time.time()
-        data = collec.all()
+        data = [row for row in collec.iterator()]
         print('load time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
         print(data[collec.last_record_id()][0])
         #data_arrays = [pickle.loads(d[0].decode(errors='replace')) for d in data]
