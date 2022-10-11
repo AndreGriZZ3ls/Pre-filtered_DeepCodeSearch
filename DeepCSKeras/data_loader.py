@@ -45,7 +45,7 @@ def eval_to_db(data_path, conf):
         data = collec.all()
         print(data[0])
         print(data[0][0])
-        data_arrays = [pickle.loads(d[0].decode()) for d in data]
+        data_arrays = [pickle.loads(d[0].decode(errors='replace')) for d in data]
         print('store time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
         print(f"len(data_arrays): {len(data_arrays)} | type(data_arrays): {type(data_arrays)} | type(data_arrays)[0]: {type(data_arrays)[0]}")
         print(data_arrays[99])
