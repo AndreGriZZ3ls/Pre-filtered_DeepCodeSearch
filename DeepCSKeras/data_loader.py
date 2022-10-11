@@ -31,6 +31,7 @@ def eval_to_db(data_path, conf):
                 data_arr = np.array(data, dtype = np.int)
                 collec.store({str(i): data_arr})
         source.close()
+        print(data_arr)
         print(type(data_arr))
         print(type(data_arr[0]))
     db.close()
