@@ -75,9 +75,9 @@ class IndexCreator:
             apiseqs   = list(map(fa, apiseq_indices))
             return methnames, tokens, apiseqs
 
-    def safe_index(self, index):
+    def save_index(self, index):
         if self.index_type == "word_indices": return
-        data_loader.safe_index(self.index_type, index); return # database
+        data_loader.save_index(self.index_type, index); return # database
         index_path = self.data_path + self.index_dir + '/'
         index_file = self.index_type + '.pkl'
         #os.makedirs(index_path, exist_ok = True)
@@ -90,7 +90,7 @@ class IndexCreator:
         if self.index_type == "word_indices": 
             methnames, tokens, irrelevant = self.load_data()
             return methnames, tokens
-        return data_loader.safe_index(self.index_type) # database
+        return data_loader.load_index_counters(self.index_type) # database
         index_path = self.data_path + self.index_dir + '/'
         index_file = self.index_type + '.pkl'
         assert os.path.exists(index_path + index_file), f"Index file {index_file} not found at {index_path}"
@@ -100,7 +100,7 @@ class IndexCreator:
     def add_to_index(self, index, lines, stopwords):
         print("Adding lines to the index...   Please wait.")
         if stopwords:
-            f      = lambda word: word in stopwords
+            f = lambda word: word in stopwords
         else:
             f = lambda word: word != '[]'
         for i, line in enumerate(tqdm(lines)):
@@ -136,4 +136,4 @@ class IndexCreator:
                 for line_nr in lines: # replace currently stored term frequence by tf-idf:
                     line_counter[line_nr] = idf * math.log(1 + line_counter[line_nr]) # tf-idf = idf * log10(1 + tf)
         
-        self.safe_index(index)
+        self.save_index(index)
