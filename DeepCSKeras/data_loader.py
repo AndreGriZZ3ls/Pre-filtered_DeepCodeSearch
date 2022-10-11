@@ -24,24 +24,29 @@ def eval_to_db(data_path, conf):
             for i, line in enumerate(lines):
                 collec.store({str(i): line.strip()})
         else:
-            vocab   = load_pickle(data_path + conf['data_params'][f'vocab_{part}'])
+            vocab = load_pickle(data_path + conf['data_params'][f'vocab_{part}'])
+            start = time.time()
             for i, line in enumerate(lines):
                 data = [vocab.get(w, 0) for w in line.strip().lower().split(' ')]
-                #collec.store({str(i): np.array(data)})
+                #collec.store({str(i): data})
                 data_arr = np.array(data, dtype = np.int)
-                collec.store({str(i): data_arr})
+                collec.store({str(i): pickle.dumps(data_arr, pickle.HIGHEST_PROTOCOL)})
+            print('store time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
         source.close()
-        print(data_arr)
-        print(type(data_arr))
-        print(type(data_arr[0]))
     db.close()
        
     # test:
     db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
     for part in dataparts:
         collec = db.collection(part)
-        print(collec.last_record_id())
-        print(collec.fetch(99)[0])
+        #print(collec.last_record_id())
+        #print(collec.fetch(99)[0])
+        start = time.time()
+        data = collec.all()
+        data_arrays = [pickle.loads(d[0]) for d in data]
+        print('store time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
+        print(f"len(data_arrays): {len(data_arrays)} | type(data_arrays): {type(data_arrays)} | type(data_arrays)[0]: {type(data_arrays)[0]}")
+        print(data_arrays[99])
     db.close()
     
 def data_to_db(data_path, conf):
@@ -56,14 +61,16 @@ def data_to_db(data_path, conf):
         else:
             data = load_hdf5(data_path + conf['data_params'][f'use_{part}'], 0, -1)
             for i, line in tqdm(enumerate(data)):
-                collec.store({str(i + 177): line})
+                collec.store({str(i + 177): line.tolist()})
         db.close()
         # test:
         db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
-        print(collec.fetch(177)[0])
-        print(collec.fetch(16000000)[0])
-        print(collec.fetch(collec.last_record_id())[0])
+        #print(collec.fetch(177)[0])
+        #print(collec.fetch(16000000)[0])
+        #print(collec.fetch(collec.last_record_id())[0])
         print(collec.last_record_id())
+        start = time.time()
+        data = collec.all()
         db.close()
 
 def load_pickle(path):
