@@ -30,7 +30,7 @@ def eval_to_db(data_path, conf):
                 data = [vocab.get(w, 0) for w in line.strip().lower().split(' ')]
                 #collec.store({str(i): data})
                 data_arr = np.array(data, dtype = np.int)
-                collec.store({str(i): pickle.dumps(data_arr, pickle.HIGHEST_PROTOCOL)})
+                collec.store({str(i): pickle.dumps(data_arr, protocol = 2)})
             print('store time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
             print(pickle.dumps(data_arr, pickle.HIGHEST_PROTOCOL))
         source.close()
