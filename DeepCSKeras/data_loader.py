@@ -85,25 +85,15 @@ def data_to_db(data_path, conf):
         print(collec.last_record_id())
         start = time.time()
         data = []
-        #for row in collec.iterator():
-        #    print(row)
-        #    data.append(row)
-        data.append(collec.fetch(6319444 + 1))
-        data.append(collec.fetch(6319444 + 2))
-        data.append(collec.fetch(6319444 + 3))
-        data.append(collec.fetch(6319444 + 4))
-        data.append(collec.fetch(6319444 + 5))
-        data.append(collec.fetch(6319444 + 6))
-        data.append(collec.fetch(6319444 + 7))
+        for row in collec.iterator(): # TODO: Load in chunks to fix segmantation fault
+            data.append(row)
         print('load time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
-        #print(data[collec.last_record_id()][0])
-        print(data[0][0])
+        print(data[collec.last_record_id()][0])
         #data_arrays = [pickle.loads(d[0].decode(errors='replace')) for d in data]
         if part != "rawcode": data_arrays = [np.fromiter(d[0], dtype = np.int) for d in data]
         print('to arrays time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
         if part != "rawcode": print(f"len(data_arrays): {len(data_arrays)} | type(data_arrays[0]): {type(data_arrays[0])} | type(data_arrays[0][0]): {type(data_arrays[0][0])}")
-        #if part != "rawcode": print(data_arrays[collec.last_record_id()])
-        if part != "rawcode": print(data_arrays[0])
+        if part != "rawcode": print(data_arrays[collec.last_record_id()])
         db.close()
 
 def load_pickle(path):

@@ -47,10 +47,11 @@ def parse_args():
     parser.add_argument("--dataset",    type=str, default="github",       help="dataset name")
     parser.add_argument("--data_path",  type=str, default='./DeepCSKeras/data/',       help="working directory")
     parser.add_argument("--model",      type=str, default="JointEmbeddingModel",       help="DeepCS model name")
-    parser.add_argument("--mode", choices=["create_index","search"], default='search', help="The mode to run:"
+    parser.add_argument("--mode", choices=["create_index","search","populate_database"], default='search', help="The mode to run:"
                         " The 'create_index' mode constructs an index of specified type on the desired dataset; "
                         " The 'search' mode filters the dataset according to given query and index before utilizing "
-                        " DeepCS with a trained model to search pre-selected for the K most relevant code snippets.")
+                        " DeepCS with a trained model to search pre-selected for the K most relevant code snippets; "
+                        " The 'populate_database' mode adds data to the database (for one time use only!). ")
     parser.add_argument("--index_type", choices=["word_indices","inverted_index"], default="inverted_index", help="Type of index "
                         " to be created or used: The 'word_indices' mode utilizes parts of the dataset already existing for DeepCS "
                         " (simple but not usable for more accurete similarity measurements. For each meaningful word the "
@@ -88,11 +89,12 @@ if __name__ == '__main__':
     _codebase_chunksize = 2000000
     tf_idf_threshold    = 2.79 
     
-    #data_loader.eval_to_db(data_path, config)
-    data_loader.data_to_db(data_path, config)
-    '''
 
-    if args.mode == 'create_index':
+    if args.mode == 'populate_database':
+        #data_loader.eval_to_db(data_path, config)
+        #data_loader.data_to_db(data_path, config)
+    
+    elif args.mode == 'create_index':
         indexer.create_index(stopwords)
 
     elif args.mode == 'search':
@@ -216,9 +218,9 @@ if __name__ == '__main__':
                     if word in index: # for each word of the processed query that the index contains: ...
                         #result_line_lists.append(index[word]) # ... add the list of code fragments containing that word.
                         """result_line_counters.append(index[word]) # ... add the list of code fragments containing that word."""
-                        cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general ''' """
+                        cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
                 #print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
-                for line_list in tqdm(result_line_lists): # iterate the code fragment list of each found query word:
+                """#for line_list in tqdm(result_line_lists): # iterate the code fragment list of each found query word:
                 for line_counter in tqdm(result_line_counters): # iterate the code fragment counters of each found query word:
                     if similarity_mode == 'tf_idf':
                         #for line_nr in line_list:
@@ -233,7 +235,7 @@ if __name__ == '__main__':
                     else: # lexical similarity:
                         #for line_nr in list(set(line_list)): # iterate deduplicated list of code fragments
                         #    cnt[line_nr] += 1
-                        cnt += line_counter""" '''
+                        cnt += line_counter"""
                 ##################################################################################################################
                 #result_line_numbers, values = zip(*cnt.most_common(10000 + 100 * n_results))
                 #result_line_numbers, values = zip(*cnt.most_common(100 * n_results))
@@ -277,4 +279,4 @@ if __name__ == '__main__':
                 engine._codebase   = codebase
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, )
             print('Total time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
-            print('System time: {:5.3f}s'.format(time.process_time()-start_proc)) '''
+            print('System time: {:5.3f}s'.format(time.process_time()-start_proc))
