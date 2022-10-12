@@ -91,7 +91,7 @@ class IndexCreator:
         if self.index_type == "word_indices": 
             methnames, tokens, irrelevant = self.load_data()
             return methnames, tokens
-        return data_loader.load_index_counters(self.index_type) # database
+        #return data_loader.load_index_counters(self.index_type) # database
         index_path = self.data_path + self.index_dir + '/'
         index_file = self.index_type + '.pkl'
         assert os.path.exists(index_path + index_file), f"Index file {index_file} not found at {index_path}"
