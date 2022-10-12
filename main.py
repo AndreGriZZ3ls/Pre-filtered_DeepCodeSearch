@@ -144,7 +144,7 @@ if __name__ == '__main__':
             methname_vocab  = data_loader.load_pickle(data_path + config['data_params']['vocab_methname'])
             token_vocab     = data_loader.load_pickle(data_path + config['data_params']['vocab_tokens'])
             methnames, tokens = indexer.load_index()
-        else:
+        elif memory_mode == "performance":
             index = indexer.load_index()  # TODO: Just load data specified by querywords --> see: Reading (and selecting) data in a table -> Table.where()
         
         while True:
@@ -216,27 +216,14 @@ if __name__ == '__main__':
                 #cnt, cnt_tf = Counter(), Counter()
                 cnt = Counter()
                 for word in query_list:
-                    if word in index: # for each word of the processed query that the index contains: ...
-                        #result_line_lists.append(index[word]) # ... add the list of code fragments containing that word.
-                        """result_line_counters.append(index[word]) # ... add the list of code fragments containing that word."""
-                        cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
+                    if memory_mode == "performance":
+                        if word in index: # for each word of the processed query that the index contains: ...
+                            cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
+                    else:
+                        counters = load_index_counters(index_type, query_list)
+                        for counter in counters:
+                            cnt += Counter(dict(counter.most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
                 #print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
-                """#for line_list in tqdm(result_line_lists): # iterate the code fragment list of each found query word:
-                for line_counter in tqdm(result_line_counters): # iterate the code fragment counters of each found query word:
-                    if similarity_mode == 'tf_idf':
-                        #for line_nr in line_list:
-                        #    cnt_tf[line_nr] += 1 # count occurrences of the query word in each of its code fragments
-                        #lines = list(cnt_tf.keys()) # deduplicated list of those code fragments
-                        lines = list(line_counter.keys()) # deduplicated list of those code fragments
-                        idf   = math.log10(number_of_code_fragments / len(lines)) # idf = log10(N/df)
-                        for line_nr in lines:
-                        #    cnt[line_nr] += idf * math.log(1 + cnt_tf[line_nr]) # tf-idf = idf * log10(1 + tf); sum values for the same line
-                            cnt[line_nr] += idf * math.log(1 + line_counter[line_nr]) # tf-idf = idf * log10(1 + tf); sum values for the same line
-                        #cnt_tf.clear() # clear temporary counter for the next query word
-                    else: # lexical similarity:
-                        #for line_nr in list(set(line_list)): # iterate deduplicated list of code fragments
-                        #    cnt[line_nr] += 1
-                        cnt += line_counter"""
                 ##################################################################################################################
                 #result_line_numbers, values = zip(*cnt.most_common(10000 + 100 * n_results))
                 #result_line_numbers, values = zip(*cnt.most_common(100 * n_results))
