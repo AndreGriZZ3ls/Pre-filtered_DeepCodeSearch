@@ -6,6 +6,7 @@ import math
 import time
 import shutil
 import codecs
+import tables
 import argparse
 import operator
 import traceback
@@ -26,6 +27,14 @@ target_file1   = "./DeepCodeSearchBT/DeepCSKeras/data/codesearchnet/eval_filter.
 
 source_file3   = "./DeepCodeSearchBT/DeepCSKeras/data/codesearchnet/allData/eval.{}.all.txt"
 target_file3   = "./DeepCodeSearchBT/DeepCSKeras/data/codesearchnet/eval.{}.txt"
+
+source_file4   = "./DeepCodeSearchBT/DeepCSKeras/data/codesearchnet/use.rawcode.txt"
+target_file4   = "./DeepCodeSearchBT/DeepCSKeras/data/codesearchnet/eval.rawcode.txt"
+
+source_file5   = "./DeepCodeSearchBT/DeepCSKeras/data/codesearchnet/eval.{}.txt"
+target_file5   = "./DeepCodeSearchBT/DeepCSKeras/data/codesearchnet/use.{}.h5"
+
+vocab_path     = "./DeepCodeSearchBT/DeepCSKeras/data/codesearchnet/vocab.{}.pkl"
 #################################################################################################
 
 def replace_camelcase():
@@ -90,10 +99,79 @@ def find_line_numbers_and_build_eval_dict():
         source.close()
         target.close()"""
         
+def append_rawcode():
+    source = io.open(source_file4, "r", encoding='utf8', errors='replace')
+    target = io.open(target_file4, "a", encoding='utf8', errors='replace')
+    target.write("\n")
+    for line in source.readlines():
+        target.write(line)
+    source.close()
+    target.close()
+
+def print_structure_of_hdf5():
+    dataparts = ["apiseq", "methname", "tokens"]
+    for part in dataparts:
+        table    = tables.open_file(target_file5.format(part))
+        data     = table.get_node('/phrases')
+        index    = table.get_node('/indices')
+        print(f"type(data): {type(data)} | type(index): {type(index)}")
+        print(f"index.indexed: {index.indexed}")
+        for name in index.colnames:
+            print(name, ':= %s, %s' % (index.coldtypes[name], index.coldtypes[name].shape))
+        data = data[:]
+        index = index[:]
+        print(f"type(data): {type(data)} | type(index): {type(index)} | type(index[0]): {type(index[0])} | index.shape: {index.shape}")
+        print(f"data[0:10]: ", data[0:10])
+        for i in range(0, 10):
+            print(f"index[i] len: {index[i]['length']} , pos: {index[i]['pos']}")
+        for i in range(177, 187):
+            print(f"index[i] len: {index[i]['length']} , pos: {index[i]['pos']}")
+        table.close()
+    
+def prepend_data_to_hdf5():
+    dataparts = ["apiseq", "methname", "tokens"]
+    for part in dataparts:
+        # load and covert new data:
+        source    = io.open(source_file5.format(part), "r", encoding='utf8', errors='replace')
+        lines     = source.readlines()
+        vocab     = data_loader.load_pickle(vocab_path.format(part))
+        data_new  = []
+        index_new = []
+        pos       = 0
+        for i, line in enumerate(lines):
+            d      = [vocab.get(w, 0) for w in line.strip().lower().split(' ')]
+            length = len(d)
+            index_new.append((length, pos))
+            pos   += length
+            data_new.extend(d)
+        data_new = np.array(data_new, dtype = np.int32)
+        source.close()
+        # get current data from h5 file:
+        table       = tables.open_file(target_file5.format(part), 'r+')
+        data_table  = table.get_node('/phrases')
+        data_old    = data_table[:].astype(np.int32)
+        index_table = table.get_node('/indices')
+        index_old   = index_table[:].tolist()
+        for i in range(0, len(index_old)): # update positions
+            elem = index_old[i]
+            index_old[i] = (elem[0], elem[1] + pos)
+        # write combined data to old h5 file:
+        index_table.append(index_new)
+        index_new.extend(index_old)
+        index_table.modify_rows(start = 0, stop = len(index_new), step = 1, rows = index_new)
+        index_table.flush()
+        data_table.append(data_new)
+        length = len(data_new)
+        data_table[0:length] = data_new
+        data_table[length:]  = data_old
+        table.close()
 
 if __name__ == '__main__':
     #replace_camelcase()
     #find_line_numbers_and_build_eval_dict()
     #copy_data()
     #deduplicate_preserving_order()
+    #append_rawcode()
+    prepend_data_to_hdf5()
+    print_structure_of_hdf5()
     

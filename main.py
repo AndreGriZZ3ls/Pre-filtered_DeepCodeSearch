@@ -43,8 +43,8 @@ from DeepCSKeras.utils import convert, revert
 
 def parse_args():
     parser = argparse.ArgumentParser("Generate Index or perform pre-filtered deep code search")
-    parser.add_argument("--index_dir",  type=str, default="indices",      help="index directory")
-    parser.add_argument("--dataset",    type=str, default="github",       help="dataset name")
+    parser.add_argument("--index_dir",  type=str, default="indices",       help="index directory")
+    parser.add_argument("--dataset",    type=str, default="codesearchnet", help="dataset name")
     parser.add_argument("--data_path",  type=str, default='./DeepCSKeras/data/',       help="working directory")
     parser.add_argument("--model",      type=str, default="JointEmbeddingModel",       help="DeepCS model name")
     parser.add_argument("--mode", choices=["create_index","search","populate_database"], default='search', help="The mode to run:"

@@ -270,7 +270,7 @@ def parse_args():
     parser = argparse.ArgumentParser("Train and Test Code Search(Embedding) Model")
     parser.add_argument("--data_path", type=str, default='./data/',              help="working directory")
     parser.add_argument("--model",     type=str, default="JointEmbeddingModel",  help="model name")
-    parser.add_argument("--dataset",   type=str, default="github",               help="dataset name")
+    parser.add_argument("--dataset",   type=str, default="codesearchnet",        help="dataset name")
     parser.add_argument("--mode", choices=["train","eval","repr_code","search"], default='search',
                         help="The mode to run. The `train` mode trains a model;"
                         " the `eval` mode evaluat models in a test set "
