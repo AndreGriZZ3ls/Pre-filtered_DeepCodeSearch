@@ -2,11 +2,11 @@ import io
 import math
 import time
 import pickle
-import tables
 import logging
 import operator
 import numpy as np
 from tqdm import tqdm
+from tables import *
 #from unqlite import UnQLite # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 from collections import Counter
 logger = logging.getLogger(__name__)
