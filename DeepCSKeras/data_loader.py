@@ -12,6 +12,8 @@ from collections import Counter
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s: %(name)s: %(levelname)s: %(message)s")
 
+class IndexMetaData(IsDecscription):
+    word = StringCol(16)
 
 def load_pickle(path):
     return pickle.load(open(path, 'rb')) 
@@ -33,7 +35,7 @@ def load_index_counters(name, word_list):
     print(f"Index successfully loaded from '{name}' collection in database.")
     return counters
     
-def save_index(name, index):
+def save_index(name, index, index_path):
     db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
     collec = db.collection(name)
     collec.drop()
@@ -45,6 +47,8 @@ def save_index(name, index):
         collec.store({'word': item[0], 'keys': keys, 'vals': vals})
     db.close()
     print(f"Index successfully saved to '{name}' collection in database.")
+    index_file = index_path + self.index_type + '.h5'
+    
 
 ##### Data Set #####
 #def load_codebase(path, chunk_size, chunk_number = -1):
@@ -170,51 +174,6 @@ def load_hdf5_lines(vecfile, lines):
     return sents #
 
 ######## database setup #########
-def eval_to_db(data_path, conf):
-    #dataparts = ["apiseq", "methname", "rawcode", "tokens"]
-    #dataparts = ["apiseq"]
-    dataparts = ["methname", "rawcode", "tokens"]
-    db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
-    for part in dataparts:
-        source = io.open("./DeepCSKeras/data/codesearchnet/eval.{}.txt".format(part), "r", encoding='utf8', errors='replace')
-        lines  = source.readlines()
-        collec = db.collection(part)
-        collec.drop() # <<<<<<<<<<<<<<<<<<<<<<<<<< WARNING: This deletes the entire collection!
-        collec.create()
-        if part == "rawcode":
-            for i, line in enumerate(lines):
-                collec.store({'r': line.strip()})
-        else:
-            vocab = load_pickle(data_path + conf['data_params'][f'vocab_{part}'])
-            start = time.time()
-            for i, line in enumerate(lines):
-                data = [vocab.get(w, 0) for w in line.strip().lower().split(' ')]
-                #collec.store({str(i): data})
-                data_arr = np.array(data, dtype = np.int)
-                collec.store({part[0]: data_arr.tolist()})
-                #collec.store({str(i): pickle.dumps(data_arr, pickle.HIGHEST_PROTOCOL)})
-            print('store time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
-            #print(pickle.dumps(data_arr, pickle.HIGHEST_PROTOCOL))
-            print(data_arr.tolist())
-        source.close()
-    db.close()
-       
-    # test:
-    db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
-    for part in dataparts:
-        collec = db.collection(part)
-        print(collec.last_record_id())
-        #print(collec.fetch(99)[0])
-        start = time.time()
-        data = collec.all()
-        print('load time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
-        print(data[collec.last_record_id()][0])
-        #data_arrays = [pickle.loads(d[0].decode(errors='replace')) for d in data]
-        if part != "rawcode": data_arrays = [np.fromiter(d[0], dtype = np.int) for d in data]
-        print('to arrays time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
-        if part != "rawcode": print(f"len(data_arrays): {len(data_arrays)} | type(data_arrays[0]): {type(data_arrays[0])} | type(data_arrays[0][0]): {type(data_arrays[0][0])}")
-        if part != "rawcode": print(data_arrays[176])
-    db.close()
     
 def data_to_db(data_path, conf):
     #dataparts = ["apiseq", "methname", "rawcode", "tokens"]

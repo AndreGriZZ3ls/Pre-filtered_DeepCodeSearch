@@ -43,7 +43,7 @@ from DeepCSKeras.utils import convert, revert
 
 def parse_args():
     parser = argparse.ArgumentParser("Generate Index or perform pre-filtered deep code search")
-    parser.add_argument("--index_dir",  type=str, default="indices",       help="index directory")
+    #parser.add_argument("--index_dir",  type=str, default="indices",       help="index directory")
     parser.add_argument("--dataset",    type=str, default="codesearchnet", help="dataset name")
     parser.add_argument("--data_path",  type=str, default='./DeepCSKeras/data/',       help="working directory")
     parser.add_argument("--model",      type=str, default="JointEmbeddingModel",       help="DeepCS model name")
@@ -91,9 +91,10 @@ if __name__ == '__main__':
     
 
     if args.mode == 'populate_database':
-        #data_loader.eval_to_db(data_path, config)
         #data_loader.data_to_db(data_path, config)
-        print('Info: Populating the database was sucessful.')
+        #print('Info: Populating the database was sucessful.')
+        index = indexer.load_index()
+        print(max(index.keys(), key = len))
     
     elif args.mode == 'create_index':
         indexer.create_index(stopwords)
