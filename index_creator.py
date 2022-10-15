@@ -80,13 +80,13 @@ class IndexCreator:
         #index_path = self.data_path + self.index_dir + '/'
         index_path = self.dataset_path
         index_file = self.index_type + '.pkl'
-        data_loader.save_index(self.index_type, index, index_path) # database
+        #data_loader.save_index(self.index_type, index, index_path) # database
         #os.makedirs(index_path, exist_ok = True)
         #assert os.path.exists(index_path + index_file), (
         #                      f"File for index storage not found. Please create an (empty) file named {index_file} in {index_path}")
         data_loader.save_pickle(index_path + index_file, index)
         print(f"Index successfully saved to: {index_path}{index_file}")
-        data_loader.save_index(self.index_type, index) # database
+        data_loader.save_index(self.index_type, index, index_path) # database
 
     def load_index(self):
         if self.index_type == "word_indices": 
