@@ -107,22 +107,21 @@ class IndexCreator:
         else:
             f = lambda word: word != '[]'
         for i, line in enumerate(tqdm(lines)):
-            for word in line:
-                #if       stopwords and word in stopwords: continue
-                #elif not stopwords and word != '[]':      continue
-                if f(word): continue
-                porter = PorterStemmer()
-                word = self.replace_synonyms(word)
-                word = porter.stem(word)
-                word = self.replace_synonyms(word)
-                if word in index:
-                    #index[word].append(i)
-                    index[word][i] += 1 # counts term frequence
-                else:
-                    #index[word] = [i]
-                    cnt = Counter()
-                    cnt[i] += 1
-                    index[word] = cnt
+            for raw_word in line:
+                for word in raw_word.split('_')
+                    if f(word) or len(word) == 0: continue
+                    porter = PorterStemmer()
+                    word = self.replace_synonyms(word)
+                    word = porter.stem(word)
+                    word = self.replace_synonyms(word)
+                    if word in index:
+                        #index[word].append(i)
+                        index[word][i] += 1 # counts term frequence
+                    else:
+                        #index[word] = [i]
+                        cnt = Counter()
+                        cnt[i] += 1
+                        index[word] = cnt
 
     def create_index(self, stopwords):
         if self.index_type == "word_indices": print("Nothing to be done."); return
