@@ -108,7 +108,7 @@ class IndexCreator:
             f = lambda word: word != '[]'
         for i, line in enumerate(tqdm(lines)):
             for raw_word in line:
-                for word in raw_word.split('_')
+                for word in raw_word.split('_'):
                     if f(word) or len(word) == 0: continue
                     porter = PorterStemmer()
                     word = self.replace_synonyms(word)
