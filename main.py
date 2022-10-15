@@ -96,7 +96,7 @@ if __name__ == '__main__':
         index = indexer.load_index()
         #print(max(index.keys(), key = len))
         for key in index.keys():
-            if len(key) > 36:
+            if len(key) > 26:
                 print(key)
     
     elif args.mode == 'create_index':
