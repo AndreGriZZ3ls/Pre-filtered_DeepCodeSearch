@@ -25,8 +25,8 @@ def load_pickle(path):
 def save_pickle(path, index):
     pickle.dump(index, open(path, 'wb'), pickle.HIGHEST_PROTOCOL) #
     
-def load_index_counters(name, word_list):
-    db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
+def load_index_counters(name, word_list, index_path):
+    """db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
     collec = db.collection(name)
     if not collec.exists():
         raise Exception(f"ERROR: The collection for index type '{name}' does not exist in the database! You have to create this index type first.")
@@ -36,7 +36,11 @@ def load_index_counters(name, word_list):
         counters.append(Counter(dict(zip(d[1], d[2]))))
     db.close()
     print(f"Index successfully loaded from '{name}' collection in database.")
-    return counters
+    return counters"""
+    index_file = index_path + self.index_type + '.h5'
+    assert os.path.exists(index_file), f"Index file {index_file} not found!"
+    h5f     = tables.open_file(index_file, mode = "r")
+    
     
 def save_index(name, index, index_path):
     """db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
@@ -57,7 +61,7 @@ def save_index(name, index, index_path):
     atom_v  = tables.Atom.from_dtype(np.array(index.values()[0].values()).dtype)
     filters = tables.Filters(complib = 'blosc', complevel = 5)
     h5f     = tables.open_file(index_file, mode = "w", title = name)
-    table   = h5file.create_table("/", 'readout', IndexMetaData, "index meta data")
+    table   = h5f.create_table("/", 'readout', IndexMetaData, "index meta data")
     meta    = table.row
     keys    = h5f.create_earray(h5f.root, 'keys', atom_k, (0), "key of the counter elements", filters)
     vals    = h5f.create_earray(h5f.root, 'vals', atom_v, (0), "values of the counter elements", filters)

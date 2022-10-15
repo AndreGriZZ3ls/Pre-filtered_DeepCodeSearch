@@ -225,7 +225,7 @@ if __name__ == '__main__':
                         if word in index: # for each word of the processed query that the index contains: ...
                             cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
                     else:
-                        counters = data_loader.load_index_counters(index_type, query_list)
+                        counters = data_loader.load_index_counters(index_type, query_list, data_path)
                         for counter in counters:
                             cnt += Counter(dict(counter.most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
                 #print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
