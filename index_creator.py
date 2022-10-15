@@ -34,7 +34,7 @@ class IndexCreator:
         self.data_params  = conf.get('data_params', dict())
         self.index_type   = args.index_type
         self.dataset      = args.dataset
-        #self.index_dir    = args.index_dir
+        self.index_dir    = args.index_dir
         self.methname_vocab   = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_methname'])
         self.token_vocab      = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_tokens'])
         self.apiseq_vocab     = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_apiseq'])
@@ -93,8 +93,8 @@ class IndexCreator:
             methnames, tokens, irrelevant = self.load_data()
             return methnames, tokens
         #return data_loader.load_index_counters(self.index_type) # database
-        #index_path = self.data_path + self.index_dir + '/'
-        index_path = self.dataset_path
+        index_path = self.data_path + self.index_dir + '/'
+        #index_path = self.dataset_path
         index_file = self.index_type + '.pkl'
         assert os.path.exists(index_path + index_file), f"Index file {index_file} not found at {index_path}"
         print(f"Loading index from: {index_path}{index_file}")
