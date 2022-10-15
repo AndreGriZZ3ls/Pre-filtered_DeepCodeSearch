@@ -94,9 +94,13 @@ if __name__ == '__main__':
         #data_loader.data_to_db(data_path, config)
         #print('Info: Populating the database was sucessful.')
         index = indexer.load_index()
-        print(max(index.keys(), key = len))
+        #print(max(index.keys(), key = len))
+        for key in index.keys():
+            if len(key) > 36:
+                print(key)
     
     elif args.mode == 'create_index':
+    #if args.mode == 'create_index':
         indexer.create_index(stopwords)
 
     elif args.mode == 'search':
