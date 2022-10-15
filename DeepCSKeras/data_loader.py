@@ -1,12 +1,13 @@
 import io
 import math
 import time
+import tables
 import pickle
 import logging
 import operator
 import numpy as np
-from tqdm import tqdm
 from tables import *
+from tqdm import tqdm
 #from unqlite import UnQLite # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 from collections import Counter
 logger = logging.getLogger(__name__)
