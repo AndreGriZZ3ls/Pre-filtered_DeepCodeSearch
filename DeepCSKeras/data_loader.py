@@ -12,7 +12,7 @@ from collections import Counter
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s: %(name)s: %(levelname)s: %(message)s")
 
-class IndexMetaData(IsDecscription):
+class IndexMetaData(IsDescription):
     word = StringCol(16)
 
 def load_pickle(path):
