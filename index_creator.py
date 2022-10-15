@@ -109,7 +109,7 @@ class IndexCreator:
         for i, line in enumerate(tqdm(lines)):
             for raw_word in line:
                 for word in raw_word.split('_'):
-                    if f(word) or len(word) == 0: continue
+                    if f(word) or len(word) == 0 or len(word) > 18: continue
                     porter = PorterStemmer()
                     word = self.replace_synonyms(word)
                     word = porter.stem(word)

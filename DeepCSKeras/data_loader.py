@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s: %(name)s: %(levelname)s: %(message)s")
 
 class IndexMetaData(IsDescription):
-    word = StringCol(99)
+    word = StringCol(18)
     len  = UInt32Col()
     pos  = UInt32Col()
 
@@ -38,7 +38,7 @@ def load_index_counters(name, word_list):
     return counters
     
 def save_index(name, index, index_path):
-    db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
+    """db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
     collec = db.collection(name)
     collec.drop()
     collec.create()
@@ -48,9 +48,34 @@ def save_index(name, index, index_path):
         vals = list(cnt.values())
         collec.store({'word': item[0], 'keys': keys, 'vals': vals})
     db.close()
-    print(f"Index successfully saved to '{name}' collection in database.")
+    print(f"Index successfully saved to '{name}' collection in database.")"""
     index_file = index_path + self.index_type + '.h5'
-    
+    if os.path.exists(index_file):
+        os.remove(index_file)
+    atom_k  = tables.Atom.from_dtype(np.array(index.values()[0].keys()).dtype)
+    atom_v  = tables.Atom.from_dtype(np.array(index.values()[0].values()).dtype)
+    filters = tables.Filters(complib = 'blosc', complevel = 5)
+    h5f     = tables.open_file(index_file, mode = "w", title = name)
+    table   = h5file.create_table("/", 'readout', IndexMetaData, "index meta data")
+    meta    = table.row
+    keys    = h5f.create_earray(h5f.root, 'keys', atom_k, (0), "key of the counter elements", filters)
+    vals    = h5f.create_earray(h5f.root, 'vals', atom_v, (0), "values of the counter elements", filters)
+    pos     = 0
+    for item in index.items():
+        k = np.array(item[1].keys())
+        v = np.array(item[1].values())
+        l = len(k)
+        meta['word'] = item[0]
+        meta['len']  = l
+        meta['pos']  = pos
+        meta.append()
+        pos += l
+        keys.append(k)
+        vals.append(v)
+    table.flush()
+    table.col('word').create_csindex(filters)
+    table.flush()
+    h5f.close()
 
 ##### Data Set #####
 #def load_codebase(path, chunk_size, chunk_number = -1):
