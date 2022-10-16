@@ -84,6 +84,8 @@ def save_index(name, index, index_path):
     for item in index.items():
         k = np.array(list(item[1].keys()), dtype = np.int32).reshape((, 1))
         v = np.array(list(item[1].values()), dtype = np.float64).reshape((, 1))
+        k.reshape((k.shape[0], 1))
+        v.reshape((v.shape[0], 1))
         l = k.shape[0]
         print(k)
         print(k.shape)
