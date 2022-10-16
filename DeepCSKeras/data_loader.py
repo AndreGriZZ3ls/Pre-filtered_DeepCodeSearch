@@ -95,7 +95,7 @@ def save_index(name, index, index_path):
         keys.append(k)
         vals.append(v)
     table.flush()
-    table._f_col('word').create_csindex(filters)
+    table.cols.word.create_csindex(filters)
     table.flush()
     h5f.close()
 
