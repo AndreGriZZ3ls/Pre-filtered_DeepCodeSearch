@@ -93,8 +93,8 @@ if __name__ == '__main__':
     if args.mode == 'populate_database':
         #data_loader.data_to_db(data_path, config)
         #print('Info: Populating the database was sucessful.')
-        index = indexer.load_index()
-        data_loader.save_index(index_type, index, data_path)
+        #index = indexer.load_index()
+        #data_loader.save_index(index_type, index, data_path)
     
     elif args.mode == 'create_index':
     #if args.mode == 'create_index':
