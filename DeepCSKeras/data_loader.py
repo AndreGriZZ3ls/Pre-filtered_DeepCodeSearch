@@ -78,8 +78,8 @@ def save_index(name, index, index_path):
     h5f     = tables.open_file(index_file, mode = "w", title = name)
     table   = h5f.create_table("/", 'meta', IndexMetaData, "index meta data")
     meta    = table.row
-    keys    = h5f.create_earray(h5f.root, 'keys', atom_k, (0), "key of the counter elements", filters)
-    vals    = h5f.create_earray(h5f.root, 'vals', atom_v, (0), "values of the counter elements", filters)
+    keys    = h5f.create_earray(h5f.root, 'keys', atom_k, (0, 1), "key of the counter elements", filters)
+    vals    = h5f.create_earray(h5f.root, 'vals', atom_v, (0, 1), "values of the counter elements", filters)
     pos     = 0
     for item in index.items():
         k = np.array(item[1].keys())
