@@ -87,8 +87,6 @@ def save_index(name, index, index_path):
         k.flatten()
         v.flatten()
         l = k.shape[0]
-        print(k)
-        print(k.shape)
         meta['word'] = item[0]
         meta['len']  = l
         meta['pos']  = pos
@@ -97,7 +95,7 @@ def save_index(name, index, index_path):
         keys.append(k)
         vals.append(v)
     table.flush()
-    table.col('word').create_csindex(filters)
+    table._f_col('word').create_csindex(filters)
     table.flush()
     h5f.close()
 
