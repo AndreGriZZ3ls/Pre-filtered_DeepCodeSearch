@@ -72,8 +72,8 @@ def save_index(name, index, index_path):
     index_file = index_path + name + '.h5'
     if os.path.exists(index_file):
         os.remove(index_file)
-    atom_k  = tables.Atom.from_dtype(np.dtype('np.int32'))
-    atom_v  = tables.Atom.from_dtype(np.dtype('np.float64'))
+    atom_k  = tables.Atom.from_dtype(np.dtype(np.int32))
+    atom_v  = tables.Atom.from_dtype(np.dtype(np.float64))
     filters = tables.Filters(complib = 'blosc', complevel = 5)
     h5f     = tables.open_file(index_file, mode = "w", title = name)
     table   = h5f.create_table("/", 'meta', IndexMetaData, "index meta data")
