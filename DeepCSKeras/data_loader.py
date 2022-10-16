@@ -46,7 +46,7 @@ def load_index_counters(name, word_list, index_path):
     vals     = h5f.root.vals
     counters = []
     for word in word_list:
-        for row in meta.where('word == word'):
+        for row in meta.where(f'word == {word}'):
             l = row['len']
             p = row['pos']
             k = keys[p:p + l]
