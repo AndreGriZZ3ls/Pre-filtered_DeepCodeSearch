@@ -72,8 +72,8 @@ def save_index(name, index, index_path):
     index_file = index_path + name + '.h5'
     if os.path.exists(index_file):
         os.remove(index_file)
-    atom_k  = tables.Atom.from_dtype(np.array(list(index.values())[0].keys()).dtype)
-    atom_v  = tables.Atom.from_dtype(np.array(list(index.values())[0].values()).dtype)
+    atom_k  = tables.Atom.from_dtype(np.int32)
+    atom_v  = tables.Atom.from_dtype(np.float64)
     filters = tables.Filters(complib = 'blosc', complevel = 5)
     h5f     = tables.open_file(index_file, mode = "w", title = name)
     table   = h5f.create_table("/", 'meta', IndexMetaData, "index meta data")
@@ -189,7 +189,7 @@ def save_code_reprs(vecs, path):
 def load_hdf5(vecfile, start_offset, chunk_size):
     """reads training sentences(list of int array) from a hdf5 file"""  
     table    = tables.open_file(vecfile)
-    data     = table.get_node('/phrases')[:].astype(np.int)
+    data     = table.get_node('/phrases')[:].astype(np.int32)
     index    = table.get_node('/indices')[:]
     data_len = index.shape[0]
     if chunk_size == -1: # if chunk_size is set to -1, then, load all data
@@ -210,7 +210,7 @@ def load_hdf5(vecfile, start_offset, chunk_size):
 def load_hdf5_lines(vecfile, lines):
     """reads specified lines of training sentences(list of int array) from a hdf5 file"""  
     table    = tables.open_file(vecfile)
-    data     = table.get_node('/phrases')[:].astype(np.int)
+    data     = table.get_node('/phrases')[:].astype(np.int32)
     index    = table.get_node('/indices')[:]
     data_len = index.shape[0]
     sents    = []
@@ -253,7 +253,7 @@ def data_to_db(data_path, conf):
         print('load time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
         print(data[collec.last_record_id()][0])
         #data_arrays = [pickle.loads(d[0].decode(errors='replace')) for d in data]
-        if part != "rawcode": data_arrays = [np.fromiter(d[0], dtype = np.int) for d in data]
+        if part != "rawcode": data_arrays = [np.fromiter(d[0], dtype = np.int32) for d in data]
         print('to arrays time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
         if part != "rawcode": print(f"len(data_arrays): {len(data_arrays)} | type(data_arrays[0]): {type(data_arrays[0])} | type(data_arrays[0][0]): {type(data_arrays[0][0])}")
         if part != "rawcode": print(data_arrays[collec.last_record_id()])
