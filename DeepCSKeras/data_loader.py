@@ -86,7 +86,7 @@ def save_index(name, index, index_path):
         v = np.array(list(item[1].values()), dtype = np.float64)
         l = k.shape[0]
         print(k)
-        print(l)
+        print(k.shape)
         meta['word'] = item[0]
         meta['len']  = l
         meta['pos']  = pos
