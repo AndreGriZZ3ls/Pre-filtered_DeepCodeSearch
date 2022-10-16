@@ -37,10 +37,24 @@ def load_index_counters(name, word_list, index_path):
     db.close()
     print(f"Index successfully loaded from '{name}' collection in database.")
     return counters"""
-    index_file = index_path + self.index_type + '.h5'
+    index_file = index_path + name + '.h5'
     assert os.path.exists(index_file), f"Index file {index_file} not found!"
-    h5f     = tables.open_file(index_file, mode = "r")
-    table   = h5f.get_node('/meta')
+    h5f      = tables.open_file(index_file, mode = "r")
+    meta     = h5f.root.meta
+    keys     = h5f.root.keys
+    vals     = h5f.root.vals
+    counters = []
+    for word in word_list:
+        for row in table.where('word == word'):
+            l = row['len']
+            p = row['pos']
+            k = keys[p:p + l]
+            v = vals[p:p + l]
+            counters.append(Counter(dict(zip(k, v))))
+    h5f.close()
+    print(f"Index successfully loaded from '{index_file}'.")
+    return counters
+    
     
 def save_index(name, index, index_path):
     """db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
@@ -54,7 +68,7 @@ def save_index(name, index, index_path):
         collec.store({'word': item[0], 'keys': keys, 'vals': vals})
     db.close()
     print(f"Index successfully saved to '{name}' collection in database.")"""
-    index_file = index_path + self.index_type + '.h5'
+    index_file = index_path + name + '.h5'
     if os.path.exists(index_file):
         os.remove(index_file)
     atom_k  = tables.Atom.from_dtype(np.array(index.values()[0].keys()).dtype)
@@ -123,7 +137,7 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
     codebase_lines = list(get_lines_generator(codes, set(lines)))
     print('Total load_codebase_lines time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
     #codebase_lines = codes[lines]
-    if chunk_number > -1: return codebase_lines # TODO: fix (under this condition include chunk_number to correct lines)
+    if chunk_number > -1: return codebase_lines
     for i in range(0, len(lines), chunk_size):
         codebase.append(codebase_lines[i:i + chunk_size])
     return codebase #
