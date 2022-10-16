@@ -82,8 +82,8 @@ def save_index(name, index, index_path):
     vals    = h5f.create_earray(h5f.root, 'vals', atom_v, (0, 1), "values of the counter elements", filters)
     pos     = 0
     for item in index.items():
-        k = np.array(list(item[1].keys()), dtype = np.int32).reshape((0, 1))
-        v = np.array(list(item[1].values()), dtype = np.float64).reshape((0, 1))
+        k = np.array(list(item[1].keys()), dtype = np.int32).reshape((, 1))
+        v = np.array(list(item[1].values()), dtype = np.float64).reshape((, 1))
         l = k.shape[0]
         print(k)
         print(k.shape)
