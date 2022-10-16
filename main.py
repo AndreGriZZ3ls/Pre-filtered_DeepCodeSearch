@@ -95,6 +95,7 @@ if __name__ == '__main__':
         #print('Info: Populating the database was sucessful.')
         #index = indexer.load_index()
         #data_loader.save_index(index_type, index, data_path)
+        print('Nothing done.')
     
     elif args.mode == 'create_index':
     #if args.mode == 'create_index':
