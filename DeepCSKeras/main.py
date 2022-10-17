@@ -246,6 +246,7 @@ class SearchEngine:
             offset = i * self._codebase_chunksize
             for ind in maxinds:
                 ind += offset
+                print(ind)
             codes.extend(maxinds)
             #######################################
         """    chunk_codes = data_loader.load_codebase_lines(self.data_path + self.data_params['use_codebase'], maxinds, self._codebase_chunksize, i)
