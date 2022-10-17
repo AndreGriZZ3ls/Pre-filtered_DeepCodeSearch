@@ -243,13 +243,11 @@ class SearchEngine:
             chunk_codes = [self._codebase[i][k] for k in maxinds]
         else:
             ################ added ################
-            print(maxinds)
             offset = i * self._codebase_chunksize
             for ind in range(0, len(maxinds)):
                 maxinds[ind] = maxinds[ind] + offset
                 #print(ind)
             codes.extend(maxinds)
-            print(maxinds)
             #######################################
         """    chunk_codes = data_loader.load_codebase_lines(self.data_path + self.data_params['use_codebase'], maxinds, self._codebase_chunksize, i)
         codes.extend(chunk_codes)"""
@@ -299,6 +297,8 @@ def search_and_print_results(engine, model, vocab, query, n_results, data_path, 
     codes, sims = engine.search(model, vocab, query, n_results)
     ################ added ################
     if not engine._codebase:
+        print(sims)
+        print(codes)
         codes = data_loader.load_codebase_lines(data_path + data_params['use_codebase'], codes, -1)
     #######################################
     zipped  = zip(codes, sims)
