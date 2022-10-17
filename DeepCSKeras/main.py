@@ -241,6 +241,7 @@ class SearchEngine:
         chunk_sims  = chunk_sims[maxinds]
         if self._codebase:
             chunk_codes = [self._codebase[i][k] for k in maxinds]
+            codes.extend(chunk_codes)
         else:
             ################ added ################
             offset = i * self._codebase_chunksize
@@ -249,8 +250,8 @@ class SearchEngine:
                 #print(ind)
             codes.extend(maxinds)
             #######################################
-        """    chunk_codes = data_loader.load_codebase_lines(self.data_path + self.data_params['use_codebase'], maxinds, self._codebase_chunksize, i)
-        codes.extend(chunk_codes)"""
+            """chunk_codes = data_loader.load_codebase_lines(self.data_path + self.data_params['use_codebase'], maxinds, self._codebase_chunksize, i)
+            codes.extend(chunk_codes)"""
         sims.extend( chunk_sims)
         
     def postproc(self, codes_sims):
