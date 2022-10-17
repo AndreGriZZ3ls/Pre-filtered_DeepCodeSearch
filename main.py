@@ -237,6 +237,7 @@ if __name__ == '__main__':
                 #for i in range(0, 1000):
                 #    print(values[i])
                 result_line_numbers = list(result_line_numbers).sort()
+                result_line_numbers.sort()
                 if last_threshold_index >= min_filtered:
                     result_line_numbers = result_line_numbers[:last_threshold_index]
                 else:
