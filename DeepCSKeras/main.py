@@ -220,9 +220,9 @@ class SearchEngine:
         for t in threads:# wait until all sub-threads finish
             t.join()
         ################
-        del self._code_reprs
-        gc.collect()
-        self._code_reprs = None
+        #del self._code_reprs
+        #gc.collect()
+        #self._code_reprs = None
         ################
         return codes, sims
                 
@@ -311,8 +311,8 @@ def search_and_print_results(engine, model, vocab, query, n_results, data_path, 
     results = '\n\n'.join(map(str, zipped)) # combine the result into a returning string
     print(results)
     ################ added ################
-    del codes, sims, zipped, results, engine._codebase
-    gc.collect()
+    #del codes, sims, zipped, results, engine._codebase
+    #gc.collect()
     #######################################
 #
 
