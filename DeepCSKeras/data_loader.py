@@ -126,6 +126,7 @@ def get_lines_generator(iterable, lines):
     for i, line in enumerate(iterable):
         if i in line_set:
             results[lines.index(i)] = line
+            print(f"Added line to index {i}")
     return results#
 
 # added:
