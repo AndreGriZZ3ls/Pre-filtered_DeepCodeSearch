@@ -53,23 +53,17 @@ def parse_args():
                         " DeepCS with a trained model to search pre-selected for the K most relevant code snippets; "
                         " The 'populate_database' mode adds data to the database (for one time use only!). ")
     parser.add_argument("--index_type", choices=["word_indices","inverted_index"], default="inverted_index", help="Type of index "
-                        " to be created or used: The 'word_indices' mode utilizes parts of the dataset already existing for DeepCS "
-                        " (simple but not usable for more accurete similarity measurements. For each meaningful word the "
-                        " 'inverted_index' stores IDs of code fragment that contain it. ")
-    """parser.add_argument("--similarity_mode", choices=["lexical","tf_idf"], default='tf_idf', help="The metric used for "
-                        " similarity calculation between query and code fragments: The 'lexical' similarity mode measures "
-                        " the amount of words that query and code fragment have in common (rather simple and inaccurate). "
-                        " 'tf_idf' combines term frequency and inverted document frequency (both logarithmically damped) "
-                        " to weighten the informativeness of each word and measure the overall quality of match (best known "
-                        " metric but more time consuming; incompatible with word_indices as index type).")"""
+                        " to be created or used: The 'word_indices' mode [not recommended at all] utilizes parts of the dataset "
+                        " already existing for DeepCS to work (simple but not usable for more accurete similarity measurements. "
+                        " For each meaningful word the 'inverted_index' stores IDs and tf-idf weights of code fragment that contain it. ")
     parser.add_argument("--memory_mode", choices=["performance","vecs_and_code_in_mem","vecs_in_mem","code_in_mem","nothing_in_mem"], 
                         default="nothing_in_mem", help="'performance': [fastest, overly memory intensive, not recommended] All data "
                         " are loaded just one time at program start and kept in memory for fast access. 'vecs_and_code_in_mem': "
                         " [insignificantly slower, less memory usage] Vectors and raw code are loaded at program start and kept in "
-                        " memory; for each query just necessary index items including tf-idf weight counter objects are loaded from "
+                        " memory; for each query just necessary index items including counter objects are loaded from "
                         " disk very fast. 'vecs_in_mem': [reasonably slower, quite less memory usage, recommended] Vectors are kept "
                         " in memory; for each query just pre-filtered elements of raw code and index are loaded. 'code_in_mem':   "
-                        "  is cept in memory. 'database': [slowest, least memory usage]  ") # TODO: complete
+                        " 'nothing_in_mem': [slowest, least memory usage]  ") # TODO: complete
     return parser.parse_args()
    
 '''def generate_sublist(list, indices):
@@ -106,7 +100,7 @@ if __name__ == '__main__':
         indexer.create_index(stopwords)
 
     elif args.mode == 'search':
-        try:
+        """try:
             shutil.rmtree('__pycache__')
             print('Info: Cleared index_creator cache.')
         except FileNotFoundError:
@@ -126,8 +120,8 @@ if __name__ == '__main__':
         except:
             print("Exception while trying to clear cache directory 'DeepCSKeras/__pycache__'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
             traceback.print_exc()
-            pass
-            
+            pass"""
+        
         ##### Initialize DeepCS search engine and model ######
         engine = deepCS_main.SearchEngine(args, config)
         model  = getattr(models, args.model)(config) # initialize the model
@@ -141,9 +135,10 @@ if __name__ == '__main__':
         porter = PorterStemmer()
         vocab  = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
         
-        if memory_mode == "performance":
+        if memory_mode in ["performance","vecs_and_code_in_mem","vecs_in_mem"]: 
             full_code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1)
             #full_code_reprs = np.array(data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1))
+        if memory_mode in ["performance","vecs_and_code_in_mem","code_in_mem"]: 
             #full_codebase   = np.array(data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1))
             full_codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1)
         
@@ -152,30 +147,9 @@ if __name__ == '__main__':
             token_vocab     = data_loader.load_pickle(data_path + config['data_params']['vocab_tokens'])
             methnames, tokens = indexer.load_index()
         elif memory_mode == "performance":
-            index = indexer.load_index()  # TODO: Just load data specified by querywords --> see: Reading (and selecting) data in a table -> Table.where()
+            index = indexer.load_index()
         
         while True:
-            """file_list = glob.glob('__pycache__/*.pyc')
-            if not file_list: print('Info: index_creator cache is not present --> nothing to be cleared.')
-            for file in file_list:
-                try:
-                    os.remove(file)
-                    print('Info: Cleared index_creator cache.')
-                except:
-                    print(f"Exception while trying to clear cache file '{file}'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
-                    traceback.print_exc()
-                    pass
-            file_list = glob.glob('DeepCSKeras/__pycache__/*.pyc')
-            if not file_list: print('Info: DeepCSKeras cache is not present --> nothing to be cleared.')
-            for file in file_list:
-                try:
-                    os.remove(file)
-                    print('Info: Cleared a DeepCSKeras cache file.')
-                except:
-                    print(f"Exception while trying to clear cache file '{file}'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
-                    traceback.print_exc()
-                    pass"""
-            
             codebase, codereprs, tmp = [], [], []
             result_line_numbers = set()
             ##### Get user input ######
@@ -250,32 +224,23 @@ if __name__ == '__main__':
             
             chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results))
             #chunk_size = n_results
-            if memory_mode != "performance":
-                engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, chunk_size)
-                engine._codebase   = data_loader.load_codebase_lines(  data_path + 'sqlite.db', result_line_numbers, chunk_size) # database
-                #engine._codebase   = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, chunk_size)
-                #for chunk in engine._codebase:
-                #    for line in chunk:
-                #        print(line)
+            if memory_mode in ["performance","vecs_and_code_in_mem","vecs_in_mem"]:
+                vector_lines   = full_code_reprs[result_line_numbers]
+                for i in range(0, len(result_line_numbers), chunk_size):
+                    codereprs.append( vector_lines[i:i + chunk_size]))
+                engine._code_reprs = codereprs
             else:
+                engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, chunk_size)
+            if memory_mode in ["performance","vecs_and_code_in_mem","code_in_mem"]:
                 f = operator.itemgetter(*result_line_numbers)
                 codebase_lines = list(f(full_codebase))
-                #codebase_lines = map(full_codebase.__getitem__, result_line_numbers)
-                #codebase_lines = full_codebase[result_line_numbers]
-                #vector_lines   = list(f(full_code_reprs))
-                #vector_lines   = map(full_code_reprs.__getitem__, result_line_numbers)
-                vector_lines   = full_code_reprs[result_line_numbers]
-                #codebase_lines = list(codebase_lines)
-                #vector_lines   = list(vector_lines)
                 for i in range(0, len(result_line_numbers), chunk_size):
-                #for chunk in chunk_of_iter(codebase_lines, chunk_size):
                     codebase.append(codebase_lines[i:i + chunk_size])
-                    #codebase.append(chunk)
-                    codereprs.append( vector_lines[i:i + chunk_size])
-                #for chunk in chunk_of_iter(vector_lines, chunk_size):
-                    #codereprs.append(chunk)
-                engine._code_reprs = codereprs
                 engine._codebase   = codebase
+            else:
+                engine._codebase   = data_loader.load_codebase_lines(  data_path + 'sqlite.db', result_line_numbers, chunk_size) # database
+                #engine._codebase   = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, chunk_size)
+            print('DeepCS start time: {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'])
             print('Total time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
             print('System time: {:5.3f}s'.format(time.process_time()-start_proc))
