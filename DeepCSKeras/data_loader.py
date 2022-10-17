@@ -46,15 +46,16 @@ def load_index_counters(name, word_list, index_path, max_items):
     keys     = h5f.root.keys
     vals     = h5f.root.vals
     counters = []
-    for word in word_list:
-        #word = word.encode()
-        cond = f'word == b"{word}"'
-        for row in meta.where(cond):
-            l = row['len']
-            p = row['pos']
-            k = keys[p:p + min(l, max_items)]
-            v = vals[p:p + min(l, max_items)]
-            counters.append(Counter(dict(zip(k, v))))
+    #for word in word_list:
+    #    #word = word.encode()
+    #    cond = f'word == b"{word}"'
+    cond = "|".join(['word == b"{w}"'.format(w) for w in word_list])
+    for row in meta.where(cond):
+        l = row['len']
+        p = row['pos']
+        k = keys[p:p + min(l, max_items)]
+        v = vals[p:p + min(l, max_items)]
+        counters.append(Counter(dict(zip(k, v))))
     h5f.close()
     print('Total load_index_counters time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
     print(f"Successfully loaded tf-idf value counters from index '{index_file}'.")
