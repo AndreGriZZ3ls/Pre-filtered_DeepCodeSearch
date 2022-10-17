@@ -57,7 +57,7 @@ def parse_args():
                         " already existing for DeepCS to work (simple but not usable for more accurete similarity measurements. "
                         " For each meaningful word the 'inverted_index' stores IDs and tf-idf weights of code fragment that contain it. ")
     parser.add_argument("--memory_mode", choices=["performance","vecs_and_code_in_mem","vecs_in_mem","code_in_mem","nothing_in_mem"], 
-                        default="vecs_in_mem", help="'performance': [fastest, overly memory intensive, not recommended] All data "
+                        default="code_in_mem", help="'performance': [fastest, overly memory intensive, not recommended] All data "
                         " are loaded just one time at program start and kept in memory for fast access. 'vecs_and_code_in_mem': "
                         " [insignificantly slower, less memory usage] Vectors and raw code are loaded at program start and kept in "
                         " memory; for each query just necessary index items including counter objects are loaded from "
@@ -232,9 +232,9 @@ if __name__ == '__main__':
             else:
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, chunk_size)
             if memory_mode in ["performance","vecs_and_code_in_mem","code_in_mem"]:
-                #f = operator.itemgetter(*result_line_numbers)
-                #codebase_lines = list(f(full_codebase))
-                codebase_lines = full_codebase[result_line_numbers]
+                f = operator.itemgetter(*result_line_numbers)
+                codebase_lines = list(f(full_codebase))
+                #codebase_lines = full_codebase[result_line_numbers]
                 for i in range(0, len(result_line_numbers), chunk_size):
                     codebase.append(codebase_lines[i:i + chunk_size])
                 engine._codebase = codebase
