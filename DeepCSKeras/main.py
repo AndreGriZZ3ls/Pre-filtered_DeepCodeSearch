@@ -297,8 +297,8 @@ def search_and_print_results(engine, model, vocab, query, n_results, data_path, 
     codes, sims = engine.search(model, vocab, query, n_results)
     ################ added ################
     if not engine._codebase:
-        print(sims)
-        print(codes)
+        print(len(sims))
+        print(len(codes))
         codes = data_loader.load_codebase_lines(data_path + data_params['use_codebase'], codes, -1)
     #######################################
     zipped  = zip(codes, sims)
