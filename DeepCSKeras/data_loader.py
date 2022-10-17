@@ -117,7 +117,8 @@ def load_codebase(path, chunk_size):
     #    offset = chunk_size * chunk_number
     #    return io.open(path, encoding='utf8', errors='replace').readlines()[offset:offset + chunk_size]
     codes = io.open(path, "r", encoding='utf8', errors='replace').readlines()
-    if chunk_size < 0: return codes
+    #if chunk_size < 0: return codes
+    if chunk_size < 0: return np.array(codes)
     else:
         for i in tqdm(range(0, len(codes), chunk_size)):
             codebase.append(codes[i:i + chunk_size])            

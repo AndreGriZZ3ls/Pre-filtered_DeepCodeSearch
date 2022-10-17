@@ -139,8 +139,8 @@ if __name__ == '__main__':
             full_code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1)
             #full_code_reprs = np.array(data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1))
         if memory_mode in ["performance","vecs_and_code_in_mem","code_in_mem"]: 
-            full_codebase   = np.array(data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1))
-            #full_codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1)
+            #full_codebase   = np.array(data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1))
+            full_codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1)
         
         if index_type == "word_indices":
             methname_vocab  = data_loader.load_pickle(data_path + config['data_params']['vocab_methname'])
@@ -225,9 +225,9 @@ if __name__ == '__main__':
             chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results))
             #chunk_size = n_results
             if memory_mode in ["performance","vecs_and_code_in_mem","vecs_in_mem"]:
-                vector_lines   = full_code_reprs[result_line_numbers]
+                vector_lines = full_code_reprs[result_line_numbers]
                 for i in range(0, len(result_line_numbers), chunk_size):
-                    codereprs.append( vector_lines[i:i + chunk_size])
+                    codereprs.append(vector_lines[i:i + chunk_size])
                 engine._code_reprs = codereprs
             else:
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, chunk_size)
