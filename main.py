@@ -95,6 +95,7 @@ if __name__ == '__main__':
         #print('Info: Populating the database was sucessful.')
         #index = indexer.load_index()
         #data_loader.save_index(index_type, index, data_path)
+        data_loader.codebase_to_sqlite(data_path + config['data_params']['use_codebase'], data_path + 'sqlite.db')
         print('Nothing done.')
     
     elif args.mode == 'create_index':

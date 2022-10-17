@@ -4,6 +4,7 @@ import math
 import time
 import tables
 import pickle
+import sqlite3
 import logging
 import operator
 import numpy as np
@@ -46,15 +47,16 @@ def load_index_counters(name, word_list, index_path, max_items):
     keys     = h5f.root.keys
     vals     = h5f.root.vals
     counters = []
-    for word in word_list:
-        #word = word.encode()
-        cond = f'word == b"{word}"'
-        for row in meta.where(cond):
-            l = row['len']
-            p = row['pos']
-            k = keys[p:p + min(l, max_items)]
-            v = vals[p:p + min(l, max_items)]
-            counters.append(Counter(dict(zip(k, v))))
+    #for word in word_list:
+    #    #word = word.encode()
+    #    cond = f'word == b"{word}"'
+    cond = "|".join(['(word == b"%s")'%w for w in word_list])
+    for row in meta.where(cond):
+        l = row['len']
+        p = row['pos']
+        k = keys[p:p + min(l, max_items)]
+        v = vals[p:p + min(l, max_items)]
+        counters.append(Counter(dict(zip(k, v))))
     h5f.close()
     print('Total load_index_counters time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
     print(f"Successfully loaded tf-idf value counters from index '{index_file}'.")
@@ -140,26 +142,29 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
     codefile: h5 file that stores raw code
     """
     logger.info(f'Loading {len(lines)} pre-filtered codebase lines ...')
-    codes = io.open(path, "r", encoding='utf8',errors='replace')
-    #codes = io.open(path, encoding='utf8',errors='replace').readlines()
-    #f = operator.itemgetter(*lines)
-    #codebase_lines = list(f(codes))
-    codebase       = []
-    start = time.time()
+    codebase = []
+    start    = time.time()
     if chunk_number > 0:
         offset = chunk_number * chunk_size
         for line in lines:
             line += offset
-    codebase_lines = get_lines_generator(codes, lines)
+    if ".db" in path:
+        conn = sqlite3.connect(path)
+        curs = conn.cursor()
+        curs.execute("SELECT code FROM codebase WHERE id IN ?", lines)
+        codebase_lines = curs.fetchall()
+    else:
+        codes = io.open(path, "r", encoding='utf8',errors='replace')
+        #codes = io.open(path, encoding='utf8',errors='replace').readlines()
+        #f = operator.itemgetter(*lines)
+        #codebase_lines = list(f(codes))
+        codebase_lines = get_lines_generator(codes, lines)
     print('Total load_codebase_lines time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
     #codebase_lines = codes[lines]
     if chunk_number > -1 or chunk_size < 0: return codebase_lines
     for i in range(0, len(lines), chunk_size):
         codebase.append(codebase_lines[i:i + chunk_size])
     return codebase #
-    
-#def convert_codebase(path, target):
-#    codes = io.open(path, encoding='utf8', errors='replace').readlines()
 
 ### Results Data ###
 def load_code_reprs(path, chunk_size):
@@ -236,8 +241,19 @@ def load_hdf5_lines(vecfile, lines):
     table.close()
     return sents #
 
-######## database setup #########
-    
+######## database setup #########  
+def codebase_to_sqlite(codebase_path, db_file):
+    conn   = sqlite3.connect(db_file)
+    curs   = conn.cursor()
+    curs.execute(" CREATE TABLE IF NOT EXISTS codebase (id integer PRIMARY KEY, code text NOT NULL); ")
+    code_f = io.open(codebase_path, encoding='utf8', errors='replace')
+    codes  = code_f.readlines()
+    for code in codes:
+        curs.execute(" INSERT INTO codebase (code) VALUES(?) ", code.strip())
+    conn.commit()
+    code_f.close()
+    conn.close()
+
 def data_to_db(data_path, conf):
     #dataparts = ["apiseq", "methname", "rawcode", "tokens"]
     dataparts = ["apiseq"]
