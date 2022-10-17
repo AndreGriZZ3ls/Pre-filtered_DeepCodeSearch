@@ -154,7 +154,6 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
         cond = "SELECT code FROM codebase WHERE id IN (" + ",".join([str(line) for line in lines]) + ")"
         curs.execute(cond)
         codebase_lines = list(next(zip(*curs.fetchall())))
-        print(codebase_lines)
     else:
         codes = io.open(path, "r", encoding='utf8',errors='replace')
         #codes = io.open(path, encoding='utf8',errors='replace').readlines()
@@ -187,9 +186,10 @@ def load_code_reprs(path, chunk_size):
 def load_code_reprs_lines(path, lines, chunk_size): 
     logger.info(f'Loading {len(lines)} pre-filtered code vectors ...')          
     """reads some of the vectors (2D numpy array) from a hdf5 file"""
-    h5f  = tables.open_file(path)
-    vecs = h5f.root.vecs
-    #f    = operator.itemgetter(*lines)
+    start = time.time()
+    h5f   = tables.open_file(path)
+    vecs  = h5f.root.vecs
+    #f     = operator.itemgetter(*lines)
     codereprs    = []
     #vector_lines = list(get_lines_generator(vecs, lines))
     #print(f'vecs.shape: {vecs.shape}')
@@ -198,6 +198,7 @@ def load_code_reprs_lines(path, lines, chunk_size):
     for i in range(0, len(lines), chunk_size):
         codereprs.append(vector_lines[i:i + chunk_size])
     h5f.close()
+    print('Total load_code_reprs_lines time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
     return codereprs #
 
 def save_code_reprs(vecs, path):

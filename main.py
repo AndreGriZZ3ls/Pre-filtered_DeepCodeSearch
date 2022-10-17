@@ -62,11 +62,14 @@ def parse_args():
                         " 'tf_idf' combines term frequency and inverted document frequency (both logarithmically damped) "
                         " to weighten the informativeness of each word and measure the overall quality of match (best known "
                         " metric but more time consuming; incompatible with word_indices as index type).")"""
-    parser.add_argument("--memory_mode", choices=["performance","less_memory","database"], default="database", help="'performance': "
-                        " [fastest, very memory intensive] All data are loaded just one time at program start and kept in memory  "
-                        " for fast access. 'less_memory': [slower] The program will just load pre-filtered elements of some files "
-                        " after each query input instead of loading them completely in the beginning. The entire index including "
-                        " tf-idf weight counter objects is cept in memory. 'database': [slowest, least memory usage]  ") # TODO: complete
+    parser.add_argument("--memory_mode", choices=["performance","vecs_and_code_in_mem","vecs_in_mem","code_in_mem","nothing_in_mem"], 
+                        default="nothing_in_mem", help="'performance': [fastest, overly memory intensive, not recommended] All data "
+                        " are loaded just one time at program start and kept in memory for fast access. 'vecs_and_code_in_mem': "
+                        " [insignificantly slower, less memory usage] Vectors and raw code are loaded at program start and kept in "
+                        " memory; for each query just necessary index items including tf-idf weight counter objects are loaded from "
+                        " disk very fast. 'vecs_in_mem': [reasonably slower, quite less memory usage, recommended] Vectors are kept "
+                        " in memory; for each query just pre-filtered elements of raw code and index are loaded. 'code_in_mem':   "
+                        "  is cept in memory. 'database': [slowest, least memory usage]  ") # TODO: complete
     return parser.parse_args()
    
 '''def generate_sublist(list, indices):

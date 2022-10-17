@@ -300,6 +300,8 @@ def search_and_print_results(engine, model, vocab, query, n_results, data_path, 
     if not engine._codebase:
         #codes = data_loader.load_codebase_lines(data_path + data_params['use_codebase'], codes, -1)
         codes, sims = zip(*sorted(zip(codes, sims), key = lambda x:x[0]))
+        codes = list(codes)
+        sims  = list(sims )
         codes = data_loader.load_codebase_lines(data_path + 'sqlite.db', codes, -1) # database
     #######################################
     zipped  = zip(codes, sims)
