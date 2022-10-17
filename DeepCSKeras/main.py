@@ -262,6 +262,8 @@ class SearchEngine:
         if not self._codebase:
             codes = data_loader.load_codebase_lines(self.data_path + self.data_params['use_codebase'], codes, -1)
         #######################################
+        print(len(codes))
+        print(len(codes_sims))
         final_codes = []
         final_sims  = []
         n = len(codes_sims)        
