@@ -151,7 +151,7 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
     if ".db" in path:
         conn = sqlite3.connect(path)
         curs = conn.cursor()
-        curs.execute("SELECT code FROM codebase WHERE id IN ?", lines)
+        curs.execute("SELECT code FROM codebase WHERE id IN ?", [lines])
         codebase_lines = curs.fetchall()
     else:
         codes = io.open(path, "r", encoding='utf8',errors='replace')
@@ -249,7 +249,7 @@ def codebase_to_sqlite(codebase_path, db_file):
     code_f = io.open(codebase_path, encoding='utf8', errors='replace')
     codes  = code_f.readlines()
     for code in codes:
-        curs.execute(" INSERT INTO codebase (code) VALUES(?) ", code.strip())
+        curs.execute(" INSERT INTO codebase (code) VALUES(?) ", [code.strip()])
     conn.commit()
     code_f.close()
     conn.close()
