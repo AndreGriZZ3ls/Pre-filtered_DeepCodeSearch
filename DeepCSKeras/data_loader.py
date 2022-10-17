@@ -153,7 +153,7 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
         curs = conn.cursor()
         cond = "SELECT code FROM codebase WHERE id IN (" + ",".join([str(line) for line in lines]) + ")"
         curs.execute(cond)
-        codebase_lines = zip(*curs.fetchall())
+        codebase_lines = *curs.fetchall()
         codebase_lines = list(codebase_lines)
         print(codebase_lines)
     else:
