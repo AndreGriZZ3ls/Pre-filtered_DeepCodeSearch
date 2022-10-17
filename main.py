@@ -56,8 +56,8 @@ def parse_args():
                         " to be created or used: The 'word_indices' mode [not recommended at all] utilizes parts of the dataset "
                         " already existing for DeepCS to work (simple but not usable for more accurete similarity measurements. "
                         " For each meaningful word the 'inverted_index' stores IDs and tf-idf weights of code fragment that contain it. ")
-    parser.add_argument("--memory_mode", choices=["performance","vecs_and_code_in_mem","vecs_in_mem","code_in_mem","nothing_in_mem"], 
-                        default="vecs_and_code_in_mem", help="'performance': [fastest, overly memory intensive, not recommended] All data "
+    parser.add_argument("--memory_mode", choices=["performance","vecs_and_code_in_mem","vecs_and_index_in_mem","vecs_in_mem","code_in_mem","nothing_in_mem"], 
+                        default="performance", help="'performance': [fastest, overly memory intensive, not recommended] All data "
                         " are loaded just one time at program start and kept in memory for fast access. 'vecs_and_code_in_mem': "
                         " [insignificantly slower, less memory usage] Vectors and raw code are loaded at program start and kept in "
                         " memory; for each query just necessary index items including counter objects are loaded from "
