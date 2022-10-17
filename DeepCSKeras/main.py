@@ -244,9 +244,8 @@ class SearchEngine:
         else:
             ################ added ################
             offset = i * self._codebase_chunksize
-            print(offset)
-            for ind in range(0, len(maxinds)):
-                maxinds[ind] = maxinds[ind] + offset
+            for ind in maxinds:
+                ind += offset
             codes.extend(maxinds)
             #######################################
         """    chunk_codes = data_loader.load_codebase_lines(self.data_path + self.data_params['use_codebase'], maxinds, self._codebase_chunksize, i)
@@ -259,12 +258,6 @@ class SearchEngine:
         #sims  = [sim  for sim  in sims_ ]
         codes = list(codes_)
         sims  = list(sims_ )
-        ################ added ################
-        if not self._codebase:
-            codes = data_loader.load_codebase_lines(self.data_path + self.data_params['use_codebase'], codes, -1)
-        #######################################
-        print(len(codes))
-        print(len(codes_sims))
         final_codes = []
         final_sims  = []    
         for i in range(len(codes_sims)):
@@ -301,6 +294,10 @@ def parse_args():
 # moved into a function:
 def search_and_print_results(engine, model, vocab, query, n_results):
     codes, sims = engine.search(model, vocab, query, n_results)
+    ################ added ################
+    if not engine._codebase:
+        codes = data_loader.load_codebase_lines(data_path + config['data_params']['use_codebase'], codes, -1)
+    #######################################
     zipped  = zip(codes, sims)
     zipped  = sorted(zipped, reverse = True, key = lambda x:x[1])
     zipped  = engine.postproc(zipped)
@@ -387,13 +384,7 @@ if __name__ == '__main__':
                 start      = time.time()
                 start_proc = time.process_time()
                 query   = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
-            codes, sims = engine.search(model, vocab, query, n_results)
-            zipped  = zip(codes, sims)
-            zipped  = sorted(zipped, reverse = True, key = lambda x:x[1])
-            zipped  = engine.postproc(zipped)
-            zipped  = list(zipped)[:n_results]
-            results = '\n\n'.join(map(str, zipped)) # combine the result into a returning string
-            print(results)
+            search_and_print_results(engine, model, vocab, query, n_results)
             ################
             del codes, sims, zipped, results
             gc.collect()
