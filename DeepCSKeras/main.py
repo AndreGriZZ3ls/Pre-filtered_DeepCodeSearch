@@ -299,11 +299,11 @@ def search_and_print_results(engine, model, vocab, query, n_results, data_path, 
     ################ added ################
     if not engine._codebase:
         #codes = data_loader.load_codebase_lines(data_path + data_params['use_codebase'], codes, -1)
-        codes, sims = sorted(zip(codes, sims), key = lambda x:x[0])
+        codes, sims = zip(*sorted(zip(codes, sims), key = lambda x:x[0]))
         codes = data_loader.load_codebase_lines(data_path + 'sqlite.db', codes, -1) # database
     #######################################
     zipped  = zip(codes, sims)
-    zipped  = zip(*sorted(zipped, reverse = True, key = lambda x:x[1]))
+    zipped  = sorted(zipped, reverse = True, key = lambda x:x[1])
     zipped  = engine.postproc(zipped)
     zipped  = list(zipped)[:n_results]
     results = '\n\n'.join(map(str, zipped)) # combine the result into a returning string
