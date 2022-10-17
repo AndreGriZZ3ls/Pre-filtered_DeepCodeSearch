@@ -292,11 +292,11 @@ def parse_args():
     return parser.parse_args()
 
 # moved into a function:
-def search_and_print_results(engine, model, vocab, query, n_results):
+def search_and_print_results(engine, model, vocab, query, n_results, data_path, data_params):
     codes, sims = engine.search(model, vocab, query, n_results)
     ################ added ################
     if not engine._codebase:
-        codes = data_loader.load_codebase_lines(data_path + config['data_params']['use_codebase'], codes, -1)
+        codes = data_loader.load_codebase_lines(data_path + data_params['use_codebase'], codes, -1)
     #######################################
     zipped  = zip(codes, sims)
     zipped  = sorted(zipped, reverse = True, key = lambda x:x[1])
@@ -384,7 +384,7 @@ if __name__ == '__main__':
                 start      = time.time()
                 start_proc = time.process_time()
                 query   = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
-            search_and_print_results(engine, model, vocab, query, n_results)
+            search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'])
             ################
             del codes, sims, zipped, results
             gc.collect()
