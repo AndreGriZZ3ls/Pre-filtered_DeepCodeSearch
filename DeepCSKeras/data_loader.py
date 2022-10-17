@@ -121,7 +121,12 @@ def load_codebase(path, chunk_size):
 
 # added:
 def get_lines_generator(iterable, lines):
-    return (line for i, line in enumerate(iterable) if i in lines) #
+    results  = [None] * len(lines)
+    line_set = set(lines)
+    for i, line in enumerate(iterable):
+        if i in line_set:
+            results[lines.find(i)] = line
+    return results#
 
 # added:
 def load_codebase_lines(path, lines, chunk_size, chunk_number = -1): 
@@ -139,7 +144,7 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
         offset = chunk_number * chunk_size
         for line in lines:
             line += offset
-    codebase_lines = list(get_lines_generator(codes, set(lines)))
+    codebase_lines = get_lines_generator(codes, lines)
     print('Total load_codebase_lines time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
     #codebase_lines = codes[lines]
     if chunk_number > -1 or chunk_size < 0: return codebase_lines

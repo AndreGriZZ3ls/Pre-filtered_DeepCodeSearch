@@ -244,6 +244,7 @@ class SearchEngine:
         else:
             ################ added ################
             offset = i * self._codebase_chunksize
+            print(offset)
             for ind in range(0, len(maxinds)):
                 maxinds[ind] = maxinds[ind] + offset
             codes.extend(maxinds)
@@ -265,9 +266,8 @@ class SearchEngine:
         print(len(codes))
         print(len(codes_sims))
         final_codes = []
-        final_sims  = []
-        n = len(codes_sims)        
-        for i in range(n):
+        final_sims  = []    
+        for i in range(len(codes_sims)):
             is_dup = False
             for j in range(i):
                 if codes[i][:80] == codes[j][:80] and abs(sims[i] - sims[j]) < 0.01:
