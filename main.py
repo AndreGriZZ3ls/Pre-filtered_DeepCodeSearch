@@ -57,7 +57,7 @@ def parse_args():
                         " already existing for DeepCS to work (simple but not usable for more accurete similarity measurements. "
                         " For each meaningful word the 'inverted_index' stores IDs and tf-idf weights of code fragment that contain it. ")
     parser.add_argument("--memory_mode", choices=["performance","vecs_and_code_in_mem","vecs_and_index_in_mem","vecs_in_mem","code_in_mem","nothing_in_mem"], 
-                        default="performance", help="'performance': [fastest, overly memory intensive, not recommended] All data "
+                        default="vecs_and_index_in_mem", help="'performance': [fastest, overly memory intensive, not recommended] All data "
                         " are loaded just one time at program start and kept in memory for fast access. 'vecs_and_code_in_mem': "
                         " [insignificantly slower, less memory usage] Vectors and raw code are loaded at program start and kept in "
                         " memory; for each query just necessary index items including counter objects are loaded from "
@@ -135,7 +135,7 @@ if __name__ == '__main__':
         porter = PorterStemmer()
         vocab  = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
         
-        if memory_mode in ["performance","vecs_and_code_in_mem","vecs_in_mem"]: 
+        if memory_mode in ["performance","vecs_and_code_in_mem","vecs_in_mem","vecs_and_index_in_mem"]: 
             full_code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1)
             #full_code_reprs = np.array(data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1))
         if memory_mode in ["performance","vecs_and_code_in_mem","code_in_mem"]: 
@@ -196,7 +196,7 @@ if __name__ == '__main__':
                 """result_line_counters = []"""
                 #cnt, cnt_tf = Counter(), Counter()
                 cnt = Counter()
-                if memory_mode == "performance":
+                if memory_mode in ["performance","vecs_and_index_in_mem"]:
                     for word in query_list:
                         if word in index: # for each word of the processed query that the index contains: ...
                             cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
@@ -224,7 +224,7 @@ if __name__ == '__main__':
             
             chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results))
             #chunk_size = n_results
-            if memory_mode in ["performance","vecs_and_code_in_mem","vecs_in_mem"]:
+            if memory_mode in ["performance","vecs_and_code_in_mem","vecs_in_mem","vecs_and_index_in_mem"]:
                 vector_lines = full_code_reprs[result_line_numbers]
                 for i in range(0, len(result_line_numbers), chunk_size):
                     codereprs.append(vector_lines[i:i + chunk_size])
