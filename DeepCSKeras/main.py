@@ -245,8 +245,8 @@ class SearchEngine:
             ################ added ################
             print(maxinds)
             offset = i * self._codebase_chunksize
-            for ind in maxinds:
-                ind += offset
+            for ind in range(0, len(maxinds)):
+                maxinds[ind] = maxinds[ind] + offset
                 #print(ind)
             codes.extend(maxinds)
             print(maxinds)
