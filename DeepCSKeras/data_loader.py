@@ -122,12 +122,14 @@ def load_codebase(path, chunk_size):
 # added:
 def get_lines_generator(iterable, lines):
     results  = [None] * len(lines)
-    print(len(lines))
+    print(lines)
     line_set = set(lines)
-    print(len(line_set))
+    #print(len(line_set))
     for i, line in enumerate(iterable):
         if i in line_set:
-            results[lines.index(i)] = line
+            ind = lines.index(i)
+            results[ind] = line
+            print(f"Added line to {ind} for {i}")
     return results#
 
 # added:
