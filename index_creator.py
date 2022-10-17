@@ -103,17 +103,26 @@ class IndexCreator:
     def add_to_index(self, index, lines, stopwords):
         print("Adding lines to the index...   Please wait.")
         if stopwords:
-            f = lambda word: word in stopwords
+            porter = PorterStemmer()
+            for i, line in enumerate(tqdm(lines)):
+                for raw_word in line:
+                    for word in raw_word.split('_'):
+                        if len(word) == 0 or len(word) > 18 or word in stopwords: continue
+                        word = self.replace_synonyms(word)
+                        word = porter.stem(word)
+                        word = self.replace_synonyms(word)
+                        if word in index:
+                            #index[word].append(i)
+                            index[word][i] += 1 # counts term frequence
+                        else:
+                            #index[word] = [i]
+                            cnt = Counter()
+                            cnt[i] += 1
+                            index[word] = cnt
         else:
-            f = lambda word: word != '[]'
-        for i, line in enumerate(tqdm(lines)):
-            for raw_word in line:
-                for word in raw_word.split('_'):
-                    if f(word) or len(word) == 0 or len(word) > 18: continue
-                    porter = PorterStemmer()
-                    word = self.replace_synonyms(word)
-                    word = porter.stem(word)
-                    word = self.replace_synonyms(word)
+            for i, line in enumerate(tqdm(lines)):
+                for word in line:
+                    if word != '[]': continue
                     if word in index:
                         #index[word].append(i)
                         index[word][i] += 1 # counts term frequence
