@@ -146,7 +146,7 @@ if __name__ == '__main__':
             methname_vocab  = data_loader.load_pickle(data_path + config['data_params']['vocab_methname'])
             token_vocab     = data_loader.load_pickle(data_path + config['data_params']['vocab_tokens'])
             methnames, tokens = indexer.load_index()
-        elif memory_mode == "performance":
+        elif memory_mode in ["performance","vecs_and_index_in_mem"]:
             index = indexer.load_index()
         
         while True:
