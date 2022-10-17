@@ -227,7 +227,7 @@ if __name__ == '__main__':
             if memory_mode in ["performance","vecs_and_code_in_mem","vecs_in_mem"]:
                 vector_lines   = full_code_reprs[result_line_numbers]
                 for i in range(0, len(result_line_numbers), chunk_size):
-                    codereprs.append( vector_lines[i:i + chunk_size]))
+                    codereprs.append( vector_lines[i:i + chunk_size])
                 engine._code_reprs = codereprs
             else:
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, chunk_size)
