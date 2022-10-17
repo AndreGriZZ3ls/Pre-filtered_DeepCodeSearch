@@ -153,7 +153,6 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
         curs = conn.cursor()
         curs.execute("SELECT code FROM codebase WHERE id IN (" + ",".join([str(line) for line in lines]) + ")")
         codebase_lines = curs.fetchall()
-        print("STONKS")
     else:
         codes = io.open(path, "r", encoding='utf8',errors='replace')
         #codes = io.open(path, encoding='utf8',errors='replace').readlines()
@@ -249,8 +248,8 @@ def codebase_to_sqlite(codebase_path, db_file):
     curs.execute(" CREATE TABLE IF NOT EXISTS codebase (id integer PRIMARY KEY, code text NOT NULL); ")
     code_f = io.open(codebase_path, encoding='utf8', errors='replace')
     codes  = code_f.readlines()
-    for code in codes:
-        curs.execute(" INSERT INTO codebase (code) VALUES(?) ", [code.strip()])
+    for i, code in enumerate(codes):
+        curs.execute(" INSERT INTO codebase (id,code) VALUES(?,?) ", [i,code.strip()])
     conn.commit()
     code_f.close()
     conn.close()
