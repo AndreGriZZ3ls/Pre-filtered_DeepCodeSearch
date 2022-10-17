@@ -139,8 +139,8 @@ if __name__ == '__main__':
             full_code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1)
             #full_code_reprs = np.array(data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1))
         if memory_mode in ["performance","vecs_and_code_in_mem","code_in_mem"]: 
-            #full_codebase   = np.array(data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1))
-            full_codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1)
+            full_codebase   = np.array(data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1))
+            #full_codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1)
         
         if index_type == "word_indices":
             methname_vocab  = data_loader.load_pickle(data_path + config['data_params']['vocab_methname'])
@@ -232,14 +232,15 @@ if __name__ == '__main__':
             else:
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, chunk_size)
             if memory_mode in ["performance","vecs_and_code_in_mem","code_in_mem"]:
-                f = operator.itemgetter(*result_line_numbers)
-                codebase_lines = list(f(full_codebase))
+                #f = operator.itemgetter(*result_line_numbers)
+                #codebase_lines = list(f(full_codebase))
+                codebase_lines = full_codebase[result_line_numbers]
                 for i in range(0, len(result_line_numbers), chunk_size):
                     codebase.append(codebase_lines[i:i + chunk_size])
-                engine._codebase   = codebase
+                engine._codebase = codebase
             else:
-                engine._codebase   = data_loader.load_codebase_lines(  data_path + 'sqlite.db', result_line_numbers, chunk_size) # database
-                #engine._codebase   = data_loader.load_codebase_lines(  data_path + config['data_params']['use_codebase'], result_line_numbers, chunk_size)
+                engine._codebase = data_loader.load_codebase_lines(data_path + 'sqlite.db', result_line_numbers, chunk_size) # database
+                #engine._codebase = data_loader.load_codebase_lines(data_path + config['data_params']['use_codebase'], result_line_numbers, chunk_size)
             print('DeepCS start time: {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'])
             print('Total time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
