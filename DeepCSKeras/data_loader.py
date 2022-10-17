@@ -55,7 +55,7 @@ def load_index_counters(name, word_list, index_path):
             v = vals[p:p + l]
             counters.append(Counter(dict(zip(k, v))))
     h5f.close()
-    print(f"Index successfully loaded from '{index_file}'.")
+    print(f"Successfully loaded tf-idf value counters from index '{index_file}'.")
     return counters
     
     
@@ -112,7 +112,7 @@ def load_codebase(path, chunk_size):
     #if chunk_number > -1:
     #    offset = chunk_size * chunk_number
     #    return io.open(path, encoding='utf8', errors='replace').readlines()[offset:offset + chunk_size]
-    codes = io.open(path, encoding='utf8', errors='replace').readlines()
+    codes = io.open(path, "r", encoding='utf8', errors='replace').readlines()
     if chunk_size < 0: return codes
     else:
         for i in tqdm(range(0, len(codes), chunk_size)):
@@ -129,7 +129,7 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
     codefile: h5 file that stores raw code
     """
     logger.info(f'Loading {len(lines)} pre-filtered codebase lines ...')
-    codes = io.open(path, encoding='utf8',errors='replace')
+    codes = io.open(path, "r", encoding='utf8',errors='replace')
     #codes = io.open(path, encoding='utf8',errors='replace').readlines()
     #f = operator.itemgetter(*lines)
     #codebase_lines = list(f(codes))
