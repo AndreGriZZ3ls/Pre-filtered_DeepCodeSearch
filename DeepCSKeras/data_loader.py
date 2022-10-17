@@ -151,7 +151,7 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
     if ".db" in path:
         conn = sqlite3.connect(path)
         curs = conn.cursor()
-        curs.execute("SELECT code FROM codebase WHERE id IN VALUES(?)", [lines])
+        curs.execute("SELECT code FROM codebase WHERE id IN (" + ",".join([line for line in lines]) + ")")
         codebase_lines = curs.fetchall()
         print("STONKS")
     else:
