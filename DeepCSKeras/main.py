@@ -298,10 +298,7 @@ def search_and_print_results(engine, model, vocab, query, n_results, data_path, 
     codes, sims = engine.search(model, vocab, query, n_results)
     ################ added ################
     if not engine._codebase:
-        #print(len(sims))
-        #print(len(codes))
         codes = data_loader.load_codebase_lines(data_path + data_params['use_codebase'], codes, -1)
-        #print(len(codes))
     #######################################
     zipped  = zip(codes, sims)
     zipped  = sorted(zipped, reverse = True, key = lambda x:x[1])
@@ -309,6 +306,10 @@ def search_and_print_results(engine, model, vocab, query, n_results, data_path, 
     zipped  = list(zipped)[:n_results]
     results = '\n\n'.join(map(str, zipped)) # combine the result into a returning string
     print(results)
+    ################ added ################
+    del codes, sims, zipped, results, engine._codebase
+    gc.collect()
+    #######################################
 #
 
 if __name__ == '__main__':
@@ -360,17 +361,6 @@ if __name__ == '__main__':
         #engine._codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], engine._codebase_chunksize)
         vocab = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
         while True:
-            """file_list = glob.glob('__pycache__/*.pyc')
-            if not file_list: print('Info: DeepCSKeras cache is not present --> nothing to be cleared.')
-            for file in file_list:
-                try:
-                    os.remove(file)
-                    print('Info: DeepCSKeras cache cleared.')
-                except:
-                    print(f"Exception while trying to clear cache file '{file}'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
-                    traceback.print_exc()
-                    pass"""
-                    
             if args.no_manual_input: # added:
                 query     = args.query
                 n_results = args.n_results
@@ -390,11 +380,6 @@ if __name__ == '__main__':
                 start_proc = time.process_time()
                 query   = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'])
-            ################
-            del codes, sims, zipped, results
-            gc.collect()
-            engine._codebase = None
-            ################
             print('Total time:  {:5.3f}s'.format(time.time()-start))
             print('System time: {:5.3f}s'.format(time.process_time()-start_proc))
             if args.no_manual_input:  # added:
