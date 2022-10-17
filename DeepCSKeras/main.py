@@ -213,7 +213,7 @@ class SearchEngine:
             self._code_reprs = data_loader.load_code_reprs(self.data_path + self.data_params['use_codevecs'], self._codebase_chunksize)
         ################
         for i, code_reprs_chunk in enumerate(self._code_reprs):
-            t = threading.Thread(target=self.search_thread, args = (codes, sims, desc_repr, code_reprs_chunk, i, n_results))
+            t = threading.Thread(target = self.search_thread, args = (codes, sims, desc_repr, code_reprs_chunk, i, n_results))
             threads.append(t)
         for t in threads:
             t.start()
@@ -238,20 +238,30 @@ class SearchEngine:
         negsims = np.negative(chunk_sims)
         maxinds = np.argpartition(negsims, kth = n_results - 1)
         maxinds = maxinds[:n_results]  
+        chunk_sims  = chunk_sims[maxinds]
         if self._codebase:
             chunk_codes = [self._codebase[i][k] for k in maxinds]
         else:
-            chunk_codes = data_loader.load_codebase_lines(self.data_path + self.data_params['use_codebase'], maxinds, self._codebase_chunksize, i)
-        chunk_sims  = chunk_sims[maxinds]
-        codes.extend(chunk_codes)
+            ################ added ################
+            offset = i * self._codebase_chunksize
+            for ind in range(0, len(maxinds)):
+                maxinds[ind] = maxinds[ind] + offset
+            codes.extend(maxinds)
+            #######################################
+        """    chunk_codes = data_loader.load_codebase_lines(self.data_path + self.data_params['use_codebase'], maxinds, self._codebase_chunksize, i)
+        codes.extend(chunk_codes)"""
         sims.extend( chunk_sims)
         
-    def postproc(self,codes_sims):
+    def postproc(self, codes_sims):
         codes_, sims_ = zip(*codes_sims)
         #codes = [code for code in codes_]
         #sims  = [sim  for sim  in sims_ ]
         codes = list(codes_)
         sims  = list(sims_ )
+        ################ added ################
+        if not self._codebase:
+            codes = data_loader.load_codebase_lines(self.data_path + self.data_params['use_codebase'], codes, -1)
+        #######################################
         final_codes = []
         final_sims  = []
         n = len(codes_sims)        

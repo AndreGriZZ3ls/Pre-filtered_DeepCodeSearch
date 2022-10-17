@@ -142,7 +142,7 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
     codebase_lines = list(get_lines_generator(codes, set(lines)))
     print('Total load_codebase_lines time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
     #codebase_lines = codes[lines]
-    if chunk_number > -1: return codebase_lines
+    if chunk_number > -1 or chunk_size < 0: return codebase_lines
     for i in range(0, len(lines), chunk_size):
         codebase.append(codebase_lines[i:i + chunk_size])
     return codebase #
