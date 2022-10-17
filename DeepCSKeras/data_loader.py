@@ -123,10 +123,10 @@ def load_codebase(path, chunk_size):
 def get_lines_generator(iterable, lines):
     results  = [None] * len(lines)
     line_set = set(lines)
+    print(len(line_set))
     for i, line in enumerate(iterable):
         if i in line_set:
             results[lines.index(i)] = line
-            print(f"Added line to index {i}")
     return results#
 
 # added:
