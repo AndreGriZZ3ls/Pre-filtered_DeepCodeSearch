@@ -218,14 +218,14 @@ if __name__ == '__main__':
                 """result_line_counters = []"""
                 #cnt, cnt_tf = Counter(), Counter()
                 cnt = Counter()
-                for word in query_list:
-                    if memory_mode == "performance":
+                if memory_mode == "performance":
+                    for word in query_list:
                         if word in index: # for each word of the processed query that the index contains: ...
                             cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
-                    else:
-                        counters = data_loader.load_index_counters(index_type, query_list, data_path, max_filtered)
-                        for counter in counters:
-                            cnt += counter # sum tf-idf values for each identical line and merge counters in general 
+                else:
+                    counters = data_loader.load_index_counters(index_type, query_list, data_path, max_filtered)
+                    for counter in counters:
+                        cnt += counter # sum tf-idf values for each identical line and merge counters in general 
                 #print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
                 ##################################################################################################################
                 #result_line_numbers, values = zip(*cnt.most_common(10000 + 100 * n_results))
