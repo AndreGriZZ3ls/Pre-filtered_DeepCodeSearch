@@ -26,7 +26,7 @@ def load_pickle(path):
 def save_pickle(path, index):
     pickle.dump(index, open(path, 'wb'), pickle.HIGHEST_PROTOCOL) #
     
-def load_index_counters(name, word_list, index_path):
+def load_index_counters(name, word_list, index_path, max_items):
     """db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
     collec = db.collection(name)
     if not collec.exists():
@@ -38,6 +38,7 @@ def load_index_counters(name, word_list, index_path):
     db.close()
     print(f"Index successfully loaded from '{name}' collection in database.")
     return counters"""
+    start = time.time()
     index_file = index_path + name + '.h5'
     assert os.path.exists(index_file), f"Index file {index_file} not found!"
     h5f      = tables.open_file(index_file, mode = "r")
@@ -51,10 +52,11 @@ def load_index_counters(name, word_list, index_path):
         for row in meta.where(cond):
             l = row['len']
             p = row['pos']
-            k = keys[p:p + l]
-            v = vals[p:p + l]
+            k = keys[p:p + min(l, max_items)]
+            v = vals[p:p + min(l, max_items)]
             counters.append(Counter(dict(zip(k, v))))
     h5f.close()
+    print('Total load_index_counters time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
     print(f"Successfully loaded tf-idf value counters from index '{index_file}'.")
     return counters
     
