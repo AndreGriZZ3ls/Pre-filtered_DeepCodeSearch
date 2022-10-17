@@ -49,7 +49,7 @@ def load_index_counters(name, word_list, index_path, max_items):
     #for word in word_list:
     #    #word = word.encode()
     #    cond = f'word == b"{word}"'
-    cond = "||".join(['word == b"%s"'%w for w in word_list])
+    cond = "|".join(['(word == b"%s")'%w for w in word_list])
     for row in meta.where(cond):
         l = row['len']
         p = row['pos']
