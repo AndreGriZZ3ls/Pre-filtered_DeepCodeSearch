@@ -271,6 +271,6 @@ if __name__ == '__main__':
                     #codereprs.append(chunk)
                 engine._code_reprs = codereprs
                 engine._codebase   = codebase
-            deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, )
+            deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, data_path + config['data_params'])
             print('Total time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
             print('System time: {:5.3f}s'.format(time.process_time()-start_proc))
