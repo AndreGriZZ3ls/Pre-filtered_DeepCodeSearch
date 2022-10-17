@@ -236,7 +236,7 @@ if __name__ == '__main__':
                 last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val >= tf_idf_threshold)
                 #for i in range(0, 1000):
                 #    print(values[i])
-                result_line_numbers = list(result_line_numbers).sort()
+                result_line_numbers = list(result_line_numbers)
                 result_line_numbers.sort()
                 if last_threshold_index >= min_filtered:
                     result_line_numbers = result_line_numbers[:last_threshold_index]
