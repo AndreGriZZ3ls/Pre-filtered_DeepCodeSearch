@@ -153,6 +153,7 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
         curs = conn.cursor()
         curs.execute("SELECT code FROM codebase WHERE id IN ?", [lines])
         codebase_lines = curs.fetchall()
+        print("STONKS")
     else:
         codes = io.open(path, "r", encoding='utf8',errors='replace')
         #codes = io.open(path, encoding='utf8',errors='replace').readlines()
