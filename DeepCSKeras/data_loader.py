@@ -178,7 +178,7 @@ def load_code_reprs(path, chunk_size):
     if chunk_size < 0: 
         #vectors = vecs.tolist() # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TODO: Test
         #return np.array(vectors)
-        return np.array(vecs[:])
+        return vecs.read()
     #for i in tqdm(range(0, len(vecs), chunk_size)):
     #    codereprs.append(vecs[i:i + chunk_size])
     codereprs = [vecs[i:i + chunk_size] for i in tqdm(range(0, len(vecs), chunk_size))]
