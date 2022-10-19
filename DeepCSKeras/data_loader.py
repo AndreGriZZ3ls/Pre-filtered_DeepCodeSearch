@@ -176,8 +176,9 @@ def load_code_reprs(path, chunk_size):
     h5f  = tables.open_file(path, 'r')
     vecs = h5f.root.vecs
     if chunk_size < 0: 
-        vectors = vecs.tolist() # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TODO: Test
-        return np.array(vectors)
+        #vectors = vecs.tolist() # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TODO: Test
+        #return np.array(vectors)
+        return vecs
     #for i in tqdm(range(0, len(vecs), chunk_size)):
     #    codereprs.append(vecs[i:i + chunk_size])
     codereprs = [vecs[i:i + chunk_size] for i in tqdm(range(0, len(vecs), chunk_size))]
