@@ -112,15 +112,24 @@ def load_codebase(path, chunk_size):
     codefile: h5 file that stores raw code
     """
     logger.info('Loading codebase (chunk size = {}) ...'.format(chunk_size))
-    codebase = []
-    #if chunk_number > -1:
-    #    offset = chunk_size * chunk_number
-    #    return io.open(path, encoding='utf8', errors='replace').readlines()[offset:offset + chunk_size]
-    codes = io.open(path, "r", encoding='utf8', errors='replace').readlines()
-    if chunk_size < 0: return codes
+    codebase  = []
+    if path[-3:] == ".db":
+        conn  = sqlite3.connect(path)
+        curs  = conn.cursor()
+        cond  = "SELECT id,code FROM codebase"
+        curs.execute(cond)
+        codes = curs.fetchall()
+        print(f"type(codes): {type(codes)} | type(codes[0]): {type(codes[0])} | {codes[0]}")
+        if chunk_size < 0: return dict(codes)
+    else:
+        #if chunk_number > -1:
+        #    offset = chunk_size * chunk_number
+        #    return io.open(path, encoding='utf8', errors='replace').readlines()[offset:offset + chunk_size]
+        codes = io.open(path, "r", encoding='utf8', errors='replace').readlines()
+        if chunk_size < 0: return codes
     else:
         for i in tqdm(range(0, len(codes), chunk_size)):
-            codebase.append(codes[i:i + chunk_size])            
+            codebase.append(dict(codes[i:i + chunk_size]))            
     return codebase
 
 # added:
@@ -148,7 +157,7 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
         offset = chunk_number * chunk_size
         for line in lines:
             line += offset
-    if ".db" in path:
+    if path[-3:] == ".db":
         conn = sqlite3.connect(path)
         curs = conn.cursor()
         cond = "SELECT code FROM codebase WHERE id IN (" + ",".join([str(line) for line in lines]) + ")"
@@ -178,7 +187,7 @@ def load_code_reprs(path, chunk_size):
     if chunk_size < 0: 
         #vectors = vecs.tolist() # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TODO: Test
         #return np.array(vectors)
-        yield vecs.read()
+        return vecs.read()
     #for i in tqdm(range(0, len(vecs), chunk_size)):
     #    codereprs.append(vecs[i:i + chunk_size])
     codereprs = [vecs[i:i + chunk_size] for i in tqdm(range(0, len(vecs), chunk_size))]
