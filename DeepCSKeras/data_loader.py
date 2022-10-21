@@ -112,7 +112,6 @@ def load_codebase(path, chunk_size):
     codefile: h5 file that stores raw code
     """
     logger.info('Loading codebase (chunk size = {}) ...'.format(chunk_size))
-    codebase  = []
     if path[-3:] == ".db":
         conn  = sqlite3.connect(path)
         curs  = conn.cursor()
@@ -127,9 +126,9 @@ def load_codebase(path, chunk_size):
         #    return io.open(path, encoding='utf8', errors='replace').readlines()[offset:offset + chunk_size]
         codes = io.open(path, "r", encoding='utf8', errors='replace').readlines()
         if chunk_size < 0: return codes
-    else:
-        for i in tqdm(range(0, len(codes), chunk_size)):
-            codebase.append(dict(codes[i:i + chunk_size]))            
+    codebase  = []
+    for i in tqdm(range(0, len(codes), chunk_size)):
+        codebase.append(dict(codes[i:i + chunk_size]))            
     return codebase
 
 # added:
