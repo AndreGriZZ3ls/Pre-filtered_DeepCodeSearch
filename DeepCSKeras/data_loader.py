@@ -133,7 +133,7 @@ def load_codebase(path, chunk_size):
     print('Total load_codebase time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
     if chunk_size < 0: 
         return dict(codes)
-    if type(codes) != type([]): codes = codes.tolist()
+    if type(codes) != type([]): codes = list(codes)
     return [dict(codes[i:i + chunk_size]) for i in tqdm(range(0, length, chunk_size))] 
 
 # added:
