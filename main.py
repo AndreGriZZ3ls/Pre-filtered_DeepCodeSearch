@@ -214,11 +214,11 @@ if __name__ == '__main__':
                 #for i in range(0, 1000):
                 #    print(values[i])
                 result_line_numbers = list(result_line_numbers)
-                result_line_numbers.sort()
                 if last_threshold_index >= min_filtered:
                     result_line_numbers = result_line_numbers[:last_threshold_index]
                 else:
                     result_line_numbers = result_line_numbers[:min_filtered]
+                result_line_numbers.sort()
             #print('Time to calculate most relevant lines:  {:5.3f}s'.format(time.time()-start))
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             
@@ -239,7 +239,7 @@ if __name__ == '__main__':
             else:
                 engine._codebase = data_loader.load_codebase_lines(data_path + 'sqlite.db', result_line_numbers, chunk_size) # database
                 #engine._codebase = data_loader.load_codebase_lines(data_path + config['data_params']['use_codebase'], result_line_numbers, chunk_size)
-            print('DeepCS start time: {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
+            print('DeepCS start time: {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'])
-            print('Total time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
-            print('System time: {:5.3f}s'.format(time.process_time()-start_proc))
+            print('Total time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
+            print('System time: {:5.3f}s'.format(time.process_time() - start_proc))
