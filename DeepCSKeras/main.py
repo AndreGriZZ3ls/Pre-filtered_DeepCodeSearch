@@ -280,10 +280,10 @@ def parse_args():
     parser.add_argument("--dataset",   type=str, default="codesearchnet",        help="dataset name")
     parser.add_argument("--mode", choices=["train","eval","repr_code","search"], default='search',
                         help="The mode to run. The `train` mode trains a model;"
-                        " the `eval` mode evaluat models in a test set "
-                        " The `repr_code/repr_desc` mode computes vectors"
-                        " for a code snippet or a natural language description with a trained model.")
-    parser.add_argument("--verbose",         action="store_true", default=True, help="Be verbose")
+                        " the `eval` mode evaluat models in a test set; "
+                        " the `repr_code` mode computes vectors for the codebase with a trained model; "
+                        " the `search` mode searches the codebase for code snippets most relevant for the users query.")
+    parser.add_argument("--verbose",     action = "store_true", default=True, help="Be verbose")
     parser.add_argument("--memory_mode", choices=["performance","vecs_in_mem","code_in_mem","nothing_in_mem"], 
                         default="performance", help="'vecs_and_code_in_mem': [fastest, highest memory usage] "
                         " Vectors and raw code are loaded at program start and kept in memory for fast access. "

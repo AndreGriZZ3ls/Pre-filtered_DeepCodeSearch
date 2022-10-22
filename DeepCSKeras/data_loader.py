@@ -119,7 +119,7 @@ def load_codebase(path, chunk_size):
         cond  = "SELECT id,code FROM codebase"
         curs.execute(cond)
         codes = curs.fetchall()
-        print(f"type(codes): {type(codes)} | type(codes[0]): {type(codes[0])} | {codes[0]}")
+        #print(f"type(codes): {type(codes)} | type(codes[0]): {type(codes[0])} | {codes[0]}")
     else:
         #if chunk_number > -1:
         #    offset = chunk_size * chunk_number
@@ -129,9 +129,9 @@ def load_codebase(path, chunk_size):
         h5f.close()
         codes = zip(range(0, len(codes)), codes)
     print('Total load_codebase time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
-    if chunk_size < 0: return dict(codes)
-    codebase  = [dict(codes[i:i + chunk_size]) for i in tqdm(range(0, len(codes), chunk_size))] 
-    return codebase
+    if chunk_size < 0: 
+        return dict(codes)
+    return [dict(codes[i:i + chunk_size]) for i in tqdm(range(0, len(codes), chunk_size))] 
 
 # added:
 def get_lines_generator(iterable, lines):
@@ -152,8 +152,7 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
     codefile: h5 file that stores raw code
     """
     logger.info(f'Loading {len(lines)} pre-filtered codebase lines ...')
-    codebase = []
-    start    = time.time()
+    start = time.time()
     if chunk_number > 0:
         offset = chunk_number * chunk_size
         for line in lines:
@@ -172,24 +171,24 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
         codebase_lines = get_lines_generator(codes, lines)
         codes.close()
     print('Total load_codebase_lines time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
-    if chunk_number > -1 or chunk_size < 0: return codebase_lines
-    for i in range(0, len(lines), chunk_size):
-        codebase.append(codebase_lines[i:i + chunk_size])
-    return codebase #
+    if chunk_number > -1 or chunk_size < 0: 
+        return codebase_lines
+    return [codebase_lines[i:i + chunk_size] for i in range(0, len(lines), chunk_size)] #
 
 ### Results Data ###
 def load_code_reprs(path, chunk_size):
     logger.info(f'Loading code vectors (chunk size = {chunk_size}) ...')          
     """reads vectors (2D numpy array) from a hdf5 file"""
-    #if chunk_size < 0: return np.array(tables.open_file(path).root.vecs)
-    h5f  = tables.open_file(path, 'r')
-    vecs = h5f.root.vecs
+    start = time.time()
+    h5f   = tables.open_file(path, 'r')
+    vecs  = h5f.root.vecs
     if chunk_size < 0: 
         #vectors = vecs.tolist() # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TODO: Test
         #return np.array(vectors)
-        codereprs = [vecs[:]]
+        codereprs = vecs[:]
         h5f.close()
-        return dict(zip(range(0, len(codereprs)), codereprs)) # TODO: save as dictionary like codebase and test
+        print('Total load_code_reprs time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
+        return dict(zip(range(0, len(codereprs)), codereprs))
     #for i in tqdm(range(0, len(vecs), chunk_size)):
     #    codereprs.append(vecs[i:i + chunk_size])
     codereprs = [vecs[i:i + chunk_size] for i in tqdm(range(0, len(vecs), chunk_size))]
@@ -205,16 +204,13 @@ def load_code_reprs_lines(path, lines, chunk_size):
     h5f   = tables.open_file(path)
     vecs  = h5f.root.vecs
     #f     = operator.itemgetter(*lines)
-    codereprs    = []
     #vector_lines = list(get_lines_generator(vecs, lines))
     #print(f'vecs.shape: {vecs.shape}')
     vector_lines = vecs[lines, ...]
     #vector_lines = list(f(vecs))
-    for i in range(0, len(lines), chunk_size):
-        codereprs.append(vector_lines[i:i + chunk_size])
     h5f.close()
     print('Total load_code_reprs_lines time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
-    return codereprs #
+    return [vector_lines[i:i + chunk_size] for i in range(0, len(lines), chunk_size)] #
 
 def save_code_reprs(vecs, path):
     npvecs  = np.array(vecs)
