@@ -225,8 +225,8 @@ if __name__ == '__main__':
             chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results))
             #chunk_size = n_results
             if memory_mode in ["performance","vecs_and_code_in_mem","vecs_in_mem","vecs_and_index_in_mem"]:
-                #vector_lines = full_code_reprs[result_line_numbers]
-                vector_lines = [full_code_reprs[line] for line in result_line_numbers]
+                vector_lines = full_code_reprs[result_line_numbers]
+                #vector_lines = [full_code_reprs[line] for line in result_line_numbers]
                 engine._code_reprs = [vector_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
             else:
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, chunk_size)
