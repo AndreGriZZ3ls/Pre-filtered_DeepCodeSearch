@@ -52,6 +52,7 @@ def parse_args():
                         " The 'search' mode filters the dataset according to given query and index before utilizing "
                         " DeepCS with a trained model to search pre-selected for the K most relevant code snippets; "
                         " The 'populate_database' mode adds data to the database (for one time use only!). ")
+    parser.add_argument("--evaluate",   action = "store_true", default=False, help="Evaluate the filter instead of searching.")
     parser.add_argument("--index_type", choices=["word_indices","inverted_index"], default="inverted_index", help="Type of index "
                         " to be created or used: The 'word_indices' mode [not recommended at all] utilizes parts of the dataset "
                         " already existing for DeepCS to work (simple but not usable for more accurete similarity measurements. "
@@ -78,6 +79,7 @@ if __name__ == '__main__':
     args        = parse_args()
     config      = getattr(configs, 'config_' + args.model)()
     data_path   = args.data_path + args.dataset + '/'
+    evaluate    = args.evaluate
     index_type  = args.index_type
     memory_mode = args.memory_mode
     indexer     = IndexCreator(args, config)
@@ -151,7 +153,6 @@ if __name__ == '__main__':
         
         while True:
             tmp = []
-            result_line_numbers = set()
             ##### Get user input ######
             try:
                 query     =     input('Input query: ')

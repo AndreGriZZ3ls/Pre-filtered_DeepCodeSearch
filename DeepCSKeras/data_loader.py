@@ -114,11 +114,11 @@ def load_codebase(path, chunk_size):
     logger.info('Loading codebase (chunk size = {}) ...'.format(chunk_size))
     start = time.time()
     if path[-3:] == ".db":
-        conn  = sqlite3.connect(path)
-        curs  = conn.cursor()
-        cond  = "SELECT id,code FROM codebase"
+        conn   = sqlite3.connect(path)
+        curs   = conn.cursor()
+        cond   = "SELECT code FROM codebase"
         curs.execute(cond)
-        codes = curs.fetchall()
+        codes  = list(next(zip(*curs.fetchall())))
         length = len(codes)
         #print(f"type(codes): {type(codes)} | type(codes[0]): {type(codes[0])} | {codes[0]}")
     else:  # faster; use this, if rawcode.txt is available!
@@ -129,12 +129,11 @@ def load_codebase(path, chunk_size):
         codes  = h5f.readlines()
         length = len(codes)
         h5f.close()
-        codes = zip(range(0, len(codes)), codes)
     print('Total load_codebase time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
     if chunk_size < 0: 
-        return dict(codes)
-    if type(codes) != type([]): codes = list(codes)
-    return [dict(codes[i:i + chunk_size]) for i in tqdm(range(0, length, chunk_size))] 
+        return dict(zip(range(0, length), codes))
+    #if type(codes) != type([]): codes = list(codes)
+    return [dict(zip(range(0, chunk_size), codes[i:i + chunk_size])) for i in tqdm(range(0, length, chunk_size))] 
 
 # added:
 def get_lines_generator(iterable, lines):
