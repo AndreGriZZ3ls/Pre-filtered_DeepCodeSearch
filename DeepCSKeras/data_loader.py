@@ -119,19 +119,21 @@ def load_codebase(path, chunk_size):
         cond  = "SELECT id,code FROM codebase"
         curs.execute(cond)
         codes = curs.fetchall()
+        length = len(codes)
         #print(f"type(codes): {type(codes)} | type(codes[0]): {type(codes[0])} | {codes[0]}")
-    else:
+    else:  # faster; use this, if rawcode.txt is available!
         #if chunk_number > -1:
         #    offset = chunk_size * chunk_number
         #    return io.open(path, encoding='utf8', errors='replace').readlines()[offset:offset + chunk_size]
-        h5f   = io.open(path, "r", encoding='utf8', errors='replace')
-        codes = h5f.readlines()
+        h5f    = io.open(path, "r", encoding='utf8', errors='replace')
+        codes  = h5f.readlines()
+        length = len(codes)
         h5f.close()
         codes = zip(range(0, len(codes)), codes)
     print('Total load_codebase time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
     if chunk_size < 0: 
         return dict(codes)
-    return [dict(codes[i:i + chunk_size]) for i in tqdm(range(0, len(codes), chunk_size))] 
+    return [dict(codes[i:i + chunk_size]) for i in tqdm(range(0, length, chunk_size))] 
 
 # added:
 def get_lines_generator(iterable, lines):
@@ -157,7 +159,7 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
         offset = chunk_number * chunk_size
         for line in lines:
             line += offset
-    if path[-3:] == ".db":
+    if path[-3:] == ".db": # much faster, use this!
         conn = sqlite3.connect(path)
         curs = conn.cursor()
         cond = "SELECT code FROM codebase WHERE id IN (" + ",".join([str(line) for line in lines]) + ")"
@@ -190,7 +192,7 @@ def load_code_reprs(path, chunk_size):
         h5f.close()
         print('Total load_code_reprs time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
         #return dict(zip(range(0, len(codereprs)), codereprs))
-        print(f"type(codereprs): {type(codereprs)} | type(codereprs[0]): {type(codereprs[0])}")
+        #print(f"type(codereprs): {type(codereprs)} | type(codereprs[0]): {type(codereprs[0])}")
         return codereprs
     #for i in tqdm(range(0, len(vecs), chunk_size)):
     #    codereprs.append(vecs[i:i + chunk_size])
