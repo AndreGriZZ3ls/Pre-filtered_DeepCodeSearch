@@ -151,6 +151,10 @@ if __name__ == '__main__':
         elif memory_mode in ["performance","vecs_and_index_in_mem"]:
             index = indexer.load_index()
         
+        if evaluate: 
+            eval_dict = data_loader.load_pickle(data_path + 'eval_filter.pkl')
+            queries   = eval_dict.keys()
+        
         while True:
             tmp = []
             ##### Get user input ######
