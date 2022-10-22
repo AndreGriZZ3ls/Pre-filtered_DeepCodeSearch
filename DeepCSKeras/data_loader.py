@@ -112,6 +112,7 @@ def load_codebase(path, chunk_size):
     codefile: h5 file that stores raw code
     """
     logger.info('Loading codebase (chunk size = {}) ...'.format(chunk_size))
+    start = time.time()
     if path[-3:] == ".db":
         conn  = sqlite3.connect(path)
         curs  = conn.cursor()
@@ -119,16 +120,17 @@ def load_codebase(path, chunk_size):
         curs.execute(cond)
         codes = curs.fetchall()
         print(f"type(codes): {type(codes)} | type(codes[0]): {type(codes[0])} | {codes[0]}")
-        if chunk_size < 0: return dict(codes)
     else:
         #if chunk_number > -1:
         #    offset = chunk_size * chunk_number
         #    return io.open(path, encoding='utf8', errors='replace').readlines()[offset:offset + chunk_size]
-        codes = io.open(path, "r", encoding='utf8', errors='replace').readlines()
-        if chunk_size < 0: return codes
-    codebase  = []
-    for i in tqdm(range(0, len(codes), chunk_size)):
-        codebase.append(dict(codes[i:i + chunk_size]))            
+        h5f   = io.open(path, "r", encoding='utf8', errors='replace')
+        codes = h5f.readlines()
+        h5f.close()
+        codes = zip(range(0, len(codes)), codes)
+    print('Total load_codebase time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
+    if chunk_size < 0: return dict(codes)
+    codebase  = [dict(codes[i:i + chunk_size]) for i in tqdm(range(0, len(codes), chunk_size))] 
     return codebase
 
 # added:
@@ -168,8 +170,8 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
         #f = operator.itemgetter(*lines)
         #codebase_lines = list(f(codes))
         codebase_lines = get_lines_generator(codes, lines)
-    print('Total load_codebase_lines time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
-    #codebase_lines = codes[lines]
+        codes.close()
+    print('Total load_codebase_lines time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
     if chunk_number > -1 or chunk_size < 0: return codebase_lines
     for i in range(0, len(lines), chunk_size):
         codebase.append(codebase_lines[i:i + chunk_size])
@@ -179,23 +181,25 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
 def load_code_reprs(path, chunk_size):
     logger.info(f'Loading code vectors (chunk size = {chunk_size}) ...')          
     """reads vectors (2D numpy array) from a hdf5 file"""
-    codereprs = []
     #if chunk_size < 0: return np.array(tables.open_file(path).root.vecs)
     h5f  = tables.open_file(path, 'r')
     vecs = h5f.root.vecs
     if chunk_size < 0: 
         #vectors = vecs.tolist() # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TODO: Test
         #return np.array(vectors)
-        return vecs.read()
+        codereprs = [vecs[:]]
+        h5f.close()
+        return dict(zip(range(0, len(codereprs)), codereprs)) # TODO: save as dictionary like codebase and test
     #for i in tqdm(range(0, len(vecs), chunk_size)):
     #    codereprs.append(vecs[i:i + chunk_size])
     codereprs = [vecs[i:i + chunk_size] for i in tqdm(range(0, len(vecs), chunk_size))]
+    #codereprs = [dict(zip(range(i, i + chunk_size), vecs[i:i + chunk_size])) for i in tqdm(range(0, len(vecs), chunk_size))]
     h5f.close()
     return codereprs
 
 # added:
 def load_code_reprs_lines(path, lines, chunk_size): 
-    logger.info(f'Loading {len(lines)} pre-filtered code vectors ...')          
+    logger.info(f'Loading {len(lines)} pre-filtered code vectors ...')         
     """reads some of the vectors (2D numpy array) from a hdf5 file"""
     start = time.time()
     h5f   = tables.open_file(path)
@@ -214,12 +218,12 @@ def load_code_reprs_lines(path, lines, chunk_size):
 
 def save_code_reprs(vecs, path):
     npvecs  = np.array(vecs)
-    fvec    = tables.open_file(path, 'w')
+    h5f     = tables.open_file(path, 'w')
     atom    = tables.Atom.from_dtype(npvecs.dtype)
     filters = tables.Filters(complib = 'blosc', complevel = 5)
-    ds      = fvec.create_carray(fvec.root, 'vecs', atom, npvecs.shape, filters=filters)
+    ds      = h5f.create_carray(h5f.root, 'vecs', atom, npvecs.shape, filters=filters)
     ds[:]   = npvecs
-    fvec.close()
+    h5f.close()
 
 def load_hdf5(vecfile, start_offset, chunk_size):
     """reads training sentences(list of int array) from a hdf5 file"""  

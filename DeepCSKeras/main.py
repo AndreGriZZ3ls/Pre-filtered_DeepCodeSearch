@@ -284,13 +284,13 @@ def parse_args():
                         " The `repr_code/repr_desc` mode computes vectors"
                         " for a code snippet or a natural language description with a trained model.")
     parser.add_argument("--verbose",         action="store_true", default=True, help="Be verbose")
-    parser.add_argument("--no_manual_input", action="store_true", default=False, # added
-                        help="If active the program will process one input via the arguments 'n_results' "
-                        " as well as 'query', print the result and terminate; "
-                        " Otherwise the program will process user inputs from the console repeatedly "
-                        " until terminated by the user.")
-    parser.add_argument("--n_results", type=int, default=None, help="number of results to return") # added
-    parser.add_argument("--query",     type=str, default=None, help="user query to search for")    # added
+    parser.add_argument("--memory_mode", choices=["performance","vecs_in_mem","code_in_mem","nothing_in_mem"], 
+                        default="performance", help="'vecs_and_code_in_mem': [fastest, highest memory usage] "
+                        " Vectors and raw code are loaded at program start and kept in memory for fast access. "
+                        " 'vecs_in_mem': [reasonably slower, quite less memory usage, recommended] Vectors are kept "
+                        " in memory; for each query just pre-filtered elements of the raw code are loaded. "
+                        " 'code_in_mem': [much slower, much less memory usage] Just the raw code is kept in memory. "
+                        " 'nothing_in_mem': [slowest, least memory usage, not recommended] Load everything from disk for each query. ") # TODO: complete
     return parser.parse_args()
 
 # moved into a function:
@@ -347,7 +347,7 @@ if __name__ == '__main__':
         data_loader.save_code_reprs(vecs, data_path + config['data_params']['use_codevecs'])
         
     elif args.mode == 'search':
-        try:
+        """try:
             shutil.rmtree('__pycache__')
             print('Info: Cleared DeepCSKeras cache.')
         except FileNotFoundError:
@@ -356,35 +356,27 @@ if __name__ == '__main__':
         except:
             print("Exception while trying to clear cache directory '__pycache__'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
             traceback.print_exc()
-            pass
+            pass"""
             
         # search code based on a desc:
         assert config['training_params']['reload'] > 0, "Please specify the number of epoch of the optimal checkpoint in config.py"
         engine.load_model(model, config['training_params']['reload'])
-        #engine._code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], engine._codebase_chunksize)
-        #engine._codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], engine._codebase_chunksize)
+        if args.memory_mode in ["performance","vecs_in_mem"]:
+            engine._code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], engine._codebase_chunksize)
+        if args.memory_mode in ["performance","code_in_mem"]:
+            engine._codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], engine._codebase_chunksize)
         vocab = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
         while True:
-            if args.no_manual_input: # added:
-                query     = args.query
-                n_results = args.n_results
-                assert query     is not None, "A query input via the '--query' argument is required for 'no_manual_input' mode."
-                assert n_results is not None, "Please specify the number of results via the '--n_results' argument for 'no_manual_input' mode."
-                start      = time.time()
-                start_proc = time.process_time()
-            else: #
-                try:
-                    query     =     input('Input Query: ')
-                    n_results = int(input('How many results? '))
-                except Exception:
-                    print("Exception while parsing your input: ")
-                    traceback.print_exc()
-                    break
-                start      = time.time()
-                start_proc = time.process_time()
-                query   = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
+            try:
+                query     =     input('Input Query: ')
+                n_results = int(input('How many results? '))
+            except Exception:
+                print("Exception while parsing your input: ")
+                traceback.print_exc()
+                break
+            start      = time.time()
+            start_proc = time.process_time()
+            query   = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'])
             print('Total time:  {:5.3f}s'.format(time.time()-start))
             print('System time: {:5.3f}s'.format(time.process_time()-start_proc))
-            if args.no_manual_input:  # added:
-                break
