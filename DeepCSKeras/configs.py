@@ -13,8 +13,8 @@ def config_JointEmbeddingModel():
             'valid_tokens':'test.tokens.h5',
             'valid_desc':'test.desc.h5',
             #use data (computing code vectors)
-            #'use_codebase':'use.rawcode.txt',#'use.rawcode.h5'
-            'use_codebase':'sqlite.db',
+            'use_codebase':'use.rawcode.txt',#'use.rawcode.h5'
+            #'use_codebase':'sqlite.db',
             'use_methname':'use.methname.h5',
             'use_apiseq':'use.apiseq.h5',
             'use_tokens':'use.tokens.h5',     

@@ -185,10 +185,13 @@ def load_code_reprs(path, chunk_size):
     if chunk_size < 0: 
         #vectors = vecs.tolist() # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TODO: Test
         #return np.array(vectors)
-        codereprs = vecs[:]
+        #codereprs = vecs[:]
+        codereprs = vecs.read()
         h5f.close()
         print('Total load_code_reprs time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
-        return dict(zip(range(0, len(codereprs)), codereprs))
+        #return dict(zip(range(0, len(codereprs)), codereprs))
+        print(f"type(codereprs): {type(codereprs)} | type(codereprs[0]): {type(codereprs[0])}")
+        return codereprs
     #for i in tqdm(range(0, len(vecs), chunk_size)):
     #    codereprs.append(vecs[i:i + chunk_size])
     codereprs = [vecs[i:i + chunk_size] for i in tqdm(range(0, len(vecs), chunk_size))]
