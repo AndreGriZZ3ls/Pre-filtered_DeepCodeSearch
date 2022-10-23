@@ -93,7 +93,7 @@ if __name__ == '__main__':
         #print('Info: Populating the database was sucessful.')
         index = indexer.load_index()
         for word, line_counter in index.items():
-            index[word] = line_counter.most_common()
+            index[word] = Counter(line_counter).most_common()
         data_loader.save_index(index_type, index, data_path)
         data_loader.save_pickle(data_path + index_type + '.pkl', index)
         #data_loader.codebase_to_sqlite(data_path + config['data_params']['use_codebase'], data_path + 'sqlite.db')
@@ -152,7 +152,8 @@ if __name__ == '__main__':
             global_cnt += query_cnt
             e += 1
             result_file.write(f"{e}&{query}&{query_cnt['found_3']} / {query_cnt['total_3']}&{query_cnt['found_2']} / {query_cnt['total_2']}&{query_cnt['found_1']} / {query_cnt['total_1']}\\\\\n")
-        
+        result_file.write(f"&Insgesamt&{global_cnt['found_3']} / {global_cnt['total_3']}&{global_cnt['found_2']} / {global_cnt['total_2']}&{global_cnt['found_1']} / {global_cnt['total_1']}\\\\\n")
+        result_file.close()
     
     elif args.mode == 'search':
         """try:
