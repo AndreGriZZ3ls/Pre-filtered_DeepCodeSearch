@@ -28,6 +28,7 @@ import codecs
 import argparse
 import operator
 import traceback
+import itertools
 import numpy as np
 from tqdm import tqdm
 from collections import Counter
@@ -93,7 +94,7 @@ if __name__ == '__main__':
         #print('Info: Populating the database was sucessful.')
         index = indexer.load_index()
         for word, line_counter in index.items():
-            index[word] = Counter(line_counter).most_common()
+            index[word] = Counter(dict(line_counter.most_common()))
         data_loader.save_index(index_type, index, data_path)
         data_loader.save_pickle(data_path + index_type + '.pkl', index)
         #data_loader.codebase_to_sqlite(data_path + config['data_params']['use_codebase'], data_path + 'sqlite.db')
