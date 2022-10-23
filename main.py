@@ -94,7 +94,8 @@ if __name__ == '__main__':
         index = indexer.load_index()
         for word, line_counter in index.items():
             index[word] = line_counter.most_common()
-        indexer.save_index(index_type, index, data_path)
+        data_loader.save_index(index_type, index, data_path)
+        data_loader.save_pickle(data_path + index_type + '.pkl', index)
         #data_loader.codebase_to_sqlite(data_path + config['data_params']['use_codebase'], data_path + 'sqlite.db')
         print('Nothing done.')
     
@@ -114,6 +115,8 @@ if __name__ == '__main__':
         porter    = PorterStemmer()
         max_filtered = max(1000, 50 * n_results)
         min_filtered = max(500,  25 * n_results)
+        global_cnt   = Counter()
+        result_file  = io.open(data_path + 'eval_results.txt', "a", encoding='utf8', errors='replace')
         
         for query in queries:
             ##### Process user query ######
@@ -126,7 +129,7 @@ if __name__ == '__main__':
             query_list.extend(tmp)
             query_list = [indexer.replace_synonyms(w) for w in query_list]
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
-            cnt = Counter()
+            cnt, query_cnt = Counter(), Counter()
             for word in query_list:
                 if word in index: # for each word of the processed query that the index contains: ...
                     cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
@@ -138,6 +141,17 @@ if __name__ == '__main__':
             else:
                 result_line_numbers = result_line_numbers[:min_filtered]
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
+            result_line_numbers = set(result_line_numbers)
+            
+            for s, line in enumerate(line_nrs[e]):
+                score = scores[e][s]
+                if line in result_line_numbers:
+                    query_cnt["found_{}".format(score)] += 1
+                query_cnt["total_{}".format(score)] += 1
+            
+            global_cnt += query_cnt
+            e += 1
+            result_file.write(f"{e}&{query}&{query_cnt['found_3']} / {query_cnt['total_3']}&{query_cnt['found_2']} / {query_cnt['total_2']}&{query_cnt['found_1']} / {query_cnt['total_1']}\\\\\n")
         
     
     elif args.mode == 'search':
