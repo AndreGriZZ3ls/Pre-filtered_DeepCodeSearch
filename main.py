@@ -59,7 +59,7 @@ def parse_args():
                         " already existing for DeepCS to work (simple but not usable for more accurete similarity measurements. "
                         " For each meaningful word the 'inverted_index' stores IDs and tf-idf weights of code fragment that contain it. ")
     parser.add_argument("--memory_mode", choices=["performance","vecs_and_code","vecs_and_index","vecs","code","nothing"], 
-                        default="code", help="'performance': [fastest, overly memory intensive, not recommended] All data "
+                        default="nothing", help="'performance': [fastest, overly memory intensive, not recommended] All data "
                         " are loaded just one time at program start and kept in memory for fast access. 'vecs_and_code': "
                         " [insignificantly slower, less memory usage] Vectors and raw code are loaded at program start and kept in "
                         " memory; for each query just necessary index items including counter objects are loaded from "
@@ -117,7 +117,10 @@ if __name__ == '__main__':
         max_filtered = max(1000, 50 * n_results)
         min_filtered = max(500,  25 * n_results)
         global_cnt   = Counter()
-        result_file  = io.open(data_path + 'eval_results.txt', "a", encoding='utf8', errors='replace')
+        result_path  = data_path + 'eval_results.txt'
+        if os.path.exists(result_path):
+            os.remove(result_path)
+        result_file  = io.open(result_path, "a", encoding='utf8', errors='replace')
         
         for query in queries:
             ##### Process user query ######
