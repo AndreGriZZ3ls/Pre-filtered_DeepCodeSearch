@@ -91,9 +91,11 @@ if __name__ == '__main__':
     if args.mode == 'populate_database':
         #data_loader.data_to_db(data_path, config)
         #print('Info: Populating the database was sucessful.')
-        #index = indexer.load_index()
-        #data_loader.save_index(index_type, index, data_path)
-        data_loader.codebase_to_sqlite(data_path + config['data_params']['use_codebase'], data_path + 'sqlite.db')
+        index = indexer.load_index()
+        for word, line_counter in index.items():
+            index[word] = line_counter.most_common()
+        indexer.save_index(index_type, index, data_path)
+        #data_loader.codebase_to_sqlite(data_path + config['data_params']['use_codebase'], data_path + 'sqlite.db')
         print('Nothing done.')
     
     elif args.mode == 'create_index':
@@ -237,7 +239,8 @@ if __name__ == '__main__':
                 if memory_mode in ["performance","vecs_and_index_in_mem"]:
                     for word in query_list:
                         if word in index: # for each word of the processed query that the index contains: ...
-                            cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
+                            #cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
+                            cnt += Counter(dict(index[word][0:max_filtered])) # sum tf-idf values for each identical line and merge counters in general 
                 else:
                     for counter in data_loader.load_index_counters(index_type, query_list, data_path, max_filtered):
                         cnt += counter # sum tf-idf values for each identical line and merge counters in general 

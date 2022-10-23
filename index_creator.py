@@ -146,5 +146,7 @@ class IndexCreator:
                 idf   = math.log10(number_of_code_fragments / len(lines)) # inverse document frequence = log10(N/df)
                 for line_nr in lines: # replace currently stored term frequence by tf-idf:
                     line_counter[line_nr] = idf * math.log(1 + line_counter[line_nr]) # tf-idf = idf * log10(1 + tf)
+            for word, line_counter in index.items():
+                index[word] = line_counter.most_common()
         
         self.save_index(index)
