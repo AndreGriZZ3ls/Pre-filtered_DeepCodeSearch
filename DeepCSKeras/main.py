@@ -284,13 +284,13 @@ def parse_args():
                         " the `repr_code` mode computes vectors for the codebase with a trained model; "
                         " the `search` mode searches the codebase for code snippets most relevant for the users query.")
     parser.add_argument("--verbose",     action = "store_true", default=True, help="Be verbose")
-    parser.add_argument("--memory_mode", choices=["vecs_and_code_in_mem","vecs_in_mem","code_in_mem","nothing_in_mem"], 
-                        default="vecs_and_code_in_mem", help="'vecs_and_code_in_mem': [fastest, highest memory usage] "
+    parser.add_argument("--memory_mode", choices=["vecs_and_code","vecs","code","nothing"], 
+                        default="vecs", help="'vecs_and_code': [fastest, highest memory usage] "
                         " Vectors and raw code are loaded at program start and kept in memory for fast access. "
-                        " 'vecs_in_mem': [reasonably slower, quite less memory usage, recommended] Vectors are kept "
+                        " 'vecs': [reasonably slower, quite less memory usage, recommended] Vectors are kept "
                         " in memory; for each query just pre-filtered elements of the raw code are loaded. "
-                        " 'code_in_mem': [much slower, much less memory usage] Just the raw code is kept in memory. "
-                        " 'nothing_in_mem': [slowest, least memory usage, not recommended] Load everything from disk for each query. ") # TODO: complete
+                        " 'code': [much slower, much less memory usage] Just the raw code is kept in memory. "
+                        " 'nothing': [slowest, least memory usage, not recommended] Load everything from disk for each query. ") # TODO: complete
     return parser.parse_args()
 
 # moved into a function:
@@ -361,9 +361,9 @@ if __name__ == '__main__':
         # search code based on a desc:
         assert config['training_params']['reload'] > 0, "Please specify the number of epoch of the optimal checkpoint in config.py"
         engine.load_model(model, config['training_params']['reload'])
-        if args.memory_mode in ["vecs_and_code_in_mem","vecs_in_mem"]:
+        if args.memory_mode in ["vecs_and_code","vecs"]:
             engine._code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], engine._codebase_chunksize)
-        if args.memory_mode in ["vecs_and_code_in_mem","code_in_mem"]:
+        if args.memory_mode in ["vecs_and_code","code"]:
             engine._codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], engine._codebase_chunksize)
         vocab = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
         while True:
