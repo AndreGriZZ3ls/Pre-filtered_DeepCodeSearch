@@ -153,7 +153,10 @@ if __name__ == '__main__':
         
         if evaluate: 
             eval_dict = data_loader.load_pickle(data_path + 'eval_filter.pkl')
-            queries   = eval_dict.keys()
+            queries   = list(eval_dict.keys())
+            line_nrs  = list(eval_dict.values().keys())
+            scores    = list(eval_dict.values().values())
+            e         = 0
         
         while True:
             tmp = []

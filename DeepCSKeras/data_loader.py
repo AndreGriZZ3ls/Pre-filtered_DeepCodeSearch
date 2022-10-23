@@ -133,8 +133,7 @@ def load_codebase(path, chunk_size):
     if chunk_size < 0: 
         return dict(zip(range(0, length), codes))
     #if type(codes) != type([]): codes = list(codes)
-    #return [dict(zip(range(0, chunk_size), codes[i:i + chunk_size])) for i in tqdm(range(0, length, chunk_size))] 
-    return [codes[i:i + chunk_size] for i in tqdm(range(0, length, chunk_size))] 
+    return [dict(zip(range(0, chunk_size), codes[i:i + chunk_size])) for i in tqdm(range(0, length, chunk_size))] 
 
 # added:
 def get_lines_generator(iterable, lines):
