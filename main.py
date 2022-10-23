@@ -47,18 +47,18 @@ def parse_args():
     parser.add_argument("--dataset",    type=str, default="codesearchnet", help="dataset name")
     parser.add_argument("--data_path",  type=str, default='./DeepCSKeras/data/',       help="working directory")
     parser.add_argument("--model",      type=str, default="JointEmbeddingModel",       help="DeepCS model name")
-    parser.add_argument("--mode", choices=["create_index","search","populate_database"], default='search', help="The mode to run:"
-                        " The 'create_index' mode constructs an index of specified type on the desired dataset; "
-                        " The 'search' mode filters the dataset according to given query and index before utilizing "
+    parser.add_argument("--mode", choices=["create_index","search","populate_database","evaluate"], default='search', 
+                        help="The mode to run: 'create_index' mode constructs an index of specified type on the desired dataset; "
+                        " 'search' mode filters the dataset according to given query and index before utilizing "
                         " DeepCS with a trained model to search pre-selected for the K most relevant code snippets; "
-                        " The 'populate_database' mode adds data to the database (for one time use only!). ")
-    parser.add_argument("--evaluate",   action = "store_true", default=False, help="Evaluate the filter instead of searching.")
+                        " 'populate_database' mode adds data to the database (for one time use only!); "
+                        " 'evaluate' mode evaluates the filter (false negatives).")
     parser.add_argument("--index_type", choices=["word_indices","inverted_index"], default="inverted_index", help="Type of index "
                         " to be created or used: The 'word_indices' mode [not recommended at all] utilizes parts of the dataset "
                         " already existing for DeepCS to work (simple but not usable for more accurete similarity measurements. "
                         " For each meaningful word the 'inverted_index' stores IDs and tf-idf weights of code fragment that contain it. ")
     parser.add_argument("--memory_mode", choices=["performance","vecs_and_code_in_mem","vecs_and_index_in_mem","vecs_in_mem","code_in_mem","nothing_in_mem"], 
-                        default="vecs_and_code_in_mem", help="'performance': [fastest, overly memory intensive, not recommended] All data "
+                        default="performance", help="'performance': [fastest, overly memory intensive, not recommended] All data "
                         " are loaded just one time at program start and kept in memory for fast access. 'vecs_and_code_in_mem': "
                         " [insignificantly slower, less memory usage] Vectors and raw code are loaded at program start and kept in "
                         " memory; for each query just necessary index items including counter objects are loaded from "
@@ -79,7 +79,6 @@ if __name__ == '__main__':
     args        = parse_args()
     config      = getattr(configs, 'config_' + args.model)()
     data_path   = args.data_path + args.dataset + '/'
-    evaluate    = args.evaluate
     index_type  = args.index_type
     memory_mode = args.memory_mode
     indexer     = IndexCreator(args, config)
@@ -101,6 +100,44 @@ if __name__ == '__main__':
     #if args.mode == 'create_index':
         indexer.create_index(stopwords)
 
+    elif args.mode == 'evaluate':
+        e   = 0
+        tmp = []
+        eval_dict = data_loader.load_pickle(data_path + 'eval_filter.pkl')
+        queries   = list(eval_dict.keys())
+        line_nrs  = list(eval_dict.values().keys())
+        scores    = list(eval_dict.values().values())
+        index     = indexer.load_index()
+        n_results = 10
+        porter    = PorterStemmer()
+        max_filtered = max(1000, 50 * n_results)
+        min_filtered = max(500,  25 * n_results)
+        
+        for query in queries:
+            ##### Process user query ######
+            query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
+            query_list = list(set(query.split(' ')) - stopwords)
+            for word in query_list:
+                word_stem = porter.stem(word)
+                if word != word_stem and word_stem not in stopwords:
+                    tmp.append(porter.stem(word)) # include stems of query words
+            query_list.extend(tmp)
+            query_list = [indexer.replace_synonyms(w) for w in query_list]
+            print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
+            cnt = Counter()
+            for word in query_list:
+                if word in index: # for each word of the processed query that the index contains: ...
+                    cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
+            result_line_numbers, values = zip(*cnt.most_common(max_filtered))
+            last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val >= tf_idf_threshold)
+            result_line_numbers = list(result_line_numbers)
+            if last_threshold_index >= min_filtered:
+                result_line_numbers = result_line_numbers[:last_threshold_index]
+            else:
+                result_line_numbers = result_line_numbers[:min_filtered]
+            print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
+        
+    
     elif args.mode == 'search':
         """try:
             shutil.rmtree('__pycache__')
@@ -150,13 +187,6 @@ if __name__ == '__main__':
             methnames, tokens = indexer.load_index()
         elif memory_mode in ["performance","vecs_and_index_in_mem"]:
             index = indexer.load_index()
-        
-        if evaluate: 
-            eval_dict = data_loader.load_pickle(data_path + 'eval_filter.pkl')
-            queries   = list(eval_dict.keys())
-            line_nrs  = list(eval_dict.values().keys())
-            scores    = list(eval_dict.values().values())
-            e         = 0
         
         while True:
             tmp = []
