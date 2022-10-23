@@ -285,7 +285,7 @@ def parse_args():
                         " the `search` mode searches the codebase for code snippets most relevant for the users query.")
     parser.add_argument("--verbose",     action = "store_true", default=True, help="Be verbose")
     parser.add_argument("--memory_mode", choices=["vecs_and_code","vecs","code","nothing"], 
-                        default="vecs", help="'vecs_and_code': [fastest, highest memory usage] "
+                        default="code", help="'vecs_and_code': [fastest, highest memory usage] "
                         " Vectors and raw code are loaded at program start and kept in memory for fast access. "
                         " 'vecs': [reasonably slower, quite less memory usage, recommended] Vectors are kept "
                         " in memory; for each query just pre-filtered elements of the raw code are loaded. "
