@@ -15,9 +15,12 @@ __copyright__ = "Copyright (c) 2022, André Warnecke"
 '''
 
 import os
+import io
+import re
 import sys
 import math
 import codecs
+import itertools
 import numpy as np
 from tqdm import tqdm
 from collections import Counter
@@ -46,13 +49,14 @@ class IndexCreator:
         word = word.replace('object', 'instance').replace(' quit', 'exit').replace('terminate', 'exit').replace(' leave', 'exit')
         word = word.replace('pop ', 'delete').replace('remove', 'delete').replace('begin', 'start').replace('run ', 'execute')
         word = word.replace(' halt', 'stop').replace('restart', 'continue').replace('append', 'add').replace('push ', 'add')
-        word = word.replace('null ', 'none').replace('method', 'function').replace('concat', 'combine').replace(' break ', 'exit')
+        word = word.replace('null ', 'none').replace('method', 'function').replace('concat ', 'combine').replace(' break ', 'exit')
         word = word.replace(' for ', 'loop').replace(' foreach ', 'loop').replace(' while ', 'loop').replace(' iterat ', 'loop')
         word = word.replace('tinyint ', 'int').replace(' smallint ', 'int').replace(' bigint ', 'int').replace(' shortint ', 'int')
         word = word.replace('longint ', 'int').replace(' byte ', 'int').replace(' long ', 'int').replace(' short ', 'int')
         word = word.replace('integer ', 'int').replace(' double ', 'float').replace(' long ', 'float').replace(' decimal ', 'float')
-        word = word.replace('real ', 'float').replace(' array ', '[]').replace(' arrays ', '[]').replace(' arr ', '[]')
-        return word.replace(' implements ', 'extends').replace('runnable', 'executable').strip()
+        word = word.replace('real ', 'float').replace(' array ', '[').replace(' arrays ', '[').replace(' arr ', '[')
+        word = word.replace(' define ', 'create').replace(' declare ', 'create').replace(' init ', 'create')
+        return word.replace(' initiate ', 'create').replace(' implements ', 'extends').replace('runnable', 'executable').strip()
 
     def load_data(self):
         assert os.path.exists(self.dataset_path + self.data_params['use_methname']), f"Method names of real data not found."
@@ -105,12 +109,20 @@ class IndexCreator:
         if stopwords:
             porter = PorterStemmer()
             for i, line in enumerate(tqdm(lines)):
-                for raw_word in line:
-                    for word in raw_word.split('_'):
-                        if len(word) == 0 or len(word) > 18 or word in stopwords: continue
-                        word = self.replace_synonyms(word)
-                        word = porter.stem(word)
-                        word = self.replace_synonyms(word)
+                line = re.sub(r'[^\[a-zA-Z ]+', ' ', line) # replace all non-alphabetic characters except '[' by ' '
+                line = re.sub(r'  +', ' ', line.strip()) # remove consecutive spaces
+                line = re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', line) # split camelcase
+                line = line.lower().split(' ')
+                    
+                #for raw_word in line:
+                for word in line:
+                    if (len(word) > 1 and not word in stopwords and len(word) < 19) or word == '[':
+                    """for word in raw_word.split('_'):
+                        if len(word) == 0 or len(word) > 18 or word in stopwords: continue"""
+                        if word != '['
+                            word = self.replace_synonyms(word)
+                            word = porter.stem(word)
+                            word = self.replace_synonyms(word)
                         if word in index:
                             #index[word].append(i)
                             index[word][i] += 1 # counts term frequence
@@ -134,19 +146,27 @@ class IndexCreator:
 
     def create_index(self, stopwords):
         if self.index_type == "word_indices": print("Nothing to be done."); return
-        methnames, tokens, apiseqs = self.load_data()
+        #methnames, tokens, apiseqs = self.load_data()
+        file  = io.open(path, "r", encoding='utf8', errors='replace')
+        codes = file.readlines()
+        file.close()
+        number_of_code_fragments = len(codes)
+        
         index = dict()
         if self.index_type == "inverted_index":
-            self.add_to_index(index, methnames, stopwords)
+            """self.add_to_index(index, methnames, stopwords)
             self.add_to_index(index, tokens   , stopwords)
             self.add_to_index(index, apiseqs  , None)
-            number_of_code_fragments = len(methnames)
+            number_of_code_fragments = len(methnames)"""
+            self.add_to_index(index, codes, stopwords)
+            del codes
             for line_counter in tqdm(index.values()):
                 lines = list(line_counter.keys()) # deduplicated list of code fragments
-                idf   = math.log10(number_of_code_fragments / len(lines)) # inverse document frequence = log10(N/df)
+                idf   = math.log10(number_of_code_fragments / len(lines)) # inverse document frequence = log10(N / df)
                 for line_nr in lines: # replace currently stored term frequence by tf-idf:
                     line_counter[line_nr] = idf * math.log(1 + line_counter[line_nr]) # tf-idf = idf * log10(1 + tf)
             for word in index.keys():
                 index[word] = Counter(dict(sorted(index[word].items(), key=lambda x: (-x[1], x[0]))))
+                print(itertools.islice(index[word].values(), 100))
         
         self.save_index(index)

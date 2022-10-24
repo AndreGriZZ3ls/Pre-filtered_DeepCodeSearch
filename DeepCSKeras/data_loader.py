@@ -21,6 +21,7 @@ class IndexMetaData(IsDescription):
     pos  = UInt32Col()
 
 def load_pickle(path):
+    assert os.path.exists(path), f"File {path} not found!"
     return pickle.load(open(path, 'rb')) 
 
 # added:
@@ -125,10 +126,10 @@ def load_codebase(path, chunk_size):
         #if chunk_number > -1:
         #    offset = chunk_size * chunk_number
         #    return io.open(path, encoding='utf8', errors='replace').readlines()[offset:offset + chunk_size]
-        h5f    = io.open(path, "r", encoding='utf8', errors='replace')
-        codes  = h5f.readlines()
+        file   = io.open(path, "r", encoding='utf8', errors='replace')
+        codes  = file.readlines()
         length = len(codes)
-        h5f.close()
+        file.close()
     print('Total load_codebase time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
     if chunk_size < 0: 
         return dict(zip(range(0, length), codes))
