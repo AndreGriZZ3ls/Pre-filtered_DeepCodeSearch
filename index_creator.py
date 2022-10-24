@@ -178,7 +178,7 @@ class IndexCreator:
             index = index_list[0]
             for i in tqdm(range(1, len(index_list))):
                 ind = index_list[i]
-                for word in list(ind.keys())
+                for word in list(ind.keys()):
                     if word in index:
                         index[word] += ind[word]
                     else:
