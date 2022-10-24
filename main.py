@@ -109,8 +109,8 @@ if __name__ == '__main__':
         tmp = []
         eval_dict = data_loader.load_pickle(data_path + 'eval_filter.pkl')
         queries   = list(eval_dict.keys())
-        line_nrs  = list(eval_dict.values().keys())
-        scores    = list(eval_dict.values().values())
+        #line_nrs  = list(eval_dict.values().keys())
+        #scores    = list(eval_dict.values().values())
         index     = indexer.load_index()
         n_results = 10
         porter    = PorterStemmer()
@@ -123,6 +123,8 @@ if __name__ == '__main__':
         result_file  = io.open(result_path, "a", encoding='utf8', errors='replace')
         
         for query in queries:
+            query_lines  = list(eval_dict[query].keys())
+            query_scores = list(eval_dict[query].values())
             ##### Process user query ######
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
@@ -147,8 +149,8 @@ if __name__ == '__main__':
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             result_line_numbers = set(result_line_numbers)
             
-            for s, line in enumerate(line_nrs[e]):
-                score = scores[e][s]
+            for s, line in enumerate(query_lines):
+                score = query_scores[s]
                 if line in result_line_numbers:
                     query_cnt["found_{}".format(score)] += 1
                 query_cnt["total_{}".format(score)] += 1
