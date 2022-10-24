@@ -83,7 +83,7 @@ if __name__ == '__main__':
     index_type  = args.index_type
     memory_mode = args.memory_mode
     indexer     = IndexCreator(args, config)
-    stopwords   = set("a,about,after,also,an,and,another,are,around,as,at,be,because,been,before,being,between,both,but,by,came,can,create,come,could,did,do,does,each,every,from,get,got,had,has,have,he,her,here,him,himself,his,how,in,into,it,its,just,like,make,many,me,might,more,most,much,must,my,never,no,now,of,on,only,other,our,out,over,re,said,same,see,should,since,so,some,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,to,too,under,unk,UNK,up,use,very,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
+    stopwords   = set("a,about,after,also,an,and,another,are,around,as,at,be,because,been,before,being,between,both,but,by,came,can,come,could,did,do,does,each,every,from,get,got,had,has,have,he,her,here,him,himself,his,how,in,into,it,its,just,like,make,many,me,might,more,most,much,must,my,never,no,now,of,on,only,other,our,out,over,re,said,same,see,should,since,so,some,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,to,too,under,unk,UNK,up,use,very,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
     n_threads   = 8 # number of threads for parallelization of less performance intensive program parts
     _codebase_chunksize = 2000000
     tf_idf_threshold    = 2.79 
@@ -126,12 +126,14 @@ if __name__ == '__main__':
             query_scores = list(eval_dict[query].values())
             ##### Process user query ######
             tmp   = []
-            query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
-            query_list = list(set(query.split(' ')) - stopwords)
-            for word in query_list:
+            query_proc = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
+            query_list = list(set(query_proc.split(' ')) - stopwords)
+            """for word in query_list:
                 word_stem = porter.stem(word)
                 if word != word_stem and word_stem not in stopwords:
-                    tmp.append(porter.stem(word)) # include stems of query words
+                    tmp.append(word_stem) # include stems of query words"""
+            for i in range(0, len(query_list)):
+                query_list[i] = porter.stem(word)
             query_list.extend(tmp)
             query_list = [indexer.replace_synonyms(w) for w in query_list]
             query_list = list(set(query_list))
@@ -230,10 +232,12 @@ if __name__ == '__main__':
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
             #len_query_without_stems = len(query_list)
-            for word in query_list:
+            """for word in query_list:
                 word_stem = porter.stem(word)
                 if word != word_stem and word_stem not in stopwords:
-                    tmp.append(porter.stem(word)) # include stems of query words
+                    tmp.append(word_stem) # include stems of query words"""
+            for i in range(0, len(query_list)):
+                query_list[i] = porter.stem(word)
             query_list.extend(tmp)
             query_list = [indexer.replace_synonyms(w) for w in query_list]
             query_list = list(set(query_list))
