@@ -141,7 +141,8 @@ if __name__ == '__main__':
             cnt, query_cnt = Counter(), Counter()
             for word in query_list:
                 if word in index: # for each word of the processed query that the index contains: ...
-                    cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
+                    #cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
+                    cnt += Counter(dict(itertools.islice(index[word].items(), max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
             #result_line_numbers, values = zip(*cnt.most_common(max_filtered))
             result_line_numbers, values = zip(*itertools.islice(sorted(cnt.items(), key=lambda x: (-x[1], x[0])), max_filtered))
             last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val >= tf_idf_threshold)
