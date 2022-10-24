@@ -39,7 +39,7 @@ class IndexCreator:
         self.index_type   = args.index_type
         self.dataset      = args.dataset
         self.index_dir    = args.index_dir
-        self.n_threads    = 16
+        self.n_threads    = 8
         self.chunk_size   = 2000000
         self.methname_vocab = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_methname'])
         self.token_vocab    = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_tokens'])
