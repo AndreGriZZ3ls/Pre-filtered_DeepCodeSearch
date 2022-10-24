@@ -39,7 +39,7 @@ class IndexCreator:
         self.index_type   = args.index_type
         self.dataset      = args.dataset
         self.index_dir    = args.index_dir
-        self.n_threads    = 64
+        self.n_threads    = 128
         self.chunk_size   = 2000000
         self.methname_vocab   = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_methname'])
         self.token_vocab      = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_tokens'])
@@ -106,12 +106,16 @@ class IndexCreator:
         print(f"Loading index from: {index_path}{index_file}")
         return data_loader.load_pickle(index_path + index_file)
                     
-    def add_to_index(self, index_list, lines, stopwords):
+    def add_to_index(self, index_list, lines, stopwords, n = 0):
         #print("Adding lines to the index...   Please wait.")
         index = dict()
+        if n == 0:
+            enum_lines = tqdm(enumerate(lines))
+        else:
+            enum_lines = enumerate(lines)
         if stopwords:
             porter = PorterStemmer()
-            for i, line in enumerate(lines):
+            for i, line in enum_lines:
                 line = re.sub(r'[^\[a-zA-Z ]+', ' ', line) # replace all non-alphabetic characters except '[' by ' '
                 line = re.sub(r'  +', ' ', line.strip()) # remove consecutive spaces
                 line = re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', line) # split camelcase
@@ -166,8 +170,8 @@ class IndexCreator:
             self.add_to_index(index, apiseqs  , None)
             number_of_code_fragments = len(methnames)"""
             print("Adding lines to the index...   Please wait.")
-            for code in codes:
-                t = threading.Thread(target = self.add_to_index, args = (index_list, code, stopwords))
+            for n, code in enumerate(codes):
+                t = threading.Thread(target = self.add_to_index, args = (index_list, code, stopwords, n))
                 threads.append(t)
             for t in threads:
                 t.start()
