@@ -237,7 +237,7 @@ if __name__ == '__main__':
                 if word != word_stem and word_stem not in stopwords:
                     tmp.append(word_stem) # include stems of query words"""
             for i in range(0, len(query_list)):
-                query_list[i] = porter.stem(word)
+                query_list[i] = porter.stem(query_list[i])
             query_list.extend(tmp)
             query_list = [indexer.replace_synonyms(w) for w in query_list]
             query_list = list(set(query_list))
