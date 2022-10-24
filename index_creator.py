@@ -39,11 +39,11 @@ class IndexCreator:
         self.index_type   = args.index_type
         self.dataset      = args.dataset
         self.index_dir    = args.index_dir
-        self.n_threads    = 250
+        self.n_threads    = 64
         self.chunk_size   = 2000000
-        self.methname_vocab   = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_methname'])
-        self.token_vocab      = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_tokens'])
-        self.apiseq_vocab     = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_apiseq'])
+        self.methname_vocab = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_methname'])
+        self.token_vocab    = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_tokens'])
+        self.apiseq_vocab   = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_apiseq'])
 
     def replace_synonyms(self, word):
         word = ' ' + word + ' '
