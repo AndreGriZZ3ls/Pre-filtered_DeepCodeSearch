@@ -105,8 +105,7 @@ if __name__ == '__main__':
         indexer.create_index(stopwords)
 
     elif args.mode == 'evaluate':
-        e   = 0
-        tmp = []
+        e = 0
         eval_dict = data_loader.load_pickle(data_path + 'eval_filter.pkl')
         queries   = list(eval_dict.keys())
         #line_nrs  = list(eval_dict.values().keys())
@@ -126,6 +125,7 @@ if __name__ == '__main__':
             query_lines  = list(eval_dict[query].keys())
             query_scores = list(eval_dict[query].values())
             ##### Process user query ######
+            tmp   = []
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
             for word in query_list:
