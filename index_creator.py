@@ -119,7 +119,7 @@ class IndexCreator:
                     #for word in raw_word.split('_'):
                     if (len(word) > 1 and not word in stopwords and len(word) < 19) or word == '[':
                         #if len(word) == 0 or len(word) > 18 or word in stopwords: continue"""
-                        if word != '['
+                        if word != '[':
                             word = self.replace_synonyms(word)
                             word = porter.stem(word)
                             word = self.replace_synonyms(word)
