@@ -107,11 +107,11 @@ class IndexCreator:
         return data_loader.load_pickle(index_path + index_file)
                     
     def add_to_index(self, index_list, lines, stopwords):
-        print("Adding lines to the index...   Please wait.")
+        #print("Adding lines to the index...   Please wait.")
         index = dict()
         if stopwords:
             porter = PorterStemmer()
-            for i, line in enumerate(tqdm(lines)):
+            for i, line in enumerate(lines):
                 line = re.sub(r'[^\[a-zA-Z ]+', ' ', line) # replace all non-alphabetic characters except '[' by ' '
                 line = re.sub(r'  +', ' ', line.strip()) # remove consecutive spaces
                 line = re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', line) # split camelcase
@@ -165,6 +165,7 @@ class IndexCreator:
             self.add_to_index(index, tokens   , stopwords)
             self.add_to_index(index, apiseqs  , None)
             number_of_code_fragments = len(methnames)"""
+            print("Adding lines to the index...   Please wait.")
             for code in codes:
                 t = threading.Thread(target = self.add_to_index, args = (index_list, code, stopwords))
                 threads.append(t)
