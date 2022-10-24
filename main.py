@@ -134,6 +134,7 @@ if __name__ == '__main__':
                     tmp.append(porter.stem(word)) # include stems of query words
             query_list.extend(tmp)
             query_list = [indexer.replace_synonyms(w) for w in query_list]
+            query_list = list(set(query_list))
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
             cnt, query_cnt = Counter(), Counter()
             for word in query_list:
@@ -235,6 +236,7 @@ if __name__ == '__main__':
                     tmp.append(porter.stem(word)) # include stems of query words
             query_list.extend(tmp)
             query_list = [indexer.replace_synonyms(w) for w in query_list]
+            query_list = list(set(query_list))
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
             #####
             #print("Processing...  Please wait.")
