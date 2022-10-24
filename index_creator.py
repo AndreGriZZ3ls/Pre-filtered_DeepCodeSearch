@@ -147,7 +147,7 @@ class IndexCreator:
     def create_index(self, stopwords):
         if self.index_type == "word_indices": print("Nothing to be done."); return
         #methnames, tokens, apiseqs = self.load_data()
-        file  = io.open(path, "r", encoding='utf8', errors='replace')
+        file  = io.open(self.dataset_path + self.data_params['use_codebase'], "r", encoding='utf8', errors='replace')
         codes = file.readlines()
         file.close()
         number_of_code_fragments = len(codes)
