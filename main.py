@@ -125,7 +125,7 @@ if __name__ == '__main__':
             query_lines  = list(eval_dict[query].keys())
             query_scores = list(eval_dict[query].values())
             ##### Process user query ######
-            tmp   = []
+            #tmp   = []
             query_proc = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query_proc.split(' ')) - stopwords)
             """for word in query_list:
@@ -134,7 +134,7 @@ if __name__ == '__main__':
                     tmp.append(word_stem) # include stems of query words"""
             for i in range(0, len(query_list)):
                 query_list[i] = porter.stem(query_list[i])
-            query_list.extend(tmp)
+            #query_list.extend(tmp)
             query_list = [indexer.replace_synonyms(w) for w in query_list]
             query_list = list(set(query_list))
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
@@ -305,6 +305,7 @@ if __name__ == '__main__':
                 engine._codebase = [codebase_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
             else:
                 engine._codebase = data_loader.load_codebase_lines(data_path + 'sqlite.db', result_line_numbers, chunk_size) # database
+                for line in engine._codebase: print(line)
                 #engine._codebase = data_loader.load_codebase_lines(data_path + config['data_params']['use_codebase'], result_line_numbers, chunk_size)
             print('DeepCS start time: {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'])
