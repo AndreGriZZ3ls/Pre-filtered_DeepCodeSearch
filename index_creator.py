@@ -20,6 +20,7 @@ import re
 import sys
 import math
 import codecs
+import threading
 import itertools
 import numpy as np
 from tqdm import tqdm
@@ -38,10 +39,11 @@ class IndexCreator:
         self.index_type   = args.index_type
         self.dataset      = args.dataset
         self.index_dir    = args.index_dir
+        self.n_threads    = 64
+        self.chunk_size   = 2000000
         self.methname_vocab   = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_methname'])
         self.token_vocab      = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_tokens'])
         self.apiseq_vocab     = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_apiseq'])
-        self.chunk_size       = 2000000
 
     def replace_synonyms(self, word):
         word = ' ' + word + ' '
@@ -104,8 +106,9 @@ class IndexCreator:
         print(f"Loading index from: {index_path}{index_file}")
         return data_loader.load_pickle(index_path + index_file)
                     
-    def add_to_index(self, index, lines, stopwords):
+    def add_to_index(self, index_list, lines, stopwords):
         print("Adding lines to the index...   Please wait.")
+        index = dict()
         if stopwords:
             porter = PorterStemmer()
             for i, line in enumerate(tqdm(lines)):
@@ -131,6 +134,8 @@ class IndexCreator:
                             cnt = Counter()
                             cnt[i] += 1
                             index[word] = cnt
+            index_list.append(index)
+            
         else:
             for i, line in enumerate(tqdm(lines)):
                 for word in line:
@@ -151,15 +156,34 @@ class IndexCreator:
         codes = file.readlines()
         file.close()
         number_of_code_fragments = len(codes)
+        chunk_size = math.ceil(number_of_code_fragments / self.n_threads)
+        codes = [codes[i:i + chunk_size] for i in tqdm(range(0, number_of_code_fragments, chunk_size))]
         
-        index = dict()
+        index_list = []
         if self.index_type == "inverted_index":
             """self.add_to_index(index, methnames, stopwords)
             self.add_to_index(index, tokens   , stopwords)
             self.add_to_index(index, apiseqs  , None)
             number_of_code_fragments = len(methnames)"""
-            self.add_to_index(index, codes, stopwords)
+            for code in codes:
+                t = threading.Thread(target = self.add_to_index, args = (index_list, code, stopwords))
+                threads.append(t)
+            for t in threads:
+                t.start()
+            for t in threads:# wait until all sub-threads finish
+                t.join()
+            #self.add_to_index(index, codes, stopwords)
             del codes
+            
+            index = index_list[0]
+            for i in tqdm(range(1, len(index_list))):
+                ind = index_list[i]
+                for word in list(ind.keys())
+                    if word in index:
+                        index[word] += ind[word]
+                    else:
+                        index[word] = ind[word]
+            
             for line_counter in tqdm(index.values()):
                 lines = list(line_counter.keys()) # deduplicated list of code fragments
                 idf   = math.log10(number_of_code_fragments / len(lines)) # inverse document frequence = log10(N / df)
