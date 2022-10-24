@@ -159,7 +159,7 @@ class IndexCreator:
         chunk_size = math.ceil(number_of_code_fragments / self.n_threads)
         codes = [codes[i:i + chunk_size] for i in tqdm(range(0, number_of_code_fragments, chunk_size))]
         
-        index_list = []
+        index_list, threads = [], []
         if self.index_type == "inverted_index":
             """self.add_to_index(index, methnames, stopwords)
             self.add_to_index(index, tokens   , stopwords)
