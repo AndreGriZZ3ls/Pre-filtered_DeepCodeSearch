@@ -273,11 +273,8 @@ if __name__ == '__main__':
                         cnt += counter # sum tf-idf values for each identical line and merge counters in general 
                 #print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
                 ##################################################################################################################
-                #result_line_numbers, values = zip(*cnt.most_common(10000 + 100 * n_results))
-                #result_line_numbers, values = zip(*cnt.most_common(100 * n_results))
-                result_line_numbers, values = zip(*cnt.most_common(max_filtered))
-                #threshold = values[0]
-                #last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val == threshold)
+                #result_line_numbers, values = zip(*cnt.most_common(max_filtered))
+                result_line_numbers, values = zip(*itertools.islice(sorted(cnt.items(), key=lambda x: (-x[1], x[0])), max_filtered))
                 last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val >= tf_idf_threshold)
                 #for i in range(0, 1000):
                 #    print(values[i])
