@@ -93,8 +93,8 @@ if __name__ == '__main__':
         #data_loader.data_to_db(data_path, config)
         #print('Info: Populating the database was sucessful.')
         index = indexer.load_index()
-        for word, line_counter in index.items():
-            index[word] = Counter(dict(line_counter.most_common()))
+        for word in index.keys():
+            index[word] = Counter(dict(sorted(index[word].items(), key=lambda x: (-x[1], x[0]))))
         data_loader.save_index(index_type, index, data_path)
         data_loader.save_pickle(data_path + index_type + '.pkl', index)
         #data_loader.codebase_to_sqlite(data_path + config['data_params']['use_codebase'], data_path + 'sqlite.db')
