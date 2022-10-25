@@ -41,26 +41,41 @@ def load_index_counters(name, word_list, index_path, max_items):
     print(f"Index successfully loaded from '{name}' collection in database.")
     return counters"""
     start = time.time()
-    index_file = index_path + name + '.h5'
-    assert os.path.exists(index_file), f"Index file {index_file} not found!"
-    h5f      = tables.open_file(index_file, mode = "r")
-    meta     = h5f.root.meta
-    keys     = h5f.root.keys
-    vals     = h5f.root.vals
     counters = []
-    #for word in word_list:
-    #    #word = word.encode()
-    #    cond = f'word == b"{word}"'
-    cond = "|".join(['(word == b"%s")'%w for w in word_list])
-    for row in meta.where(cond):
-        l = row['len']
-        p = row['pos']
-        k = keys[p:p + min(l, max_items)]
-        v = vals[p:p + min(l, max_items)]
-        counters.append(Counter(dict(zip(k, v))))
-    h5f.close()
-    print('Total load_index_counters time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
-    print(f"Successfully loaded tf-idf value counters from index '{index_file}'.")
+    if path[-3:] == ".db":
+        conn  = sqlite3.connect(index_path)
+        curs  = conn.cursor()
+        for word in word_list:
+            cond = f"SELECT lines,values FROM {name} WHERE word == {word}"
+            curs.execute(cond)
+            raw = curs.fetchone()
+            print(raw)
+            keys, vals = zip(*raw)
+            keys = itertools.islice(keys, max_items)
+            vals = itertools.islice(vals, max_items)
+            counters.append(Counter(dict(zip(keys, vals))))
+        conn.close()
+        print(f"Successfully loaded tf-idf value counters from index '{name}' in database '{index_path}'.")
+    else:
+        index_file = index_path + name + '.h5'
+        assert os.path.exists(index_file), f"Index file {index_file} not found!"
+        h5f      = tables.open_file(index_file, mode = "r")
+        meta     = h5f.root.meta
+        keys     = h5f.root.keys
+        vals     = h5f.root.vals
+        #for word in word_list:
+        #    #word = word.encode()
+        #    cond = f'word == b"{word}"'
+        cond = "|".join(['(word == b"%s")'%w for w in word_list])
+        for row in meta.where(cond):
+            l = row['len']
+            p = row['pos']
+            k = keys[p:p + min(l, max_items)]
+            v = vals[p:p + min(l, max_items)]
+            counters.append(Counter(dict(zip(k, v))))
+        h5f.close()
+        print('Total load_index_counters time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
+        print(f"Successfully loaded tf-idf value counters from index '{index_file}'.")
     return counters
     
     
@@ -121,6 +136,7 @@ def load_codebase(path, chunk_size):
         curs.execute(cond)
         codes  = list(next(zip(*curs.fetchall())))
         length = len(codes)
+        conn.close()
         #print(f"type(codes): {type(codes)} | type(codes[0]): {type(codes[0])} | {codes[0]}")
     else:  # faster; use this, if rawcode.txt is available!
         #if chunk_number > -1:
@@ -166,6 +182,7 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
         cond = "SELECT code FROM codebase WHERE id IN (" + ",".join([str(line) for line in lines]) + ")"
         curs.execute(cond)
         codebase_lines = list(next(zip(*curs.fetchall())))
+        conn.close()
     else:
         codes = io.open(path, "r", encoding='utf8',errors='replace')
         #codes = io.open(path, encoding='utf8',errors='replace').readlines()
@@ -270,6 +287,19 @@ def codebase_to_sqlite(codebase_path, db_file):
     codes  = code_f.readlines()
     for i, code in enumerate(codes):
         curs.execute(" INSERT INTO codebase (id,code) VALUES(?,?) ", [i,code.strip()])
+    conn.commit()
+    code_f.close()
+    conn.close()
+    
+def index_to_sqlite(name, index_path, db_file):
+    conn   = sqlite3.connect(db_file)
+    curs   = conn.cursor()
+    curs.execute(f" DROP TABLE IF EXISTS {name}; ")
+    curs.execute(f" CREATE TABLE IF NOT EXISTS {name} (word text PRIMARY KEY, lines blob NOT NULL, values blob NOT NULL); ")
+    index = load_pickle(index_path)
+    for word in index.keys():
+        cnt = index[word]
+        curs.execute(f" INSERT INTO {name} (word,lines,values) VALUES(?,?,?) ", [word,list(cnt.keys()),list(cnt.values())])
     conn.commit()
     code_f.close()
     conn.close()

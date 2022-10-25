@@ -92,12 +92,13 @@ if __name__ == '__main__':
     if args.mode == 'populate_database':
         #data_loader.data_to_db(data_path, config)
         #print('Info: Populating the database was sucessful.')
-        index = indexer.load_index()
+        """index = indexer.load_index()
         for word in index.keys():
             index[word] = Counter(dict(sorted(index[word].items(), key=lambda x: (-x[1], x[0]))))
         data_loader.save_index(index_type, index, data_path)
-        data_loader.save_pickle(data_path + index_type + '.pkl', index)
+        data_loader.save_pickle(data_path + index_type + '.pkl', index)"""
         #data_loader.codebase_to_sqlite(data_path + config['data_params']['use_codebase'], data_path + 'sqlite.db')
+        data_loader.index_to_sqlite(index_type, data_path + index_type + '.pkl', data_path + 'sqlite.db')
         print('Nothing done.')
     
     elif args.mode == 'create_index':
@@ -271,7 +272,8 @@ if __name__ == '__main__':
                             #cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
                             cnt += Counter(dict(itertools.islice(index[word].items(), max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
                 else:
-                    for counter in data_loader.load_index_counters(index_type, query_list, data_path, max_filtered):
+                    #for counter in data_loader.load_index_counters(index_type, query_list, data_path, max_filtered):
+                    for counter in data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db', max_filtered):
                         cnt += counter # sum tf-idf values for each identical line and merge counters in general 
                 #print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
                 ##################################################################################################################
