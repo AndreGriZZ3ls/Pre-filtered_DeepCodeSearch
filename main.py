@@ -272,8 +272,8 @@ if __name__ == '__main__':
                             #cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
                             cnt += Counter(dict(itertools.islice(index[word].items(), max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
                 else:
-                    #for counter in data_loader.load_index_counters(index_type, query_list, data_path, max_filtered):
-                    for counter in data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db', max_filtered):
+                    for counter in data_loader.load_index_counters(index_type, query_list, data_path, max_filtered):
+                    #for counter in data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db', max_filtered):
                         cnt += counter # sum tf-idf values for each identical line and merge counters in general 
                 #print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
                 ##################################################################################################################
