@@ -118,11 +118,10 @@ class IndexCreator:
             pattern1 = re.compile(r'[^\[a-zA-Z ]+')
             pattern2 = re.compile(r'  +')
             pattern3 = re.compile(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))')
-            pattern4 = re.compile(r' \1')
             for i, line in enum_lines:
                 line = re.sub(pattern1, ' ', line) # replace all non-alphabetic characters except '[' by ' '
                 line = re.sub(pattern2, ' ', line.strip()) # remove consecutive spaces
-                line = re.sub(pattern3, pattern4, line) # split camelcase
+                line = re.sub(pattern3, r' \1', line) # split camelcase
                 line = line.lower().split(' ')
                     
                 #for raw_word in line:
