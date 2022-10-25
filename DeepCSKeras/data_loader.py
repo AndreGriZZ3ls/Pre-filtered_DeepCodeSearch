@@ -42,7 +42,7 @@ def load_index_counters(name, word_list, index_path, max_items):
     return counters"""
     start = time.time()
     counters = []
-    if path[-3:] == ".db":
+    if index_path[-3:] == ".db":
         conn  = sqlite3.connect(index_path)
         curs  = conn.cursor()
         for word in word_list:

@@ -199,6 +199,6 @@ class IndexCreator:
                     line_counter[line_nr] = idf * math.log(1 + line_counter[line_nr]) # tf-idf = idf * log10(1 + tf)
             for word in index.keys():
                 index[word] = Counter(dict(sorted(index[word].items(), key=lambda x: (-x[1], x[0]))))
-                print(itertools.islice(index[word].values(), 100))
+                #print(itertools.islice(index[word].values(), 100))
         
         self.save_index(index)
