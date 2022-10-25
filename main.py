@@ -273,7 +273,7 @@ if __name__ == '__main__':
                             cnt += Counter(dict(itertools.islice(index[word].items(), max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
                 else:
                     for counter in data_loader.load_index_counters(index_type, query_list, data_path, max_filtered):
-                    #for counter in data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db', max_filtered):
+                    #for counter in data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db', max_filtered): # TODO: compare
                         cnt += counter # sum tf-idf values for each identical line and merge counters in general 
                 #print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
                 ##################################################################################################################
@@ -307,9 +307,9 @@ if __name__ == '__main__':
                 engine._codebase = [codebase_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
             else:
                 engine._codebase = data_loader.load_codebase_lines(data_path + 'sqlite.db', result_line_numbers, chunk_size) # database
-                for chunk in engine._codebase: 
+                """for chunk in engine._codebase: 
                     for line in chunk:
-                        print(line + "\n")
+                        print(line + "\n")"""
                 #engine._codebase = data_loader.load_codebase_lines(data_path + config['data_params']['use_codebase'], result_line_numbers, chunk_size)
             print('DeepCS start time: {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'])
