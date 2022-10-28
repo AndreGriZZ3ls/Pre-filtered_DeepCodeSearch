@@ -1,72 +1,72 @@
-1&create cookie&0 / 0&0 / 2&0 / 1\\
-2&read properties file&0 / 2&0 / 2&0 / 1\\
+1&create cookie&0 / 0&2 / 2&0 / 1\\
+2&read properties file&0 / 2&1 / 2&0 / 1\\
 3&get executable path&0 / 2&0 / 0&0 / 2\\
-4&all permutations of a list&1 / 1&0 / 0&1 / 2\\
-5&string to date&1 / 1&0 / 0&0 / 1\\
-6&how to make the checkbox checked&1 / 2&0 / 0&1 / 2\\
+4&all permutations of a list&1 / 1&0 / 0&2 / 2\\
+5&string to date&0 / 1&0 / 0&0 / 1\\
+6&how to make the checkbox checked&0 / 2&0 / 0&0 / 2\\
 7&sorting multiple arrays based on another arrays sorted order&0 / 0&0 / 2&0 / 1\\
 8&format date&0 / 1&0 / 1&0 / 0\\
 9&how to get current date&0 / 1&0 / 1&0 / 1\\
-10&how to randomly pick a number&0 / 0&1 / 2&0 / 2\\
-11&deserialize json&0 / 0&1 / 3&0 / 1\\
-12&copy to clipboard&2 / 3&1 / 1&1 / 1\\
-13&matrix multiply&1 / 2&0 / 0&1 / 2\\
+10&how to randomly pick a number&0 / 0&0 / 2&1 / 2\\
+11&deserialize json&0 / 0&0 / 3&0 / 1\\
+12&copy to clipboard&1 / 3&0 / 1&0 / 1\\
+13&matrix multiply&0 / 2&0 / 0&0 / 2\\
 14&sort string list&0 / 0&0 / 0&1 / 2\\
 15&convert decimal to hex&0 / 0&0 / 0&0 / 1\\
 16&convert a date string into yyyymmdd&0 / 0&0 / 1&0 / 3\\
 17&parse command line argument&0 / 1&0 / 1&0 / 3\\
 18&get name of enumerated value&0 / 1&0 / 0&0 / 0\\
-19&export to excel&1 / 1&0 / 0&2 / 2\\
-20&set working directory&0 / 0&0 / 0&2 / 2\\
+19&export to excel&0 / 1&0 / 0&1 / 2\\
+20&set working directory&0 / 0&0 / 0&0 / 2\\
 21&get the description of a http status code&0 / 0&0 / 2&0 / 0\\
-22&httpclient post json&0 / 1&0 / 1&1 / 2\\
+22&httpclient post json&0 / 1&1 / 1&0 / 2\\
 23&postgresql connection&0 / 0&0 / 1&0 / 1\\
 24&copying a file to a path&0 / 2&0 / 0&0 / 0\\
 25&buffered file reader read text&0 / 1&0 / 2&0 / 1\\
-26&finding time elapsed using a timer&1 / 1&3 / 4&0 / 0\\
-27&how to reverse a string&6 / 6&0 / 0&0 / 0\\
-28&extract data from html content&1 / 1&0 / 2&1 / 1\\
+26&finding time elapsed using a timer&0 / 1&0 / 4&0 / 0\\
+27&how to reverse a string&0 / 6&0 / 0&0 / 0\\
+28&extract data from html content&0 / 1&0 / 2&1 / 1\\
 29&how to get html of website&0 / 2&0 / 0&0 / 0\\
-30&output to html file&1 / 1&0 / 0&0 / 0\\
+30&output to html file&0 / 1&0 / 0&0 / 0\\
 31&get current ip address&0 / 0&0 / 1&0 / 1\\
-32&string similarity levenshtein&0 / 1&1 / 1&1 / 2\\
-33&binomial distribution&1 / 2&0 / 0&1 / 2\\
-34&write csv&3 / 3&0 / 0&0 / 0\\
-35&how to check if a checkbox is checked&1 / 2&0 / 0&0 / 1\\
+32&string similarity levenshtein&0 / 1&0 / 1&1 / 2\\
+33&binomial distribution&0 / 2&0 / 0&1 / 2\\
+34&write csv&0 / 3&0 / 0&0 / 0\\
+35&how to check if a checkbox is checked&0 / 2&0 / 0&0 / 1\\
 36&underline text in label widget&0 / 0&0 / 0&0 / 2\\
 37&convert string to number&0 / 1&0 / 0&0 / 0\\
 38&save list to file&0 / 1&0 / 0&0 / 1\\
 39&concatenate several file remove header lines&0 / 0&0 / 1&0 / 0\\
 40&replace in file&0 / 1&0 / 0&0 / 1\\
 41&scatter plot&1 / 3&1 / 1&0 / 0\\
-42&how to extract zip file recursively&0 / 3&0 / 1&0 / 0\\
+42&how to extract zip file recursively&0 / 3&1 / 1&0 / 0\\
 43&parse json file&0 / 0&0 / 1&0 / 2\\
-44&reading element from html - <td>&0 / 0&1 / 1&0 / 0\\
-45&normal distribution&0 / 0&0 / 1&0 / 2\\
-46&convert json to csv&0 / 0&0 / 0&1 / 1\\
-47&socket recv timeout&0 / 1&0 / 1&1 / 1\\
-48&how to read the contents of a .gz compressed file?&0 / 2&0 / 1&0 / 0\\
+44&reading element from html td&0 / 0&0 / 1&0 / 0\\
+45&normal distribution&0 / 0&1 / 1&0 / 2\\
+46&convert json to csv&0 / 0&0 / 0&0 / 1\\
+47&socket recv timeout&0 / 1&0 / 1&0 / 1\\
+48&how to read the contents of a gz compressed file&0 / 2&0 / 1&0 / 0\\
 49&priority queue&0 / 0&0 / 0&0 / 1\\
-50&k means clustering&0 / 1&1 / 2&2 / 3\\
+50&k means clustering&0 / 1&2 / 2&1 / 3\\
 51&get current process id&0 / 0&0 / 1&0 / 0\\
 52&sending binary data over a serial connection&0 / 0&0 / 1&0 / 1\\
 53&connect to sql&0 / 1&0 / 0&0 / 0\\
-54&memoize to disk  - persistent memoization&0 / 0&0 / 0&1 / 1\\
+54&memoize to disk persistent memoization&0 / 0&0 / 0&0 / 1\\
 55&regex case insensitive&0 / 1&0 / 0&0 / 0\\
-56&deducting the median from each column&0 / 0&0 / 0&1 / 1\\
-57&filter array&1 / 2&1 / 1&0 / 0\\
+56&deducting the median from each column&0 / 0&0 / 0&0 / 1\\
+57&filter array&0 / 2&0 / 1&0 / 0\\
 58&randomly extract x items from a list&0 / 1&0 / 0&0 / 1\\
 59&aes encryption&0 / 1&0 / 0&0 / 1\\
 60&unique elements&0 / 0&0 / 0&1 / 1\\
-61&confusion matrix&1 / 1&0 / 0&0 / 0\\
+61&confusion matrix&0 / 1&0 / 0&0 / 0\\
 62&html entities replace&0 / 1&0 / 1&0 / 0\\
-63&json to xml conversion&0 / 0&0 / 0&1 / 1\\
+63&json to xml conversion&0 / 0&0 / 0&0 / 1\\
 64&encode url&0 / 1&0 / 1&0 / 0\\
-65&heatmap from 3d coordinates&0 / 0&0 / 0&0 / 1\\
+65&heatmap from d coordinates&0 / 0&0 / 0&1 / 1\\
 66&unzipping large files&0 / 1&0 / 0&0 / 0\\
-67&convert a utc time to epoch&0 / 0&1 / 1&0 / 0\\
+67&convert a utc time to epoch&0 / 0&0 / 1&0 / 0\\
 68&get current observable value&0 / 0&0 / 0&0 / 1\\
-69&print model summary&0 / 0&0 / 0&0 / 1\\
+69&print model summary&0 / 0&0 / 0&1 / 1\\
 70&linear regression&0 / 1&0 / 0&0 / 0\\
-71&convert html to pdf&0 / 0&1 / 1&0 / 0\\
-&Insgesamt&24 / 65&13 / 47&21 / 65\\
+71&convert html to pdf&0 / 0&0 / 1&0 / 0\\
+&Insgesamt&3 / 65&9 / 47&12 / 65\\
