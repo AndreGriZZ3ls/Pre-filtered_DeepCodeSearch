@@ -94,7 +94,6 @@ if __name__ == '__main__':
 
     if args.mode == 'populate_database':
         #data_loader.data_to_db(data_path, config)
-        data_loader.process_raw_code()
         #print('Info: Populating the database was sucessful.')
         """index = indexer.load_index()
         for word in index.keys():
@@ -103,6 +102,7 @@ if __name__ == '__main__':
         data_loader.save_pickle(data_path + index_type + '.pkl', index)"""
         #data_loader.codebase_to_sqlite(data_path + config['data_params']['use_codebase'], data_path + 'sqlite.db')
         #data_loader.index_to_sqlite(index_type, data_path + index_type + '.pkl', data_path + 'sqlite.db')
+        indexer.process_raw_code()
         print('Nothing done.')
     
     elif args.mode == 'create_index':
