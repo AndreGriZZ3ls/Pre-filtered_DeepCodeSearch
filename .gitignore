@@ -6,6 +6,7 @@
 epo*
 *.all.txt
 *index*.pkl
+use.processed.code.pkl
 allData/
 inverted_index.h5
 train.apiseq.h5
