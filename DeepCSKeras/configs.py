@@ -15,6 +15,7 @@ def config_JointEmbeddingModel():
             #use data (computing code vectors)
             'use_codebase':'use.rawcode.txt',#'use.rawcode.h5'
             #'use_codebase':'sqlite.db',
+            'use_processed_code':'use.processed.code.pkl',
             'use_methname':'use.methname.h5',
             'use_apiseq':'use.apiseq.h5',
             'use_tokens':'use.tokens.h5',     

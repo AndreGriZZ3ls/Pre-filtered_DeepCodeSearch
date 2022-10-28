@@ -56,8 +56,10 @@ class IndexCreator:
         word = word.replace('tinyint ', 'int').replace(' smallint ', 'int').replace(' bigint ', 'int').replace(' shortint ', 'int')
         word = word.replace('longint ', 'int').replace(' byte ', 'int').replace(' long ', 'int').replace(' short ', 'int')
         word = word.replace('integer ', 'int').replace(' double ', 'float').replace(' long ', 'float').replace(' decimal ', 'float')
-        word = word.replace('real ', 'float').replace(' array ', '[').replace(' arrays ', '[').replace(' arr ', '[')
-        word = word.replace(' define ', 'create').replace(' declare ', 'create').replace(' init ', 'create')
+        word = word.replace('real ', 'float').replace(' array ', '[').replace(' arrays ', '[').replace(' arr ', '[').replace(' heatmaptl ', 'heatmap')
+        word = word.replace(' define ', 'create').replace(' declare ', 'create').replace(' init ', 'create').replace(' boolean ', 'bool')
+        word = word.replace(' initialize ', 'create').replace(' initialized ', 'create').replace(' initializing ', 'create')
+        word = word.replace(' enumerate ', 'enum').replace(' enumerated ', 'enum').replace(' enumeration ', 'enum').replace(' website ', 'web')
         return word.replace(' initiate ', 'create').replace(' implements ', 'extends').replace('runnable', 'executable').strip()
 
     def load_data(self):
@@ -80,6 +82,30 @@ class IndexCreator:
             tokens    = list(map(ft, token_indices))
             apiseqs   = list(map(fa, apiseq_indices))
             return methnames, tokens, apiseqs
+
+    def process_raw_code(self):
+        file  = io.open(self.dataset_path + self.data_params['use_codebase'], "r", encoding='utf8', errors='replace')
+        lines = file.readlines()
+        file.close()
+        processed = []
+        pattern0  = re.compile(r'"[^"\n]?"')
+        pattern1  = re.compile(r'[^\[a-zA-Z ]+')
+        pattern2  = re.compile(r'  +')
+        pattern3  = re.compile(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))')
+        do_not_split = set("ArrayList,HashMap,heatMapTL,HttpClient,InputStream,OutputStram,ReadOnly,yyyyMMdd,YYYYMMDD".split(',')) # TODO
+        for line in tqdm(lines):
+            line = re.sub(pattern0, '', line) # remove strings
+            line = re.sub(pattern1, ' ', line) # replace all non-alphabetic characters except '[' by ' '
+            line = re.sub(pattern2, ' ', line.strip()) # remove consecutive spaces
+            line = line.split(' ')
+            for i, word in enumerate(line):
+                if word in do_not_split or word[-8:-1] == "xception":
+                    word = word.lower()
+                else:
+                    word = re.sub(pattern3, r' \1', word).lower() # split camelcase
+                line[i] = word
+            processed.append(line)
+        data_loader.save_pickle(self.dataset_path + self.data_params['use_processed_code'], processed)
 
     def save_index(self, index):
         if self.index_type == "word_indices": return
@@ -106,24 +132,18 @@ class IndexCreator:
         print(f"Loading index from: {index_path}{index_file}")
         return data_loader.load_pickle(index_path + index_file)
                     
-    def add_to_index(self, index_list, lines, stopwords, n = 0):
+    def add_to_index(self, index, lines, stopwords, n = 0):
         #print("Adding lines to the index...   Please wait.")
-        index = dict()
-        if n == 0:
+        #index = dict()
+        """if n == 0:
             enum_lines = tqdm(enumerate(lines))
         else:
-            enum_lines = enumerate(lines)
+            enum_lines = enumerate(lines)"""
         if stopwords:
             porter = PorterStemmer()
-            pattern1 = re.compile(r'[^\[a-zA-Z ]+')
-            pattern2 = re.compile(r'  +')
-            pattern3 = re.compile(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))')
-            for i, line in enum_lines:
-                line = re.sub(pattern1, ' ', line) # replace all non-alphabetic characters except '[' by ' '
-                line = re.sub(pattern2, ' ', line.strip()) # remove consecutive spaces
-                line = re.sub(pattern3, r' \1', line) # split camelcase
-                line = line.lower().split(' ')
-                    
+            
+            #for i, line in enum_lines:
+            for i, line in tqdm(enumerate(lines)):
                 #for raw_word in line:
                 for word in line:
                     #for word in raw_word.split('_'):
@@ -141,7 +161,7 @@ class IndexCreator:
                             cnt = Counter()
                             cnt[i] += 1
                             index[word] = cnt
-            index_list.append(index)
+            #index_list.append(index)
             
         else:
             for i, line in enumerate(tqdm(lines)):
@@ -159,12 +179,14 @@ class IndexCreator:
     def create_index(self, stopwords):
         if self.index_type == "word_indices": print("Nothing to be done."); return
         #methnames, tokens, apiseqs = self.load_data()
-        file  = io.open(self.dataset_path + self.data_params['use_codebase'], "r", encoding='utf8', errors='replace')
-        codes = file.readlines()
-        file.close()
+        index = dict()
+        codes = data_loader.load_pickle(self.dataset_path + self.data_params['use_processed_code'])
+        #file  = io.open(self.dataset_path + self.data_params['use_processed_code'], "r", encoding='utf8', errors='replace')
+        #codes = file.readlines()
+        #file.close()
         number_of_code_fragments = len(codes)
-        chunk_size = math.ceil(number_of_code_fragments / self.n_threads)
-        codes = [codes[i:i + chunk_size] for i in tqdm(range(0, number_of_code_fragments, chunk_size))]
+        #chunk_size = math.ceil(number_of_code_fragments / self.n_threads)
+        #codes = [codes[i:i + chunk_size] for i in tqdm(range(0, number_of_code_fragments, chunk_size))]
         
         index_list, threads = [], []
         if self.index_type == "inverted_index":
@@ -173,24 +195,24 @@ class IndexCreator:
             self.add_to_index(index, apiseqs  , None)
             number_of_code_fragments = len(methnames)"""
             print("Adding lines to the index...   Please wait.")
-            for n, code in enumerate(codes):
+            """for n, code in enumerate(codes):
                 t = threading.Thread(target = self.add_to_index, args = (index_list, code, stopwords, n))
                 threads.append(t)
             for t in threads:
                 t.start()
             for t in threads:# wait until all sub-threads finish
-                t.join()
-            #self.add_to_index(index, codes, stopwords)
+                t.join()"""
+            self.add_to_index(index, codes, stopwords)
             del codes
             
-            index = index_list[0]
+            """index = index_list[0]
             for i in tqdm(range(1, len(index_list))):
                 ind = index_list[i]
                 for word in list(ind.keys()):
                     if word in index:
                         index[word] += ind[word]
                     else:
-                        index[word] = ind[word]
+                        index[word] = ind[word]"""
             
             for line_counter in tqdm(index.values()):
                 lines = list(line_counter.keys()) # deduplicated list of code fragments

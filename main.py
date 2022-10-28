@@ -83,7 +83,9 @@ if __name__ == '__main__':
     index_type  = args.index_type
     memory_mode = args.memory_mode
     indexer     = IndexCreator(args, config)
-    stopwords   = set("a,about,after,also,an,and,another,are,around,as,at,be,because,been,before,being,between,both,but,by,came,can,come,could,did,do,does,each,every,final,from,get,got,had,has,have,he,her,here,him,himself,his,how,in,into,it,its,just,like,make,many,me,might,more,most,much,must,my,never,new,no,now,of,on,only,other,our,out,over,override,private,protected,public,re,said,same,see,should,since,so,some,static,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,to,too,under,unk,UNK,up,use,very,void,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
+    stopwords   = set("a,about,after,also,an,and,another,are,around,as,at,awt,be,because,been,before,being,between,both,but,by,came,can,come,could,did,do,does,each,every,final,from,get,got,had,has,have,he,her,here,him,himself,his,how,in,into,io,it,its,java,javax,just,lang,like,make,many,me,might,more,most,much,must,my,never,net,new,no,now,of,on,only,other,our,out,over,override,private,protected,public,re,return,said,same,see,set,should,since,so,some,static,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,throw,throws,to,too,under,unk,UNK,up,use,util,very,void,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
+    pattern1    = re.compile(r'[^\[a-zA-Z ]+')
+    pattern2    = re.compile(r'  +')
     #n_threads   = 8 # number of threads for parallelization of less performance intensive program parts
     _codebase_chunksize = 2000000
     tf_idf_threshold    = 2.79 
@@ -91,6 +93,7 @@ if __name__ == '__main__':
 
     if args.mode == 'populate_database':
         #data_loader.data_to_db(data_path, config)
+        data_loader.process_raw_code()
         #print('Info: Populating the database was sucessful.')
         """index = indexer.load_index()
         for word in index.keys():
@@ -98,7 +101,7 @@ if __name__ == '__main__':
         data_loader.save_index(index_type, index, data_path)
         data_loader.save_pickle(data_path + index_type + '.pkl', index)"""
         #data_loader.codebase_to_sqlite(data_path + config['data_params']['use_codebase'], data_path + 'sqlite.db')
-        data_loader.index_to_sqlite(index_type, data_path + index_type + '.pkl', data_path + 'sqlite.db')
+        #data_loader.index_to_sqlite(index_type, data_path + index_type + '.pkl', data_path + 'sqlite.db')
         print('Nothing done.')
     
     elif args.mode == 'create_index':
@@ -127,6 +130,8 @@ if __name__ == '__main__':
             query_scores = list(eval_dict[query].values())
             ##### Process user query ######
             #tmp   = []
+            query = re.sub(pattern1, ' ', query) # replace all non-alphabetic characters except '[' by ' '
+            query = re.sub(pattern2, ' ', query.strip()) # remove consecutive spaces
             query_proc = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query_proc.split(' ')) - stopwords)
             """for word in query_list:
@@ -307,9 +312,9 @@ if __name__ == '__main__':
                 engine._codebase = [codebase_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
             else:
                 engine._codebase = data_loader.load_codebase_lines(data_path + 'sqlite.db', result_line_numbers, chunk_size) # database
-                """for chunk in engine._codebase: 
+                for chunk in engine._codebase: 
                     for line in chunk:
-                        print(line + "\n")"""
+                        print(line + "\n")
                 #engine._codebase = data_loader.load_codebase_lines(data_path + config['data_params']['use_codebase'], result_line_numbers, chunk_size)
             print('DeepCS start time: {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'])
