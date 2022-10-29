@@ -218,7 +218,7 @@ class IndexCreator:
                 lines = list(line_counter.keys()) # deduplicated list of code fragments
                 idf   = math.log10(number_of_code_fragments / len(lines)) # inverse document frequence = log10(N / df)
                 for line_nr in lines: # replace currently stored term frequence by tf-idf:
-                    line_counter[line_nr] = idf * math.log(1 + line_counter[line_nr]) # tf-idf = idf * log10(1 + tf)
+                    line_counter[line_nr] = idf * math.log10(1 + line_counter[line_nr]) # tf-idf = idf * log10(1 + tf)
             for word in index.keys():
                 index[word] = Counter(dict(sorted(index[word].items(), key=lambda x: (-x[1], x[0]))))
                 #print(itertools.islice(index[word].values(), 100))
