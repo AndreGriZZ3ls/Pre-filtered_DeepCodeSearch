@@ -144,12 +144,12 @@ class IndexCreator:
             
             #for i, line in enum_lines:
             for i, line in tqdm(enumerate(lines)):
-                #for raw_word in line:
-                for word in line:
-                    #for word in raw_word.split('_'):
-                    length = len(word)
-                    if (length > 1 and not word in stopwords and length < 19) or word == '[':
-                        #if len(word) == 0 or len(word) > 18 or word in stopwords: continue"""
+                for raw_word in line:
+                #for word in line:
+                    #if (length > 1 and not word in stopwords and length < 19) or word == '[':
+                    for word in raw_word.split('_'):
+                        length = len(word)
+                        if length == 0 or length > 18 or word in stopwords: continue
                         word = self.replace_synonyms(word)
                         word = porter.stem(word)
                         word = self.replace_synonyms(word)
@@ -178,23 +178,21 @@ class IndexCreator:
 
     def create_index(self, stopwords):
         if self.index_type == "word_indices": print("Nothing to be done."); return
-        #methnames, tokens, apiseqs = self.load_data()
+        methnames, tokens, apiseqs = self.load_data()
         index = dict()
-        codes = data_loader.load_pickle(self.dataset_path + self.data_params['use_processed_code'])
-        #file  = io.open(self.dataset_path + self.data_params['use_processed_code'], "r", encoding='utf8', errors='replace')
-        #codes = file.readlines()
-        #file.close()
-        number_of_code_fragments = len(codes)
+        #codes = data_loader.load_pickle(self.dataset_path + self.data_params['use_processed_code'])
+        #number_of_code_fragments = len(codes)
         #chunk_size = math.ceil(number_of_code_fragments / self.n_threads)
         #codes = [codes[i:i + chunk_size] for i in tqdm(range(0, number_of_code_fragments, chunk_size))]
         
         index_list, threads = [], []
         if self.index_type == "inverted_index":
-            """self.add_to_index(index, methnames, stopwords)
-            self.add_to_index(index, tokens   , stopwords)
-            self.add_to_index(index, apiseqs  , None)
-            number_of_code_fragments = len(methnames)"""
             print("Adding lines to the index...   Please wait.")
+            self.add_to_index(index, methnames, stopwords)
+            self.add_to_index(index, tokens,    stopwords)
+            self.add_to_index(index, apiseqs,   None)
+            number_of_code_fragments = len(methnames)
+            
             """for n, code in enumerate(codes):
                 t = threading.Thread(target = self.add_to_index, args = (index_list, code, stopwords, n))
                 threads.append(t)
@@ -202,8 +200,8 @@ class IndexCreator:
                 t.start()
             for t in threads:# wait until all sub-threads finish
                 t.join()"""
-            self.add_to_index(index, codes, stopwords)
-            del codes
+            #self.add_to_index(index, codes, stopwords)
+            #del codes
             
             """index = index_list[0]
             for i in tqdm(range(1, len(index_list))):
@@ -218,7 +216,7 @@ class IndexCreator:
                 lines = list(line_counter.keys()) # deduplicated list of code fragments
                 idf   = math.log10(number_of_code_fragments / len(lines)) # inverse document frequence = log10(N / df)
                 for line_nr in lines: # replace currently stored term frequence by tf-idf:
-                    #line_counter[line_nr] = idf * math.log10(1 + line_counter[line_nr]) # tf-idf = idf * log10(1 + tf)
+                    #line_counter[line_nr] = idf * math.log(1 + line_counter[line_nr]) # tf-idf = idf * log(1 + tf)
                     line_counter[line_nr] = idf * math.log10(1 + line_counter[line_nr]) # tf-idf = idf * log10(1 + tf)
             for word in index.keys():
                 index[word] = Counter(dict(sorted(index[word].items(), key=lambda x: (-x[1], x[0]))))

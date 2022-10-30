@@ -89,7 +89,7 @@ if __name__ == '__main__':
     pattern2    = re.compile(r'  +')
     #n_threads   = 8 # number of threads for parallelization of less performance intensive program parts
     _codebase_chunksize = 2000000
-    tf_idf_threshold    = 2.00
+    tf_idf_threshold    = 2.00 # 2.79
     
 
     if args.mode == 'populate_database':
@@ -235,8 +235,8 @@ if __name__ == '__main__':
                 break
             start        = time.time()
             start_proc   = time.process_time()
-            #max_filtered = max(1000, 50 * n_results) # < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
-            max_filtered = max(1000, 75 * n_results)
+            max_filtered = max(1000, 50 * n_results) # < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+            #max_filtered = max(1000, 75 * n_results)
             min_filtered = max(500,  25 * n_results)
             ##### Process user query ######
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
