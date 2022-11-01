@@ -55,7 +55,7 @@ def parse_args():
                         " DeepCS with a trained model to search pre-selected for the K most relevant code snippets; "
                         " 'populate_database' mode adds data to the database (for one time use only!); "
                         " 'evaluate' mode evaluates the filter (false negatives).")
-    parser.add_argument("--index_type", choices=["word_indices","inverted_index","inverted_index_total"], default="inverted_index_total", help="Type of index "
+    parser.add_argument("--index_type", choices=["word_indices","inverted_index"], default="inverted_index", help="Type of index "
                         " to be created or used: The 'word_indices' mode [not recommended at all] utilizes parts of the dataset "
                         " already existing for DeepCS to work (simple but not usable for more accurete similarity measurements. "
                         " For each meaningful word the 'inverted_index' stores IDs and tf-idf weights of code fragment that contain it. ")
@@ -118,7 +118,7 @@ if __name__ == '__main__':
         index     = indexer.load_index()
         n_results = 10
         porter    = PorterStemmer()
-        max_filtered = max(1500, 50 * n_results)
+        max_filtered = max(1000, 50 * n_results)
         min_filtered = max(500,  25 * n_results)
         global_cnt   = Counter()
         result_path  = data_path + 'eval_results.txt'
@@ -227,7 +227,7 @@ if __name__ == '__main__':
             index = indexer.load_index()
         
         while True:
-            tmp = []
+            #tmp = []
             ##### Get user input ######
             try:
                 query     =     input('Input query: ')
@@ -238,20 +238,20 @@ if __name__ == '__main__':
                 break
             start        = time.time()
             start_proc   = time.process_time()
-            max_filtered = max(1000, 50 * n_results) # < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+            max_filtered = max(2000, 50 * n_results) # < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
             #max_filtered = max(1000, 75 * n_results)
             min_filtered = max(500,  25 * n_results)
             ##### Process user query ######
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
             #len_query_without_stems = len(query_list)
-            for word in query_list:
+            """for word in query_list:
                 word_stem = porter.stem(word)
                 if word != word_stem and word_stem not in stopwords:
-                    tmp.append(word_stem) # include stems of query words
-            """for i in range(0, len(query_list)):
-                query_list[i] = porter.stem(query_list[i])"""
-            query_list.extend(tmp)
+                    tmp.append(word_stem) # include stems of query words"""
+            for i in range(0, len(query_list)):
+                query_list[i] = porter.stem(query_list[i])
+            #query_list.extend(tmp)
             query_list = [indexer.replace_synonyms(w) for w in query_list]
             query_list = list(set(query_list))
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
@@ -271,7 +271,7 @@ if __name__ == '__main__':
                         result_line_numbers.add(i)
                 result_line_numbers = list(result_line_numbers)
                 
-            elif index_type in ["inverted_index", "inverted_index_total"]:
+            elif index_type == "inverted_index":
                 cnt = Counter()
                 if memory_mode in ["performance","vecs_and_index"]:
                     for word in query_list:
