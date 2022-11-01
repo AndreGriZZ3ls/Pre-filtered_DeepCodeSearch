@@ -152,7 +152,7 @@ if __name__ == '__main__':
                     if cnt == None:
                         cnt = index[word]
                     else:
-                        cnt.update(index[word]) line and merge counters in general 
+                        cnt.update(index[word])
             #result_line_numbers, values = zip(*cnt.most_common(max_filtered))
             result_line_numbers, values = zip(*itertools.islice(sorted(cnt.items(), key=lambda x: (-x[1], x[0])), max_filtered))
             try:
