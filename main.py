@@ -271,7 +271,7 @@ if __name__ == '__main__':
                         result_line_numbers.add(i)
                 result_line_numbers = list(result_line_numbers)
                 
-            elif index_type == "inverted_index":
+            elif index_type in ["inverted_index", "inverted_index_total"]:
                 #result_line_lists = []
                 """result_line_counters = []"""
                 #cnt, cnt_tf = Counter(), Counter()
