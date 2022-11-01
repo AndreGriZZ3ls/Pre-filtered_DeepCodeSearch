@@ -286,9 +286,12 @@ if __name__ == '__main__':
                 ##################################################################################################################
                 #result_line_numbers, values = zip(*cnt.most_common(max_filtered))
                 result_line_numbers, values = zip(*itertools.islice(sorted(cnt.items(), key=lambda x: (-x[1], x[0])), max_filtered))
-                last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val >= tf_idf_threshold)
-                #for i in range(0, 1000):
-                #    print(values[i])
+                try:
+                    last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val >= tf_idf_threshold)
+                except ValueError:
+                    last_threshold_index = -1
+                for i in range(0, 1000):
+                    print(values[i])
                 result_line_numbers = list(result_line_numbers)
                 if last_threshold_index >= min_filtered:
                     result_line_numbers = result_line_numbers[:last_threshold_index]
