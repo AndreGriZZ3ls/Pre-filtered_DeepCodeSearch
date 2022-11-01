@@ -143,7 +143,7 @@ if __name__ == '__main__':
                 query_list[i] = porter.stem(query_list[i])
             #query_list.extend(tmp)
             query_list = [indexer.replace_synonyms(w) for w in query_list]
-            query_list = list(set(query_list) - stopwords)
+            query_list = list(set(query_list))
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
             query_cnt  = Counter()
             cnt        = None
@@ -259,7 +259,7 @@ if __name__ == '__main__':
                 query_list[i] = porter.stem(query_list[i])
             #query_list.extend(tmp)
             query_list = [indexer.replace_synonyms(w) for w in query_list]
-            query_list = list(set(query_list) - stopwords)
+            query_list = list(set(query_list))
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
             #####
             #print("Processing...  Please wait.")
