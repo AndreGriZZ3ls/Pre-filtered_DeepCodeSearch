@@ -89,7 +89,7 @@ if __name__ == '__main__':
     pattern2    = re.compile(r'  +')
     #n_threads   = 8 # number of threads for parallelization of less performance intensive program parts
     _codebase_chunksize = 2000000
-    tf_idf_threshold    = 2.00 # 2.79
+    tf_idf_threshold    = 2.79 # 2.00
     
 
     if args.mode == 'populate_database':
@@ -102,7 +102,7 @@ if __name__ == '__main__':
         data_loader.save_pickle(data_path + index_type + '.pkl', index)"""
         #data_loader.codebase_to_sqlite(data_path + config['data_params']['use_codebase'], data_path + 'sqlite.db')
         #data_loader.index_to_sqlite(index_type, data_path + index_type + '.pkl', data_path + 'sqlite.db')
-        indexer.process_raw_code()
+        #indexer.process_raw_code()
         print('Nothing done.')
     
     elif args.mode == 'create_index':
@@ -130,18 +130,18 @@ if __name__ == '__main__':
             query_lines  = list(eval_dict[query].keys())
             query_scores = list(eval_dict[query].values())
             ##### Process user query ######
-            #tmp   = []
+            tmp   = []
             query = re.sub(pattern1, ' ', query) # replace all non-alphabetic characters except '[' by ' '
             query = re.sub(pattern2, ' ', query.strip()) # remove consecutive spaces
             query_proc = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query_proc.split(' ')) - stopwords)
-            """for word in query_list:
+            for word in query_list:
                 word_stem = porter.stem(word)
                 if word != word_stem and word_stem not in stopwords:
-                    tmp.append(word_stem) # include stems of query words"""
+                    tmp.append(word_stem) # include stems of query words
             for i in range(0, len(query_list)):
                 query_list[i] = porter.stem(query_list[i])
-            #query_list.extend(tmp)
+            query_list.extend(tmp)
             query_list = [indexer.replace_synonyms(w) for w in query_list]
             query_list = list(set(query_list))
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
@@ -242,10 +242,10 @@ if __name__ == '__main__':
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
             #len_query_without_stems = len(query_list)
-            """for word in query_list:
+            for word in query_list:
                 word_stem = porter.stem(word)
                 if word != word_stem and word_stem not in stopwords:
-                    tmp.append(word_stem) # include stems of query words"""
+                    tmp.append(word_stem) # include stems of query words
             for i in range(0, len(query_list)):
                 query_list[i] = porter.stem(query_list[i])
             query_list.extend(tmp)
@@ -287,8 +287,8 @@ if __name__ == '__main__':
                 #result_line_numbers, values = zip(*cnt.most_common(max_filtered))
                 result_line_numbers, values = zip(*itertools.islice(sorted(cnt.items(), key=lambda x: (-x[1], x[0])), max_filtered))
                 last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val >= tf_idf_threshold)
-                for i in range(0, 1000):
-                    print(values[i])
+                #for i in range(0, 1000):
+                #    print(values[i])
                 result_line_numbers = list(result_line_numbers)
                 if last_threshold_index >= min_filtered:
                     result_line_numbers = result_line_numbers[:last_threshold_index]
