@@ -242,6 +242,8 @@ if __name__ == '__main__':
             #max_filtered = max(1000, 75 * n_results)
             min_filtered = max(500,  25 * n_results + 250)
             ##### Process user query ######
+            query = re.sub(pattern1, ' ', query) # replace all non-alphabetic characters except '[' by ' '
+            query = re.sub(pattern2, ' ', query.strip()) # remove consecutive spaces
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
             #len_query_without_stems = len(query_list)
