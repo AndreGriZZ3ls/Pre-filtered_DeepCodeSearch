@@ -164,7 +164,7 @@ if __name__ == '__main__':
                 result_line_numbers = result_line_numbers[:last_threshold_index]
             else:
                 result_line_numbers = result_line_numbers[:min_filtered]
-            print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
+            #print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             result_line_numbers = set(result_line_numbers)
             
             for s, line in enumerate(query_lines):
@@ -173,7 +173,7 @@ if __name__ == '__main__':
                     query_cnt["found_{}".format(score)] += 1
                 query_cnt["total_{}".format(score)] += 1
             
-            global_cnt += query_cnt
+            global_cnt.update(query_cnt)
             e += 1
             result_file.write(f"{e}&{query}&{query_cnt['found_3']} / {query_cnt['total_3']}&{query_cnt['found_2']} / {query_cnt['total_2']}&{query_cnt['found_1']} / {query_cnt['total_1']}\\\\\n")
         result_file.write(f"&Insgesamt&{global_cnt['found_3']} / {global_cnt['total_3']}&{global_cnt['found_2']} / {global_cnt['total_2']}&{global_cnt['found_1']} / {global_cnt['total_1']}\\\\\n")
