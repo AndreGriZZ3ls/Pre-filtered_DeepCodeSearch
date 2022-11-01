@@ -238,9 +238,9 @@ if __name__ == '__main__':
                 break
             start        = time.time()
             start_proc   = time.process_time()
-            max_filtered = max(750, 50 * n_results) # < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+            max_filtered = max(500, 50 * n_results + 250) # < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
             #max_filtered = max(1000, 75 * n_results)
-            min_filtered = max(500,  25 * n_results)
+            min_filtered = max(500,  25 * n_results + 250)
             ##### Process user query ######
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
