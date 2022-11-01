@@ -243,7 +243,7 @@ if __name__ == '__main__':
             min_filtered = max(500,  25 * n_results + 250)
             ##### Process user query ######
             query = re.sub(pattern1, ' ', query) # replace all non-alphabetic characters except '[' by ' '
-            query = re.sub(pattern2, ' ', query.strip()) # remove consecutive spaces
+            query = re.sub(pattern2, ' ', query.strip()) # remove consecutive spaces and single caracters
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
             #len_query_without_stems = len(query_list)
@@ -251,6 +251,7 @@ if __name__ == '__main__':
                 word_stem = porter.stem(word)
                 if word != word_stem and word_stem not in stopwords:
                     tmp.append(word_stem) # include stems of query words"""
+            query_list = [indexer.replace_synonyms(w) for w in query_list]
             for i in range(0, len(query_list)):
                 query_list[i] = porter.stem(query_list[i])
             #query_list.extend(tmp)

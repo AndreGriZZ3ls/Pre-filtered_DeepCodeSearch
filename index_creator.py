@@ -56,7 +56,7 @@ class IndexCreator:
         word = word.replace('tinyint ', 'int').replace(' smallint ', 'int').replace(' bigint ', 'int').replace(' shortint ', 'int')
         word = word.replace('longint ', 'int').replace(' byte ', 'int').replace(' long ', 'int').replace(' short ', 'int')
         word = word.replace('integer ', 'int').replace(' double ', 'float').replace(' long ', 'float').replace(' decimal ', 'float')
-        word = word.replace('real ', 'float').replace(' array ', '[').replace(' arrays ', '[').replace(' arr ', '[').replace(' heatmaptl ', 'heatmap')
+        word = word.replace('real ', 'float').replace(' array ', '[').replace(' arrays ', '[').replace(' arr ', '[').replace(' fastest ', 'fast')
         word = word.replace(' define ', 'create').replace(' declare ', 'create').replace(' init ', 'create').replace(' boolean ', 'bool')
         word = word.replace(' initialize ', 'create').replace(' initialized ', 'create').replace(' initializing ', 'create')
         word = word.replace(' enumerate ', 'enum').replace(' enumerated ', 'enum').replace(' enumeration ', 'enum').replace(' website ', 'web')
