@@ -272,17 +272,20 @@ if __name__ == '__main__':
                 result_line_numbers = list(result_line_numbers)
                 
             elif index_type == "inverted_index":
-                cnt = Counter()
+                '''cnt = Counter()'''
                 if memory_mode in ["performance","vecs_and_index"]:
                     for word in query_list:
                         if word in index: # for each word of the processed query that the index contains: ...
                             #cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
                             cnt += Counter(dict(itertools.islice(index[word].items(), max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
                 else:
-                    for counter in data_loader.load_index_counters(index_type, query_list, data_path, max_filtered):
+                    counters = data_loader.load_index_counters(index_type, query_list, data_path, max_filtered)
+                    cnt = counters[0]
+                    for i in range(1, len(counters)):
+                    '''for counter in data_loader.load_index_counters(index_type, query_list, data_path, max_filtered):'''
                     #for counter in data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db', max_filtered): # TODO: compare
                         cnt += counter # sum tf-idf values for each identical line and merge counters in general 
-                #print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
+                print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
                 ##################################################################################################################
                 #result_line_numbers, values = zip(*cnt.most_common(max_filtered))
                 result_line_numbers, values = zip(*itertools.islice(sorted(cnt.items(), key=lambda x: (-x[1], x[0])), max_filtered))
