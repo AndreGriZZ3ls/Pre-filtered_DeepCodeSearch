@@ -89,7 +89,7 @@ if __name__ == '__main__':
     pattern2    = re.compile(r'  +')
     #n_threads   = 8 # number of threads for parallelization of less performance intensive program parts
     _codebase_chunksize = 2000000
-    tf_idf_threshold    = 1.3 #2.79 # 2.00
+    tf_idf_threshold    = 1.0 #2.79 # 2.00
     
 
     if args.mode == 'populate_database':
@@ -118,7 +118,7 @@ if __name__ == '__main__':
         index     = indexer.load_index()
         n_results = 10
         porter    = PorterStemmer()
-        max_filtered = max(1000, 50 * n_results)
+        max_filtered = max(1500, 50 * n_results)
         min_filtered = max(500,  25 * n_results)
         global_cnt   = Counter()
         result_path  = data_path + 'eval_results.txt'
