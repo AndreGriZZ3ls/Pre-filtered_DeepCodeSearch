@@ -227,7 +227,7 @@ if __name__ == '__main__':
             index = indexer.load_index()
         
         while True:
-            #tmp = []
+            tmp = []
             ##### Get user input ######
             try:
                 query     =     input('Input query: ')
@@ -238,20 +238,20 @@ if __name__ == '__main__':
                 break
             start        = time.time()
             start_proc   = time.process_time()
-            max_filtered = max(1500, 50 * n_results) # < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+            max_filtered = max(1000, 50 * n_results) # < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
             #max_filtered = max(1000, 75 * n_results)
             min_filtered = max(500,  25 * n_results)
             ##### Process user query ######
             query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query.split(' ')) - stopwords)
             #len_query_without_stems = len(query_list)
-            """for word in query_list:
+            for word in query_list:
                 word_stem = porter.stem(word)
                 if word != word_stem and word_stem not in stopwords:
-                    tmp.append(word_stem) # include stems of query words"""
-            for i in range(0, len(query_list)):
-                query_list[i] = porter.stem(query_list[i])
-            #query_list.extend(tmp)
+                    tmp.append(word_stem) # include stems of query words
+            """for i in range(0, len(query_list)):
+                query_list[i] = porter.stem(query_list[i])"""
+            query_list.extend(tmp)
             query_list = [indexer.replace_synonyms(w) for w in query_list]
             query_list = list(set(query_list))
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
