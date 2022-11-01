@@ -70,8 +70,10 @@ def load_index_counters(name, word_list, index_path, max_items):
         for row in meta.where(cond):
             l = row['len']
             p = row['pos']
-            k = keys[p:p + min(l, max_items)]
-            v = vals[p:p + min(l, max_items)]
+            #k = keys[p:p + min(l, max_items)]
+            #v = vals[p:p + min(l, max_items)]
+            k = keys[p:p + l]
+            v = vals[p:p + l]
             counters.append(Counter(dict(zip(k, v))))
         h5f.close()
         print('Total load_index_counters time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
