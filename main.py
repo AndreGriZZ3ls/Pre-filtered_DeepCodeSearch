@@ -89,7 +89,7 @@ if __name__ == '__main__':
     pattern2    = re.compile(r'  +')
     #n_threads   = 8 # number of threads for parallelization of less performance intensive program parts
     _codebase_chunksize = 2000000
-    tf_idf_threshold    = 1.2 #2.79 # 2.00
+    tf_idf_threshold    = 1.3 #2.79 # 2.00
     
 
     if args.mode == 'populate_database':
@@ -293,8 +293,8 @@ if __name__ == '__main__':
                     last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val >= tf_idf_threshold)
                 except ValueError:
                     last_threshold_index = -1
-                for i in range(0, 1000):
-                    print(values[i])
+                #for i in range(0, 1000):
+                #    print(values[i])
                 result_line_numbers = list(result_line_numbers)
                 if last_threshold_index >= min_filtered:
                     result_line_numbers = result_line_numbers[:last_threshold_index]
