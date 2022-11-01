@@ -118,12 +118,11 @@ if __name__ == '__main__':
         index     = indexer.load_index()
         n_results = 10
         porter    = PorterStemmer()
-        max_filtered = max(1000, 50 * n_results)
-        min_filtered = max(500,  25 * n_results)
+        max_filtered = max(500, 50 * n_results + 250)
+        min_filtered = max(500,  25 * n_results + 250)
         global_cnt   = Counter()
         result_path  = data_path + 'eval_results.txt'
-        if os.path.exists(result_path):
-            os.remove(result_path)
+        if os.path.exists(result_path): os.remove(result_path)
         result_file  = io.open(result_path, "a", encoding='utf8', errors='replace')
         
         for query in queries:
@@ -139,17 +138,21 @@ if __name__ == '__main__':
                 word_stem = porter.stem(word)
                 if word != word_stem and word_stem not in stopwords:
                     tmp.append(word_stem) # include stems of query words """
+            query_list = [indexer.replace_synonyms(w) for w in query_list]
             for i in range(0, len(query_list)):
                 query_list[i] = porter.stem(query_list[i])
             #query_list.extend(tmp)
             query_list = [indexer.replace_synonyms(w) for w in query_list]
             query_list = list(set(query_list))
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
-            cnt, query_cnt = Counter(), Counter()
+            query_cnt  = Counter()
+            cnt        = None
             for word in query_list:
                 if word in index: # for each word of the processed query that the index contains: ...
-                    #cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
-                    cnt += Counter(dict(itertools.islice(index[word].items(), max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
+                    if cnt == None:
+                        cnt = index[word]
+                    else:
+                        cnt.update(index[word]) line and merge counters in general 
             #result_line_numbers, values = zip(*cnt.most_common(max_filtered))
             result_line_numbers, values = zip(*itertools.islice(sorted(cnt.items(), key=lambda x: (-x[1], x[0])), max_filtered))
             try:
@@ -238,7 +241,7 @@ if __name__ == '__main__':
                 break
             start        = time.time()
             start_proc   = time.process_time()
-            max_filtered = max(500, 50 * n_results + 250) # < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+            max_filtered = max(500, 50 * n_results + 250)
             #max_filtered = max(1000, 75 * n_results)
             min_filtered = max(500,  25 * n_results + 250)
             ##### Process user query ######
@@ -275,19 +278,21 @@ if __name__ == '__main__':
                 result_line_numbers = list(result_line_numbers)
                 
             elif index_type == "inverted_index":
-                '''cnt = Counter()'''
+                cnt = None
                 if memory_mode in ["performance","vecs_and_index"]:
                     for word in query_list:
                         if word in index: # for each word of the processed query that the index contains: ...
                             #cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
-                            cnt += Counter(dict(itertools.islice(index[word].items(), max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
+                            #cnt += Counter(dict(itertools.islice(index[word].items(), max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
+                            if cnt == None:
+                                cnt = index[word]
+                            else:
+                                cnt.update(index[word])
                 else:
-                    counters = data_loader.load_index_counters(index_type, query_list, data_path, max_filtered)
+                    #counters = data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db') # TODO: compare
+                    counters = data_loader.load_index_counters(index_type, query_list, data_path)
                     cnt = counters[0]
-                    '''for counter in data_loader.load_index_counters(index_type, query_list, data_path, max_filtered):'''
-                    #for counter in data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db', max_filtered): # TODO: compare
                     for i in range(1, len(counters)):
-                        #cnt += counters[i] # sum tf-idf values for each identical line and merge counters in general 
                         cnt.update(counters[i]) # sum tf-idf values for each identical line and merge counters in general 
                 print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
                 ##################################################################################################################
