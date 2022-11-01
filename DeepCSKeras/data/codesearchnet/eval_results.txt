@@ -11,7 +11,7 @@
 11&deserialize json&0 / 0&3 / 3&1 / 1\\
 12&copy to clipboard&2 / 3&1 / 1&1 / 1\\
 13&matrix multiply&2 / 2&0 / 0&2 / 2\\
-14&sort string list&0 / 0&0 / 0&0 / 2\\
+14&sort string list&0 / 0&0 / 0&2 / 2\\
 15&convert decimal to hex&0 / 0&0 / 0&0 / 1\\
 16&convert date string into yyyymmdd&0 / 0&0 / 1&0 / 3\\
 17&parse command line argument&0 / 1&0 / 1&1 / 3\\
@@ -24,7 +24,7 @@
 24&copying file to path&0 / 2&0 / 0&0 / 0\\
 25&buffered file reader read text&0 / 1&0 / 2&0 / 1\\
 26&finding time elapsed using timer&0 / 1&0 / 4&0 / 0\\
-27&how to reverse string&6 / 6&0 / 0&0 / 0\\
+27&how to reverse string&0 / 6&0 / 0&0 / 0\\
 28&extract data from html content&1 / 1&2 / 2&1 / 1\\
 29&how to get html of website&1 / 2&0 / 0&0 / 0\\
 30&output to html file&0 / 1&0 / 0&0 / 0\\
@@ -34,12 +34,12 @@
 34&write csv&3 / 3&0 / 0&0 / 0\\
 35&how to check if checkbox is checked&2 / 2&0 / 0&0 / 1\\
 36&underline text in label widget&0 / 0&0 / 0&0 / 2\\
-37&convert string to number&1 / 1&0 / 0&0 / 0\\
+37&convert string to number&0 / 1&0 / 0&0 / 0\\
 38&save list to file&0 / 1&0 / 0&0 / 1\\
 39&concatenate several file remove header lines&0 / 0&1 / 1&0 / 0\\
-40&replace in file&0 / 1&0 / 0&0 / 1\\
+40&replace in file&1 / 1&0 / 0&1 / 1\\
 41&scatter plot&3 / 3&1 / 1&0 / 0\\
-42&how to extract zip file recursively&1 / 3&0 / 1&0 / 0\\
+42&how to extract zip file recursively&2 / 3&1 / 1&0 / 0\\
 43&parse json file&0 / 0&0 / 1&0 / 2\\
 44&reading element from html td&0 / 0&0 / 1&0 / 0\\
 45&normal distribution&0 / 0&0 / 1&0 / 2\\
@@ -48,25 +48,25 @@
 48&how to read the contents of gz compressed file&0 / 2&0 / 1&0 / 0\\
 49&priority queue&0 / 0&0 / 0&0 / 1\\
 50&k means clustering&1 / 1&2 / 2&2 / 3\\
-51&get current process id&0 / 0&1 / 1&0 / 0\\
+51&get current process id&0 / 0&0 / 1&0 / 0\\
 52&sending binary data over serial connection&0 / 0&0 / 1&0 / 1\\
 53&connect to sql&0 / 1&0 / 0&0 / 0\\
 54&memoize to disk persistent memoization&0 / 0&0 / 0&1 / 1\\
 55&regex case insensitive&0 / 1&0 / 0&0 / 0\\
 56&deducting the median from each column&0 / 0&0 / 0&1 / 1\\
-57&filter array&0 / 2&0 / 1&0 / 0\\
+57&filter array&1 / 2&1 / 1&0 / 0\\
 58&randomly extract items from list&0 / 1&0 / 0&0 / 1\\
 59&aes encryption&1 / 1&0 / 0&1 / 1\\
 60&unique elements&0 / 0&0 / 0&0 / 1\\
 61&confusion matrix&1 / 1&0 / 0&0 / 0\\
-62&html entities replace&0 / 1&0 / 1&0 / 0\\
+62&html entities replace&1 / 1&0 / 1&0 / 0\\
 63&json to xml conversion&0 / 0&0 / 0&1 / 1\\
 64&encode url&0 / 1&0 / 1&0 / 0\\
 65&heatmap from d coordinates&0 / 0&0 / 0&0 / 1\\
 66&unzipping large files&0 / 1&0 / 0&0 / 0\\
-67&convert utc time to epoch&0 / 0&1 / 1&0 / 0\\
+67&convert utc time to epoch&0 / 0&0 / 1&0 / 0\\
 68&get current observable value&0 / 0&0 / 0&0 / 1\\
 69&print model summary&0 / 0&0 / 0&1 / 1\\
 70&linear regression&0 / 1&0 / 0&0 / 0\\
 71&convert html to pdf&0 / 0&0 / 1&0 / 0\\
-&Insgesamt&33 / 65&18 / 47&26 / 65\\
+&Insgesamt&30 / 65&18 / 47&29 / 65\\
