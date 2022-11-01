@@ -86,7 +86,7 @@ if __name__ == '__main__':
     indexer     = IndexCreator(args, config)
     stopwords   = set("a,about,after,also,an,and,another,are,around,as,at,awt,be,because,been,before,being,between,both,but,by,came,can,come,could,did,do,does,each,every,final,from,get,got,had,has,have,he,her,here,him,himself,his,how,in,into,io,it,its,java,javax,just,lang,like,make,many,me,might,more,most,much,must,my,never,net,new,no,now,of,on,only,other,our,out,over,override,private,protected,public,re,return,said,same,see,set,should,since,so,some,static,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,throw,throws,to,too,under,unk,UNK,up,use,util,very,void,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
     pattern1    = re.compile(r'[^\[a-zA-Z ]+')
-    pattern2    = re.compile(r'  +')
+    pattern2    = re.compile(r' \w? +')
     #n_threads   = 8 # number of threads for parallelization of less performance intensive program parts
     _codebase_chunksize = 2000000
     tf_idf_threshold    = 1.0 #2.79 # 2.00
