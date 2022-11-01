@@ -55,7 +55,7 @@ def parse_args():
                         " DeepCS with a trained model to search pre-selected for the K most relevant code snippets; "
                         " 'populate_database' mode adds data to the database (for one time use only!); "
                         " 'evaluate' mode evaluates the filter (false negatives).")
-    parser.add_argument("--index_type", choices=["word_indices","inverted_index"], default="inverted_index", help="Type of index "
+    parser.add_argument("--index_type", choices=["word_indices","inverted_index","inverted_index_total"], default="inverted_index_total", help="Type of index "
                         " to be created or used: The 'word_indices' mode [not recommended at all] utilizes parts of the dataset "
                         " already existing for DeepCS to work (simple but not usable for more accurete similarity measurements. "
                         " For each meaningful word the 'inverted_index' stores IDs and tf-idf weights of code fragment that contain it. ")
