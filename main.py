@@ -116,8 +116,8 @@ if __name__ == '__main__':
             source_file = io.open(data_path + 'eval_difference.txt', "r", encoding='utf8', errors='replace')
             queries     = source_file.readlines()
             source_file.close()
+            results     = []
             result_file = fileinput.FileInput(data_path + 'eval_difference_results.txt', inplace=1)
-            result_file_lines = list(result_file)
             
             engine = deepCS_main.SearchEngine(args, config)
             model  = getattr(models, args.model)(config) # initialize the model
@@ -190,11 +190,8 @@ if __name__ == '__main__':
             #print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             result_line_numbers = set(result_line_numbers)
             
-            if args.mode  == "eval":
-                common = len(list(result_line_numbers & deepCS_result_line_numbers))
-                line   = re.sub(r'(&\d+\\\\$)', f"&{common}\\\\", result_file_lines[e])
-                print(line.strip())
-                e += 1
+            if args.mode == "eval":
+                results.append(len(list(result_line_numbers & deepCS_result_line_numbers)))
             else:
                 for s, line in enumerate(query_lines):
                     score = query_scores[s]
@@ -205,7 +202,12 @@ if __name__ == '__main__':
                 global_cnt.update(query_cnt)
                 e += 1
                 result_file.write(f"{e}&{query}&{query_cnt['found_3']} / {query_cnt['total_3']}&{query_cnt['found_2']} / {query_cnt['total_2']}&{query_cnt['found_1']} / {query_cnt['total_1']}\\\\\n")
-        if args.mode == "eval_filter": result_file.write(f"&Insgesamt&{global_cnt['found_3']} / {global_cnt['total_3']}&{global_cnt['found_2']} / {global_cnt['total_2']}&{global_cnt['found_1']} / {global_cnt['total_1']}\\\\\n")
+        if args.mode == "eval":
+            for line in result_file:
+                line = re.sub(r'(&\d+\\\\$)', f"&{results[e]}\\\\", line)
+                print(line.strip())
+        else:
+            result_file.write(f"&Insgesamt&{global_cnt['found_3']} / {global_cnt['total_3']}&{global_cnt['found_2']} / {global_cnt['total_2']}&{global_cnt['found_1']} / {global_cnt['total_1']}\\\\\n")
         result_file.close()
     
     elif args.mode == 'search':

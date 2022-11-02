@@ -243,18 +243,20 @@ class SearchEngine:
         if self._codebase:
             chunk_codes = [self._codebase[i][k] for k in maxinds]
             codes.extend(chunk_codes)
-        else:
+        if not self._codebase or return_line_numbers:
             ################ added ################
             offset = i * self._codebase_chunksize
             for ind in range(0, len(maxinds)):
                 maxinds[ind] = maxinds[ind] + offset
                 #print(ind)
-            codes.extend(maxinds)
+            if return_line_numbers: 
+                line_numbers.extend(maxinds)
+            else:
+                codes.extend(maxinds)
             #######################################
             """chunk_codes = data_loader.load_codebase_lines(self.data_path + self.data_params['use_codebase'], maxinds, self._codebase_chunksize, i)
             codes.extend(chunk_codes)"""
         sims.extend(chunk_sims)
-        if return_line_numbers: line_numbers.extend(maxinds)
         
     def postproc(self, codes_sims):
         codes_, sims_ = zip(*codes_sims)
