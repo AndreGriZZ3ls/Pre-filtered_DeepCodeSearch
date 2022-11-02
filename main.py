@@ -127,8 +127,8 @@ if __name__ == '__main__':
             assert config['training_params']['reload'] > 0, "Please specify the number of the optimal epoch checkpoint in config.py"
             engine.load_model(model, config['training_params']['reload'], f"./DeepCSKeras/output/{model.__class__.__name__}/models/")
             vocab  = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
-            #engine._code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], _codebase_chunksize)
-            #engine._codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], _codebase_chunksize)
+            engine._code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], _codebase_chunksize)
+            engine._codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], _codebase_chunksize)
         else:
             eval_dict = data_loader.load_pickle(data_path + 'eval_filter.pkl')
             queries   = list(eval_dict.keys())
