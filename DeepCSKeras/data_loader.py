@@ -130,7 +130,7 @@ def load_codebase(path, chunk_size):
     codefile: h5 file that stores raw code
     """
     logger.info('Loading codebase (chunk size = {}) ...'.format(chunk_size))
-    start = time.time()
+    #start = time.time()
     if path[-3:] == ".db":
         conn   = sqlite3.connect(path)
         curs   = conn.cursor()
@@ -148,7 +148,7 @@ def load_codebase(path, chunk_size):
         codes  = file.readlines()
         length = len(codes)
         file.close()
-    print('Total load_codebase time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
+    #print('Total load_codebase time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
     if chunk_size < 0: 
         return dict(zip(range(0, length), codes))
     #if type(codes) != type([]): codes = list(codes)

@@ -325,7 +325,7 @@ def search_and_print_results(engine, model, vocab, query, n_results, data_path, 
     if return_line_numbers:
         zipped  = zip(codes, sims, line_numbers)
         zipped  = sorted(zipped, reverse = True, key = lambda x:x[1])
-        return postproc_ln(zipped)
+        return engine.postproc_ln(zipped)
     zipped  = zip(codes, sims)
     zipped  = sorted(zipped, reverse = True, key = lambda x:x[1])
     zipped  = engine.postproc(zipped)
