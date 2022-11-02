@@ -282,7 +282,7 @@ class SearchEngine:
         sims  = list(sims_ )
         lines = list(lines_)   
         final_lines = set()  
-        for i in range(len(codes_sims)):
+        for i in range(len(codes_sims_lines)):
             is_dup = False
             for j in range(i):
                 if codes[i][:80] == codes[j][:80] and abs(sims[i] - sims[j]) < 0.01:
