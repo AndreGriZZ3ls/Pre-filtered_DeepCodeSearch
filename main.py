@@ -191,7 +191,7 @@ if __name__ == '__main__':
             else:
                 result_line_numbers = result_line_numbers[:min_filtered]
             #print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
-            result_line_numbers.sort())
+            result_line_numbers.sort()
             
             if args.mode == "eval":
                 chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results))
