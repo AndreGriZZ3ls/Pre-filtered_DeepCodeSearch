@@ -214,7 +214,7 @@ if __name__ == '__main__':
         if args.mode == "eval":
             result_file = fileinput.FileInput(data_path + 'eval_difference_results.txt', inplace=1)
             for line in result_file:
-                line = re.sub(r'(&\d+\\$)', f"&{results[e]}\\\\", line)
+                line = re.sub(r'(&\d+\\$)', f"&{10 - results[e]}\\\\", line)
                 print(line.strip())
                 e += 1
         else:
