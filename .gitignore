@@ -6,9 +6,9 @@
 epo*
 *.all.txt
 *index*.pkl
+*index*.h5
 use.processed.code.pkl
 allData/
-inverted_index.h5
 train.apiseq.h5
 train.desc.h5
 train.methname.h5

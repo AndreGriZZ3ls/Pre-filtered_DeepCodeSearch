@@ -1,0 +1,50 @@
+convert an inputstream to a string
+create arraylist from array
+iterate through a hashmap
+generating random integers in a specific range
+converting string to int in java
+initialization of an array in one line
+how can I test if an array contains a certain value
+lookup enum by string value
+breaking out of nested loops in java
+how to declare an array
+how to generate a random alpha-numeric string
+what is the simplest way to print a java array
+sort a map by values
+fastest way to determine if an integer’s square root is an integer
+how can I concatenate two arrays in java
+how do I create a java string from the contents of a file
+how can I convert a stack trace to a string
+how do I compare strings in java
+how to split a string in java
+how to create a file and write to a file in java
+how can I initialise a static map
+iterating through a collection, avoiding concurrentmodificationexception when removing in loop
+how can I generate an md5 hash
+get current stack trace in java
+sort arraylist of custom objects by property
+how to round a number to n decimal places in java
+how can I pad an integers with zeros on the left
+how to create a generic array in java
+reading a plain text file in java
+a for loop to iterate over enum in java
+check if at least two out of three booleans are true
+how do I convert from int to string
+how to convert a char to a string in java
+how do I check if a file exists in java
+java string to date conversion
+convert inputstream to byte array in java
+how to check if a string is numeric in java
+how do I copy an object in java
+how do I time a method’s execution in java
+how to read a large text file line by line using java
+how to make a new list in java
+how to append text to an existing file in java
+converting iso 8601-compliant string to date
+what is the best way to filter a java collection
+removing whitespace from strings in java
+how do I split a string with any whitespace chars as delimiters
+in java, what is the best way to determine the size of an object
+how do I invoke a java method when given the method name as a string
+how do I get a platform dependent new line character
+how to convert a map to list in java

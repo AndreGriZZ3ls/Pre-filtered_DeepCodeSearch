@@ -1,0 +1,50 @@
+01&309424&convert an inputstream to a string&Ü&Ü&0\\
+02&157944&create arraylist from array&Ü&Ü&0\\
+03&1066589&iterate through a hashmap&Ü&Ü&0\\
+04&363681&generating random integers in a specific range&Ü&Ü&0\\
+05&5585779&converting string to int in java&Ü&Ü&0\\
+06&1005073&initialization of an array in one line&Ü&Ü&0\\
+07&1128723&how can I test if an array contains a certain value&Ü&Ü&0\\
+08&604424&lookup enum by string value&Ü&Ü&0\\
+09&886955&breaking out of nested loops in java&Ü&Ü&0\\
+10&1200621&how to declare an array&Ü&Ü&0\\
+11&41107&how to generate a random alpha-numeric string&Ü&Ü&0\\
+12&409784&what is the simplest way to print a java array&Ü&Ü&0\\
+13&109383&sort a map by values&Ü&Ü&0\\
+14&295579&fastest way to determine if an integer’s square root is an integer&Ü&Ü&0\\
+15&80476&how can I concatenate two arrays in java&Ü&Ü&0\\
+16&326369&how do I create a java string from the contents of a file&Ü&Ü&0\\
+17&1149703&how can I convert a stack trace to a string&Ü&Ü&0\\
+18&513832&how do I compare strings in java&Ü&Ü&0\\
+19&3481828&how to split a string in java&Ü&Ü&0\\
+20&2885173&how to create a file and write to a file in java&Ü&Ü&0\\
+21&507602&how can I initialise a static map&Ü&Ü&0\\
+22&223918&iterating through a collection, avoiding concurrentmodificationexception when removing in loop&Ü&Ü&0\\
+23&415953&how can I generate an md5 hash&Ü&Ü&0\\
+24&1069066&get current stack trace in java&Ü&Ü&0\\
+25&2784514&sort arraylist of custom objects by property&Ü&Ü&0\\
+26&153724&how to round a number to n decimal places in java&Ü&Ü&0\\
+27&473282&how can I pad an integers with zeros on the left&Ü&Ü&0\\
+28&529085&how to create a generic array in java&Ü&Ü&0\\
+29&4716503&reading a plain text file in java&Ü&Ü&0\\
+30&1104975&a for loop to iterate over enum in java&Ü&Ü&0\\
+31&3076078&check if at least two out of three booleans are true&Ü&Ü&0\\
+32&4105331&how do I convert from int to string&Ü&Ü&0\\
+33&8172420&how to convert a char to a string in java&Ü&Ü&0\\
+34&1816673&how do I check if a file exists in java&Ü&Ü&0\\
+35&4216745&java string to date conversion&Ü&Ü&0\\
+36&1264709&convert inputstream to byte array in java&Ü&Ü&0\\
+37&1102891&how to check if a string is numeric in java&Ü&Ü&0\\
+38&869033&how do I copy an object in java&Ü&Ü&0\\
+39&180158&how do I time a method’s execution in java&Ü&Ü&0\\
+40&5868369&how to read a large text file line by line using java&Ü&Ü&0\\
+41&858572&how to make a new list in java&Ü&Ü&0\\
+42&1625234&how to append text to an existing file in java&Ü&Ü&0\\
+43&2201925&converting iso 8601-compliant string to date&Ü&Ü&0\\
+44&122105&what is the best way to filter a java collection&Ü&Ü&0\\
+45&5455794&removing whitespace from strings in java&Ü&Ü&0\\
+46&225337&how do I split a string with any whitespace chars as delimiters&Ü&Ü&0\\
+47&52353&in java, what is the best way to determine the size of an object&Ü&Ü&0\\
+48&160970&how do I invoke a java method when given the method name as a string&Ü&Ü&0\\
+49&207947&how do I get a platform dependent new line character&Ü&Ü&0\\
+50&1026723&how to convert a map to list in java&Ü&Ü&0\\

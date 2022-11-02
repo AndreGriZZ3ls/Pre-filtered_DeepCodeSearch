@@ -30,6 +30,7 @@ import argparse
 import operator
 import traceback
 import itertools
+import fileinput
 import numpy as np
 from tqdm import tqdm
 from collections import Counter
@@ -49,7 +50,7 @@ def parse_args():
     parser.add_argument("--dataset",    type=str, default="codesearchnet", help="dataset name")
     parser.add_argument("--data_path",  type=str, default='./DeepCSKeras/data/',       help="working directory")
     parser.add_argument("--model",      type=str, default="JointEmbeddingModel",       help="DeepCS model name")
-    parser.add_argument("--mode", choices=["create_index","search","populate_database","evaluate"], default='search', 
+    parser.add_argument("--mode", choices=["create_index","search","populate_database","eval","eval_filter"], default='search', 
                         help="The mode to run: 'create_index' mode constructs an index of specified type on the desired dataset; "
                         " 'search' mode filters the dataset according to given query and index before utilizing "
                         " DeepCS with a trained model to search pre-selected for the K most relevant code snippets; "
@@ -109,25 +110,46 @@ if __name__ == '__main__':
     #if args.mode == 'create_index':
         indexer.create_index(stopwords)
 
-    elif args.mode == 'evaluate':
+    elif args.mode in ["eval","eval_filter"]:
         e = 0
-        eval_dict = data_loader.load_pickle(data_path + 'eval_filter.pkl')
-        queries   = list(eval_dict.keys())
-        #line_nrs  = list(eval_dict.values().keys())
-        #scores    = list(eval_dict.values().values())
+        if args.mode  == "eval":
+            source_file = io.open(data_path + 'eval_difference.txt', "a", encoding='utf8', errors='replace')
+            queries     = source_file.readlines()
+            source_file.close()
+            result_file = fileinput.FileInput(camelcase_file, inplace=1)
+            
+            engine = deepCS_main.SearchEngine(args, config)
+            model  = getattr(models, args.model)(config) # initialize the model
+            model.build()
+            model.summary(export_path = f"./output/{args.model}/")
+            optimizer = config.get('training_params', dict()).get('optimizer', 'adam')
+            model.compile(optimizer = optimizer)
+            assert config['training_params']['reload'] > 0, "Please specify the number of the optimal epoch checkpoint in config.py"
+            engine.load_model(model, config['training_params']['reload'], f"./DeepCSKeras/output/{model.__class__.__name__}/models/")
+            vocab  = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
+            #engine._code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], _codebase_chunksize)
+            #engine._codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], _codebase_chunksize)
+        else:
+            eval_dict = data_loader.load_pickle(data_path + 'eval_difference_results.txt' + 'eval_filter.pkl')
+            queries   = list(eval_dict.keys())
+            global_cnt   = Counter()
+            result_path  = data_path + 'eval_results.txt'
+            if os.path.exists(result_path): os.remove(result_path)
+            result_file  = io.open(result_path, "a", encoding='utf8', errors='replace')
         index     = indexer.load_index()
         n_results = 10
         porter    = PorterStemmer()
         max_filtered = max(500, 50 * n_results + 250)
         min_filtered = max(500,  25 * n_results + 250)
-        global_cnt   = Counter()
-        result_path  = data_path + 'eval_results.txt'
-        if os.path.exists(result_path): os.remove(result_path)
-        result_file  = io.open(result_path, "a", encoding='utf8', errors='replace')
+        
         
         for query in queries:
-            query_lines  = list(eval_dict[query].keys())
-            query_scores = list(eval_dict[query].values())
+            if args.mode  == "eval":
+                query_proc = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
+                deepCS_result_line_numbers = deepCS_main.search_and_print_results(engine, model, vocab, query_proc, n_results, data_path, config['data_params'], True)
+            else:
+                query_lines  = list(eval_dict[query].keys())
+                query_scores = list(eval_dict[query].values())
             ##### Process user query ######
             #tmp   = []
             query = re.sub(pattern1, ' ', query) # replace all non-alphabetic characters except '[' by ' '
@@ -167,16 +189,22 @@ if __name__ == '__main__':
             #print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             result_line_numbers = set(result_line_numbers)
             
-            for s, line in enumerate(query_lines):
-                score = query_scores[s]
-                if line in result_line_numbers:
-                    query_cnt["found_{}".format(score)] += 1
-                query_cnt["total_{}".format(score)] += 1
-            
-            global_cnt.update(query_cnt)
-            e += 1
-            result_file.write(f"{e}&{query}&{query_cnt['found_3']} / {query_cnt['total_3']}&{query_cnt['found_2']} / {query_cnt['total_2']}&{query_cnt['found_1']} / {query_cnt['total_1']}\\\\\n")
-        result_file.write(f"&Insgesamt&{global_cnt['found_3']} / {global_cnt['total_3']}&{global_cnt['found_2']} / {global_cnt['total_2']}&{global_cnt['found_1']} / {global_cnt['total_1']}\\\\\n")
+            if args.mode  == "eval":
+                common = len(list(result_line_numbers & deepCS_result_line_numbers))
+                line   = re.sub(r'(&\d+\\\\$)', f"&{common}\\\\", result_file[e])
+                print(line.strip())
+                e += 1
+            else:
+                for s, line in enumerate(query_lines):
+                    score = query_scores[s]
+                    if line in result_line_numbers:
+                        query_cnt["found_{}".format(score)] += 1
+                    query_cnt["total_{}".format(score)] += 1
+                
+                global_cnt.update(query_cnt)
+                e += 1
+                result_file.write(f"{e}&{query}&{query_cnt['found_3']} / {query_cnt['total_3']}&{query_cnt['found_2']} / {query_cnt['total_2']}&{query_cnt['found_1']} / {query_cnt['total_1']}\\\\\n")
+        if args.mode == "eval_filter": result_file.write(f"&Insgesamt&{global_cnt['found_3']} / {global_cnt['total_3']}&{global_cnt['found_2']} / {global_cnt['total_2']}&{global_cnt['found_1']} / {global_cnt['total_1']}\\\\\n")
         result_file.close()
     
     elif args.mode == 'search':
