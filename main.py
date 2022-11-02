@@ -117,7 +117,6 @@ if __name__ == '__main__':
             queries     = source_file.readlines()
             source_file.close()
             results     = []
-            result_file = fileinput.FileInput(data_path + 'eval_difference_results.txt', inplace=1)
             
             engine = deepCS_main.SearchEngine(args, config)
             model  = getattr(models, args.model)(config) # initialize the model
@@ -203,9 +202,11 @@ if __name__ == '__main__':
                 e += 1
                 result_file.write(f"{e}&{query}&{query_cnt['found_3']} / {query_cnt['total_3']}&{query_cnt['found_2']} / {query_cnt['total_2']}&{query_cnt['found_1']} / {query_cnt['total_1']}\\\\\n")
         if args.mode == "eval":
+            result_file = fileinput.FileInput(data_path + 'eval_difference_results.txt', inplace=1)
             for line in result_file:
                 line = re.sub(r'(&\d+\\\\$)', f"&{results[e]}\\\\", line)
                 print(line.strip())
+                e += 1
         else:
             result_file.write(f"&Insgesamt&{global_cnt['found_3']} / {global_cnt['total_3']}&{global_cnt['found_2']} / {global_cnt['total_2']}&{global_cnt['found_1']} / {global_cnt['total_1']}\\\\\n")
         result_file.close()
