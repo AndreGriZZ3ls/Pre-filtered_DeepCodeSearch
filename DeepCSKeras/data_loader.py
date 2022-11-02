@@ -28,7 +28,7 @@ def load_pickle(path):
 def save_pickle(path, index):
     pickle.dump(index, open(path, 'wb'), pickle.HIGHEST_PROTOCOL) #
     
-def load_index_counters(name, word_list, index_path, max_items):
+def load_index_counters(name, word_list, index_path):
     """db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
     collec = db.collection(name)
     if not collec.exists():
@@ -50,10 +50,11 @@ def load_index_counters(name, word_list, index_path, max_items):
             curs.execute(cond)
             raw = curs.fetchone()
             print(raw)
-            keys, vals = zip(*raw)
-            keys = itertools.islice(keys, max_items)
-            vals = itertools.islice(vals, max_items)
-            counters.append(Counter(dict(zip(keys, vals))))
+            #keys, vals = zip(*raw)
+            #keys = itertools.islice(keys, max_items)
+            #vals = itertools.islice(vals, max_items)
+            #counters.append(Counter(dict(zip(keys, vals))))
+            counters.append(Counter(dict(raw)))
         conn.close()
         print(f"Successfully loaded tf-idf value counters from index '{name}' in database '{index_path}'.")
     else:
