@@ -117,6 +117,7 @@ if __name__ == '__main__':
             queries     = source_file.readlines()
             source_file.close()
             result_file = fileinput.FileInput(data_path + 'eval_difference_results.txt', inplace=1)
+            result_file_lines = list(result_file)
             
             engine = deepCS_main.SearchEngine(args, config)
             model  = getattr(models, args.model)(config) # initialize the model
@@ -191,7 +192,7 @@ if __name__ == '__main__':
             
             if args.mode  == "eval":
                 common = len(list(result_line_numbers & deepCS_result_line_numbers))
-                line   = re.sub(r'(&\d+\\\\$)', f"&{common}\\\\", result_file[e])
+                line   = re.sub(r'(&\d+\\\\$)', f"&{common}\\\\", result_file_lines[e])
                 print(line.strip())
                 e += 1
             else:
