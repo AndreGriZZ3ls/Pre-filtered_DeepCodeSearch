@@ -1,50 +1,50 @@
-01&309424&convert an inputstream to a string&Ü&Ü&10\\
-02&157944&create arraylist from array&Ü&Ü&10\\
-03&1066589&iterate through a hashmap&Ü&Ü&10\\
-04&363681&generating random integers in a specific range&Ü&Ü&10\\
-05&5585779&converting string to int in java&Ü&Ü&10\\
-06&1005073&initialization of an array in one line&Ü&Ü&10\\
-07&1128723&how can I test if an array contains a certain value&Ü&Ü&10\\
-08&604424&lookup enum by string value&Ü&Ü&10\\
-09&886955&breaking out of nested loops in java&Ü&Ü&10\\
-10&1200621&how to declare an array&Ü&Ü&10\\
-11&41107&how to generate a random alpha-numeric string&Ü&Ü&10\\
-12&409784&what is the simplest way to print a java array&Ü&Ü&10\\
-13&109383&sort a map by values&Ü&Ü&10\\
-14&295579&fastest way to determine if an integer’s square root is an integer&Ü&Ü&10\\
-15&80476&how can I concatenate two arrays in java&Ü&Ü&10\\
-16&326369&how do I create a java string from the contents of a file&Ü&Ü&10\\
-17&1149703&how can I convert a stack trace to a string&Ü&Ü&10\\
-18&513832&how do I compare strings in java&Ü&Ü&10\\
-19&3481828&how to split a string in java&Ü&Ü&10\\
-20&2885173&how to create a file and write to a file in java&Ü&Ü&10\\
-21&507602&how can I initialise a static map&Ü&Ü&10\\
-22&223918&iterating through a collection, avoiding concurrentmodification\-exception when removing in loop&Ü&Ü&10\\
-23&415953&how can I generate an md5 hash&Ü&Ü&10\\
-24&1069066&get current stack trace in java&Ü&Ü&10\\
-25&2784514&sort arraylist of custom objects by property&Ü&Ü&10\\
-26&153724&how to round a number to n decimal places in java&Ü&Ü&10\\
-27&473282&how can I pad an integers with zeros on the left&Ü&Ü&10\\
-28&529085&how to create a generic array in java&Ü&Ü&10\\
-29&4716503&reading a plain text file in java&Ü&Ü&10\\
-30&1104975&a for loop to iterate over enum in java&Ü&Ü&10\\
-31&3076078&check if at least two out of three booleans are true&Ü&Ü&10\\
-32&4105331&how do I convert from int to string&Ü&Ü&10\\
-33&8172420&how to convert a char to a string in java&Ü&Ü&10\\
-34&1816673&how do I check if a file exists in java&Ü&Ü&10\\
-35&4216745&java string to date conversion&Ü&Ü&10\\
-36&1264709&convert inputstream to byte array in java&Ü&Ü&10\\
-37&1102891&how to check if a string is numeric in java&Ü&Ü&10\\
-38&869033&how do I copy an object in java&Ü&Ü&10\\
-39&180158&how do I time a method’s execution in java&Ü&Ü&10\\
-40&5868369&how to read a large text file line by line using java&Ü&Ü&10\\
-41&858572&how to make a new list in java&Ü&Ü&10\\
-42&1625234&how to append text to an existing file in java&Ü&Ü&10\\
-43&2201925&converting iso 8601-compliant string to date&Ü&Ü&10\\
-44&122105&what is the best way to filter a java collection&Ü&Ü&10\\
-45&5455794&removing whitespace from strings in java&Ü&Ü&10\\
-46&225337&how do I split a string with any whitespace chars as delimiters&Ü&Ü&10\\
-47&52353&in java, what is the best way to determine the size of an object&Ü&Ü&10\\
-48&160970&how do I invoke a java method when given the method name as a string&Ü&Ü&10\\
-49&207947&how do I get a platform dependent new line character&Ü&Ü&10\\
-50&1026723&how to convert a map to list in java&Ü&Ü&10\\
+01&309424&convert an inputstream to a string&Ü&Ü&10\
+02&157944&create arraylist from array&Ü&Ü&10\
+03&1066589&iterate through a hashmap&Ü&Ü&10\
+04&363681&generating random integers in a specific range&Ü&Ü&10\
+05&5585779&converting string to int in java&Ü&Ü&10\
+06&1005073&initialization of an array in one line&Ü&Ü&10\
+07&1128723&how can I test if an array contains a certain value&Ü&Ü&10\
+08&604424&lookup enum by string value&Ü&Ü&10\
+09&886955&breaking out of nested loops in java&Ü&Ü&10\
+10&1200621&how to declare an array&Ü&Ü&10\
+11&41107&how to generate a random alpha-numeric string&Ü&Ü&10\
+12&409784&what is the simplest way to print a java array&Ü&Ü&10\
+13&109383&sort a map by values&Ü&Ü&10\
+14&295579&fastest way to determine if an integer’s square root is an integer&Ü&Ü&10\
+15&80476&how can I concatenate two arrays in java&Ü&Ü&10\
+16&326369&how do I create a java string from the contents of a file&Ü&Ü&10\
+17&1149703&how can I convert a stack trace to a string&Ü&Ü&10\
+18&513832&how do I compare strings in java&Ü&Ü&10\
+19&3481828&how to split a string in java&Ü&Ü&10\
+20&2885173&how to create a file and write to a file in java&Ü&Ü&10\
+21&507602&how can I initialise a static map&Ü&Ü&10\
+22&223918&iterating through a collection, avoiding concurrentmodification\-exception when removing in loop&Ü&Ü&10\
+23&415953&how can I generate an md5 hash&Ü&Ü&10\
+24&1069066&get current stack trace in java&Ü&Ü&10\
+25&2784514&sort arraylist of custom objects by property&Ü&Ü&10\
+26&153724&how to round a number to n decimal places in java&Ü&Ü&10\
+27&473282&how can I pad an integers with zeros on the left&Ü&Ü&10\
+28&529085&how to create a generic array in java&Ü&Ü&10\
+29&4716503&reading a plain text file in java&Ü&Ü&10\
+30&1104975&a for loop to iterate over enum in java&Ü&Ü&10\
+31&3076078&check if at least two out of three booleans are true&Ü&Ü&10\
+32&4105331&how do I convert from int to string&Ü&Ü&10\
+33&8172420&how to convert a char to a string in java&Ü&Ü&10\
+34&1816673&how do I check if a file exists in java&Ü&Ü&10\
+35&4216745&java string to date conversion&Ü&Ü&10\
+36&1264709&convert inputstream to byte array in java&Ü&Ü&10\
+37&1102891&how to check if a string is numeric in java&Ü&Ü&10\
+38&869033&how do I copy an object in java&Ü&Ü&10\
+39&180158&how do I time a method’s execution in java&Ü&Ü&10\
+40&5868369&how to read a large text file line by line using java&Ü&Ü&10\
+41&858572&how to make a new list in java&Ü&Ü&10\
+42&1625234&how to append text to an existing file in java&Ü&Ü&10\
+43&2201925&converting iso 8601-compliant string to date&Ü&Ü&10\
+44&122105&what is the best way to filter a java collection&Ü&Ü&10\
+45&5455794&removing whitespace from strings in java&Ü&Ü&10\
+46&225337&how do I split a string with any whitespace chars as delimiters&Ü&Ü&10\
+47&52353&in java, what is the best way to determine the size of an object&Ü&Ü&10\
+48&160970&how do I invoke a java method when given the method name as a string&Ü&Ü&10\
+49&207947&how do I get a platform dependent new line character&Ü&Ü&10\
+50&1026723&how to convert a map to list in java&Ü&Ü&10\
