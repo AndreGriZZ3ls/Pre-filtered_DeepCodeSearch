@@ -113,7 +113,7 @@ if __name__ == '__main__':
     elif args.mode in ["eval","eval_filter"]:
         e = 0
         if args.mode  == "eval":
-            source_file = io.open(data_path + 'eval_difference.txt', "a", encoding='utf8', errors='replace')
+            source_file = io.open(data_path + 'eval_difference.txt', "r", encoding='utf8', errors='replace')
             queries     = source_file.readlines()
             source_file.close()
             result_file = fileinput.FileInput(camelcase_file, inplace=1)
