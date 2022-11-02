@@ -127,8 +127,8 @@ if __name__ == '__main__':
             assert config['training_params']['reload'] > 0, "Please specify the number of the optimal epoch checkpoint in config.py"
             engine.load_model(model, config['training_params']['reload'], f"./DeepCSKeras/output/{model.__class__.__name__}/models/")
             vocab  = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
-            engine._code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], _codebase_chunksize)
-            engine._codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], _codebase_chunksize)
+            full_code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], _codebase_chunksize)
+            full_codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], _codebase_chunksize)
         else:
             eval_dict = data_loader.load_pickle(data_path + 'eval_filter.pkl')
             queries   = list(eval_dict.keys())
@@ -145,8 +145,10 @@ if __name__ == '__main__':
         
         for query in queries:
             if args.mode  == "eval":
-                query_proc = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
-                deepCS_result_line_numbers = deepCS_main.search_and_print_results(engine, model, vocab, query_proc, n_results, data_path, config['data_params'], True)
+                engine._code_reprs = full_code_reprs
+                engine._codebase   = full_codebase
+                query_DeepCS = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
+                deepCS_result_line_numbers = deepCS_main.search_and_print_results(engine, model, vocab, query_DeepCS, n_results, data_path, config['data_params'], True)
             else:
                 query_lines  = list(eval_dict[query].keys())
                 query_scores = list(eval_dict[query].values())
@@ -190,6 +192,12 @@ if __name__ == '__main__':
             result_line_numbers = set(result_line_numbers)
             
             if args.mode == "eval":
+                chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results))
+                vector_lines = full_code_reprs[result_line_numbers]
+                engine._code_reprs = [vector_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
+                codebase_lines = [full_codebase[line] for line in result_line_numbers]
+                engine._codebase = [codebase_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
+                result_line_numbers = deepCS_main.search_and_print_results(engine, model, vocab, query_DeepCS, n_results, data_path, config['data_params'], True)
                 results.append(len(list(result_line_numbers & deepCS_result_line_numbers)))
             else:
                 for s, line in enumerate(query_lines):
