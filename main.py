@@ -85,7 +85,7 @@ if __name__ == '__main__':
     index_type  = args.index_type
     memory_mode = args.memory_mode
     indexer     = IndexCreator(args, config)
-    stopwords   = set("a,about,after,also,an,and,another,are,around,as,at,awt,be,because,been,before,being,between,both,but,by,came,can,come,could,did,do,does,each,every,final,from,get,got,had,has,have,he,her,here,him,himself,his,how,if,in,into,io,is,it,its,java,javax,just,lang,like,make,many,me,might,more,most,much,must,my,never,net,new,no,now,of,on,only,other,our,out,over,override,private,protected,public,re,return,said,same,see,set,should,since,so,some,static,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,throw,throws,to,too,under,unk,UNK,up,use,util,very,void,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
+    stopwords   = set("a,about,after,also,an,and,another,are,around,as,at,awt,be,because,been,before,being,between,both,but,by,came,can,come,could,did,do,does,each,every,final,got,had,has,have,he,her,here,him,himself,his,how,in,into,io,it,its,java,javax,just,lang,like,make,many,me,might,more,most,much,must,my,never,net,new,no,now,on,only,other,our,out,over,override,private,protected,public,re,return,said,same,see,should,since,so,some,static,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,throw,throws,too,under,unk,UNK,up,use,util,very,void,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
     pattern1    = re.compile(r'[^\[a-zA-Z ]+')
     pattern2    = re.compile(r' \w? +')
     #n_threads   = 8 # number of threads for parallelization of less performance intensive program parts
@@ -156,8 +156,8 @@ if __name__ == '__main__':
                 query_scores = list(eval_dict[query].values())
             ##### Process user query ######
             #tmp   = []
-            query = re.sub(pattern1, ' ', query) # replace all non-alphabetic characters except '[' by ' '
-            query = re.sub(pattern2, ' ', query.strip()) # remove consecutive spaces
+            query_proc = re.sub(pattern1, ' ', query) # replace all non-alphabetic characters except '[' by ' '
+            query_proc = re.sub(pattern2, ' ', query_proc.strip()) # remove consecutive spaces
             query_proc = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query_proc.split(' ')) - stopwords)
             """for word in query_list:
@@ -214,7 +214,7 @@ if __name__ == '__main__':
         if args.mode == "eval":
             result_file = fileinput.FileInput(data_path + 'eval_difference_results.txt', inplace=1)
             for line in result_file:
-                line = re.sub(r'(&\d+\\\\$)', f"&{10 - results[e]}\\\\", line)
+                line = re.sub(r'(&\d+\\\\$)', f"&{10 - results[e]}\\\\ ", line)
                 print(line.strip())
                 e += 1
         else:
@@ -287,10 +287,11 @@ if __name__ == '__main__':
             #max_filtered = max(1000, 75 * n_results)
             min_filtered = max(500,  25 * n_results + 250)
             ##### Process user query ######
-            query = re.sub(pattern1, ' ', query) # replace all non-alphabetic characters except '[' by ' '
-            query = re.sub(pattern2, ' ', query.strip()) # remove consecutive spaces and single caracters
-            query = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
-            query_list = list(set(query.split(' ')) - stopwords)
+            query_proc = re.sub(pattern1, ' ', query) # replace all non-alphabetic characters except '[' by ' '
+            query_proc = re.sub(pattern2, ' ', query_proc.strip()) # remove consecutive spaces and single caracters
+            query_proc = query_proc.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
+            query      = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
+            query_list = list(set(query_proc.split(' ')) - stopwords)
             #len_query_without_stems = len(query_list)
             """for word in query_list:
                 word_stem = porter.stem(word)
