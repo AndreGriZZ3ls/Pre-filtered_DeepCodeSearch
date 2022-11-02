@@ -116,7 +116,7 @@ if __name__ == '__main__':
             source_file = io.open(data_path + 'eval_difference.txt', "r", encoding='utf8', errors='replace')
             queries     = source_file.readlines()
             source_file.close()
-            result_file = fileinput.FileInput(camelcase_file, inplace=1)
+            result_file = fileinput.FileInput(data_path + 'eval_difference_results.txt', inplace=1)
             
             engine = deepCS_main.SearchEngine(args, config)
             model  = getattr(models, args.model)(config) # initialize the model
@@ -130,7 +130,7 @@ if __name__ == '__main__':
             #engine._code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], _codebase_chunksize)
             #engine._codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], _codebase_chunksize)
         else:
-            eval_dict = data_loader.load_pickle(data_path + 'eval_difference_results.txt' + 'eval_filter.pkl')
+            eval_dict = data_loader.load_pickle(data_path + 'eval_filter.pkl')
             queries   = list(eval_dict.keys())
             global_cnt   = Counter()
             result_path  = data_path + 'eval_results.txt'
