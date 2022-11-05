@@ -116,7 +116,13 @@ if __name__ == '__main__':
             source_file = io.open(data_path + 'eval_difference.txt', "r", encoding='utf8', errors='replace')
             queries     = source_file.readlines()
             source_file.close()
-            results     = []
+            amount_diff, mean_sims, mean_sims_pf = [], [], []
+            out_path    = data_path + 'search_results.txt'
+            out_path_pf = data_path + 'search_results_filtered.txt'
+            if os.path.exists(out_path   ): os.remove(out_path)
+            if os.path.exists(out_path_pf): os.remove(out_path_pf)
+            out_file    = io.open(out_path   , "a", encoding='utf8', errors='replace')
+            out_file_pf = io.open(out_path_pf, "a", encoding='utf8', errors='replace')
             
             engine = deepCS_main.SearchEngine(args, config)
             model  = getattr(models, args.model)(config) # initialize the model
@@ -150,7 +156,7 @@ if __name__ == '__main__':
                 engine._code_reprs = _full_code_reprs
                 engine._codebase   = _full_codebase
                 query_DeepCS = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
-                deepCS_result_line_numbers = deepCS_main.search_and_print_results(engine, model, vocab, query_DeepCS, n_results, data_path, config['data_params'], True)
+                deepCS_codes, deepCS_sims, deepCS_result_line_numbers = deepCS_main.search_and_print_results(engine, model, vocab, query_DeepCS, n_results, data_path, config['data_params'], True)
             else:
                 query_lines  = list(eval_dict[query].keys())
                 query_scores = list(eval_dict[query].values())
@@ -199,8 +205,15 @@ if __name__ == '__main__':
                 engine._code_reprs = [vector_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
                 codebase_lines = [full_codebase[line] for line in result_line_numbers]
                 engine._codebase = [codebase_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
-                result_line_numbers = deepCS_main.search_and_print_results(engine, model, vocab, query_DeepCS, n_results, data_path, config['data_params'], True)
-                results.append(len(list(result_line_numbers & deepCS_result_line_numbers)))
+                codes, sims, result_line_numbers = deepCS_main.search_and_print_results(engine, model, vocab, query_DeepCS, n_results, data_path, config['data_params'], True)
+                mean_sims.append(   mean(DeepCS_sims))
+                mean_sims_pf.append(mean(       sims))
+                amount_diff.append(len(list(result_line_numbers & deepCS_result_line_numbers)))
+                e += 1
+                seperator = f"########################## {e} #################################\n"
+                metrics = "FRank:   | P@1:   | P@5:   | P@10: \n\n"
+                out_file.write(   seperator + '\n\n'.join(map(str, list(zip(deepCS_codes, deepCS_sims)))) + metrics)
+                out_file_pf.write(seperator + '\n\n'.join(map(str, list(zip(       codes,        sims)))) + metrics)
             else:
                 for s, line in enumerate(query_lines):
                     score = query_scores[s]
@@ -212,11 +225,16 @@ if __name__ == '__main__':
                 e += 1
                 result_file.write(f"{e}&{query}&{query_cnt['found_3']} / {query_cnt['total_3']}&{query_cnt['found_2']} / {query_cnt['total_2']}&{query_cnt['found_1']} / {query_cnt['total_1']}\\\\\n")
         if args.mode == "eval":
+            e = 0
             result_file = fileinput.FileInput(data_path + 'eval_difference_results.txt', inplace=1)
             for line in result_file:
-                line = re.sub(r'(&\d+\\\\$)', f"&{10 - results[e]}\\\\ ", line)
+                line = re.sub(r'(&\d+&\d+&\d+\\\\$)', f"&{mean_sims[e]}&{mean_sims_pf[e]}&{10 - amount_diff[e]}\\\\\ ", line)
                 print(line.strip())
                 e += 1
+            out_file.write(   f"Mean sims: {mean(mean_sims)}")
+            out_file_pf.write(f"Mean sims: {mean(mean_sims_pf)}")
+            out_file.close()
+            out_file_pf.close()
         else:
             result_file.write(f"&Insgesamt&{global_cnt['found_3']} / {global_cnt['total_3']}&{global_cnt['found_2']} / {global_cnt['total_2']}&{global_cnt['found_1']} / {global_cnt['total_1']}\\\\\n")
         result_file.close()

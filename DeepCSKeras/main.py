@@ -264,8 +264,7 @@ class SearchEngine:
         #sims  = [sim  for sim  in sims_ ]
         codes = list(codes_)
         sims  = list(sims_ )
-        final_codes = []
-        final_sims  = []    
+        final_codes, final_sims = [], [] 
         for i in range(len(codes_sims)):
             is_dup = False
             for j in range(i):
@@ -282,16 +281,18 @@ class SearchEngine:
         #sims  = [sim  for sim  in sims_ ]
         codes = list(codes_)
         sims  = list(sims_ )
-        lines = list(lines_)   
-        final_lines = set()  
+        lines = list(lines_) 
+        final_codes, final_sims, final_lines = [], [], []
         for i in range(len(codes_sims_lines)):
             is_dup = False
             for j in range(i):
                 if codes[i][:80] == codes[j][:80] and abs(sims[i] - sims[j]) < 0.01:
                     is_dup = True
             if not is_dup:
-                final_lines.add(lines[i])
-        return final_lines
+                final_codes.append(codes[i])
+                final_sims.append(  sims[i])
+                final_lines.append(lines[i])
+        return final_codes, final_sims, final_lines
     
 def parse_args():
     parser = argparse.ArgumentParser("Train and Test Code Search(Embedding) Model")
@@ -327,7 +328,8 @@ def search_and_print_results(engine, model, vocab, query, n_results, data_path, 
     if return_line_numbers:
         zipped  = zip(codes, sims, line_numbers)
         zipped  = sorted(zipped, reverse = True, key = lambda x:x[1])
-        return engine.postproc_ln(zipped)
+        final_codes, final_sims, final_lines = engine.postproc_ln(zipped)
+        return final_codes[:n_results], final_sims[:n_results], set(final_lines[:n_results])
     zipped  = zip(codes, sims)
     zipped  = sorted(zipped, reverse = True, key = lambda x:x[1])
     zipped  = engine.postproc(zipped)
