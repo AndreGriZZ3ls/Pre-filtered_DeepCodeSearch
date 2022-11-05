@@ -1,50 +1,50 @@
-01&309424&convert an inputstream to a string&Ü&Ü&20&20&20\\
-02&157944&create arraylist from array&Ü&Ü&20&20&20\\
-03&1066589&iterate through a hashmap&Ü&Ü&20&20&20\\
-04&363681&generating random integers in a specific range&Ü&Ü&20&20&20\\
-05&5585779&converting string to int in java&Ü&Ü&20&20&20\\
-06&1005073&initialization of an array in one line&Ü&Ü&20&20&20\\
-07&1128723&how can I test if an array contains a certain value&Ü&Ü&20&20&20\\
-08&604424&lookup enum by string value&Ü&Ü&20&20&20\\
-09&886955&breaking out of nested loops in java&Ü&Ü&20&20&20\\
-10&1200621&how to declare an array&Ü&Ü&20&20&20\\
-11&41107&how to generate a random alpha-numeric string&Ü&Ü&20&20&20\\
-12&409784&what is the simplest way to print a java array&Ü&Ü&20&20&20\\
-13&109383&sort a map by values&Ü&Ü&20&20&20\\
-14&295579&fastest way to determine if an integer’s square root is an integer&Ü&Ü&20&20&20\\
-15&80476&how can I concatenate two arrays in java&Ü&Ü&20&20&20\\
-16&326369&how do I create a java string from the contents of a file&Ü&Ü&20&20&20\\
-17&1149703&how can I convert a stack trace to a string&Ü&Ü&20&20&20\\
-18&513832&how do I compare strings in java&Ü&Ü&20&20&20\\
-19&3481828&how to split a string in java&Ü&Ü&20&20&20\\
-20&2885173&how to create a file and write to a file in java&Ü&Ü&20&20&20\\
-21&507602&how can I initialise a static map&Ü&Ü&20&20&20\\
-22&223918&iterating through a collection, avoiding concurrentmodification\-exception when removing in loop&Ü&Ü&20&20&20\\
-23&415953&how can I generate an md5 hash&Ü&Ü&20&20&20\\
-24&1069066&get current stack trace in java&Ü&Ü&20&20&20\\
-25&2784514&sort arraylist of custom objects by property&Ü&Ü&20&20&20\\
-26&153724&how to round a number to n decimal places in java&Ü&Ü&20&20&20\\
-27&473282&how can I pad an integers with zeros on the left&Ü&Ü&20&20&20\\
-28&529085&how to create a generic array in java&Ü&Ü&20&20&20\\
-29&4716503&reading a plain text file in java&Ü&Ü&20&20&20\\
-30&1104975&a for loop to iterate over enum in java&Ü&Ü&20&20&20\\
-31&3076078&check if at least two out of three booleans are true&Ü&Ü&20&20&20\\
-32&4105331&how do I convert from int to string&Ü&Ü&20&20&20\\
-33&8172420&how to convert a char to a string in java&Ü&Ü&20&20&20\\
-34&1816673&how do I check if a file exists in java&Ü&Ü&20&20&20\\
-35&4216745&java string to date conversion&Ü&Ü&20&20&20\\
-36&1264709&convert inputstream to byte array in java&Ü&Ü&20&20&20\\
-37&1102891&how to check if a string is numeric in java&Ü&Ü&20&20&20\\
-38&869033&how do I copy an object in java&Ü&Ü&20&20&20\\
-39&180158&how do I time a method’s execution in java&Ü&Ü&20&20&20\\
-40&5868369&how to read a large text file line by line using java&Ü&Ü&20&20&20\\
-41&858572&how to make a new list in java&Ü&Ü&20&20&20\\
-42&1625234&how to append text to an existing file in java&Ü&Ü&20&20&20\\
-43&2201925&converting iso 8601-compliant string to date&Ü&Ü&20&20&20\\
-44&122105&what is the best way to filter a java collection&Ü&Ü&20&20&20\\
-45&5455794&removing whitespace from strings in java&Ü&Ü&20&20&20\\
-46&225337&how do I split a string with any whitespace chars as delimiters&Ü&Ü&20&20&20\\
-47&52353&in java, what is the best way to determine the size of an object&Ü&Ü&20&20&20\\
-48&160970&how do I invoke a java method when given the method name as a string&Ü&Ü&20&20&20\\
-49&207947&how do I get a platform dependent new line character&Ü&Ü&20&20&20\\
-50&1026723&how to convert a map to list in java&Ü&Ü&20&20&20\\
+01&309424&convert an inputstream to a string&Ü&Ü&0.419753717967686&0.4004882023165648&10\\
+02&157944&create arraylist from array&Ü&Ü&0.40388153901846924&0.2793122076706124&10\\
+03&1066589&iterate through a hashmap&Ü&Ü&0.39008830293435387&0.3343849186073773&10\\
+04&363681&generating random integers in a specific range&Ü&Ü&0.4297030187324258&0.42047196913403695&10\\
+05&5585779&converting string to int in java&Ü&Ü&0.44607214246741306&0.4188786974935382&10\\
+06&1005073&initialization of an array in one line&Ü&Ü&0.4178457569071528&0.3204015239355561&10\\
+07&1128723&how can I test if an array contains a certain value&Ü&Ü&0.3607494481352942&0.33202832095677776&10\\
+08&604424&lookup enum by string value&Ü&Ü&0.4007896620352524&0.3097498031073298&10\\
+09&886955&breaking out of nested loops in java&Ü&Ü&0.38467093528422414&0.30577519381739715&10\\
+10&1200621&how to declare an array&Ü&Ü&0.3471540783704079&0.25810031801483546&10\\
+11&41107&how to generate a random alpha-numeric string&Ü&Ü&0.4441505744074445&0.4249257063216669&10\\
+12&409784&what is the simplest way to print a java array&Ü&Ü&0.3333663677982759&0.32975427240325406&10\\
+13&109383&sort a map by values&Ü&Ü&0.4674133781186367&0.4590513689926181&10\\
+14&295579&fastest way to determine if an integer’s square root is an integer&Ü&Ü&0.3465418737840844&0.22453430807599994&10\\
+15&80476&how can I concatenate two arrays in java&Ü&Ü&0.3709655893104153&0.32440472939497317&10\\
+16&326369&how do I create a java string from the contents of a file&Ü&Ü&0.3813509690029469&0.31957127698528326&10\\
+17&1149703&how can I convert a stack trace to a string&Ü&Ü&0.4349354751849447&0.4187859368739751&10\\
+18&513832&how do I compare strings in java&Ü&Ü&0.38071075005912797&0.31067970446276144&10\\
+19&3481828&how to split a string in java&Ü&Ü&0.41554524066054527&0.3534358735061404&10\\
+20&2885173&how to create a file and write to a file in java&Ü&Ü&0.3757322922354146&0.32858477869048014&10\\
+21&507602&how can I initialise a static map&Ü&Ü&0.4027362501333375&0.37914692731242255&10\\
+22&223918&iterating through a collection, avoiding concurrentmodification\-exception when removing in loop&Ü&Ü&0.40936866897042024&0.32927560822148844&10\\
+23&415953&how can I generate an md5 hash&Ü&Ü&0.4335716105856296&0.3925557427189972&10\\
+24&1069066&get current stack trace in java&Ü&Ü&0.44097913175821823&0.3833706222828614&10\\
+25&2784514&sort arraylist of custom objects by property&Ü&Ü&0.42558127848819727&0.39138912233177436&10\\
+26&153724&how to round a number to n decimal places in java&Ü&Ü&0.4671403958129018&0.46474543087599407&10\\
+27&473282&how can I pad an integers with zeros on the left&Ü&Ü&0.4092514101634714&0.39618818509615744&10\\
+28&529085&how to create a generic array in java&Ü&Ü&0.38700168924749945&0.25904824432046597&10\\
+29&4716503&reading a plain text file in java&Ü&Ü&0.42194493206732053&0.40163268575689703&10\\
+30&1104975&a for loop to iterate over enum in java&Ü&Ü&0.39128370451104305&0.2950346792740581&10\\
+31&3076078&check if at least two out of three booleans are true&Ü&Ü&0.40506558277143323&0.3409365059497854&10\\
+32&4105331&how do I convert from int to string&Ü&Ü&0.43300819011659275&0.3695214934640012&10\\
+33&8172420&how to convert a char to a string in java&Ü&Ü&0.3901539921528907&0.3464737521118217&10\\
+34&1816673&how do I check if a file exists in java&Ü&Ü&0.3930055914235593&0.3096214012241037&10\\
+35&4216745&java string to date conversion&Ü&Ü&0.43268506254113864&0.4061821443182218&10\\
+36&1264709&convert inputstream to byte array in java&Ü&Ü&0.4055751616773399&0.39249354194201397&10\\
+37&1102891&how to check if a string is numeric in java&Ü&Ü&0.4237685075913977&0.33405355450157725&10\\
+38&869033&how do I copy an object in java&Ü&Ü&0.4127432907928343&0.4012931077520544&10\\
+39&180158&how do I time a method’s execution in java&Ü&Ü&0.3945502118091743&0.3332191616914781&10\\
+40&5868369&how to read a large text file line by line using java&Ü&Ü&0.4333122714188133&0.37460289481214976&10\\
+41&858572&how to make a new list in java&Ü&Ü&0.3871162686973235&0.32127903046189055&10\\
+42&1625234&how to append text to an existing file in java&Ü&Ü&0.41402246316030955&0.30399717817432437&10\\
+43&2201925&converting iso 8601-compliant string to date&Ü&Ü&0.44008321129121064&0.4290475826839964&10\\
+44&122105&what is the best way to filter a java collection&Ü&Ü&0.35773435398671477&0.2800727329223528&10\\
+45&5455794&removing whitespace from strings in java&Ü&Ü&0.42113604810055416&0.1762258045043237&10\\
+46&225337&how do I split a string with any whitespace chars as delimiters&Ü&Ü&0.4132634063767309&0.263195140794907&10\\
+47&52353&in java, what is the best way to determine the size of an object&Ü&Ü&0.36151205839073586&0.20413497839714614&10\\
+48&160970&how do I invoke a java method when given the method name as a string&Ü&Ü&0.33785105687225997&0.21155029115792645&10\\
+49&207947&how do I get a platform dependent new line character&Ü&Ü&0.37529599807359176&0.19932300990668195&10\\
+50&1026723&how to convert a map to list in java&Ü&Ü&0.4436235039859159&0.38003755560309394&10\\
