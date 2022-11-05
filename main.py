@@ -207,7 +207,7 @@ if __name__ == '__main__':
                 codebase_lines = [full_codebase[line] for line in result_line_numbers]
                 engine._codebase = [codebase_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
                 codes, sims, result_line_numbers = deepCS_main.search_and_print_results(engine, model, vocab, query_DeepCS, n_results, data_path, config['data_params'], True)
-                mean_sims.append(   mean(DeepCS_sims))
+                mean_sims.append(   mean(deepCS_sims))
                 mean_sims_pf.append(mean(       sims))
                 amount_diff.append(len(list(result_line_numbers & deepCS_result_line_numbers)))
                 e += 1
