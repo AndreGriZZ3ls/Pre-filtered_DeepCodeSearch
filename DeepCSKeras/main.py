@@ -200,21 +200,20 @@ class SearchEngine:
         return vecs
             
     
-    def search(self, model, vocab, query, n_results = 10, return_line_numbers = False):
+    def search(self, model, vocab, query, n_results = 10):
         desc = [convert(vocab, query)] # convert desc sentence to word indices
         padded_desc  = pad(desc, self.data_params['desc_len'])
         desc_repr    = model.repr_desc([padded_desc])
         desc_repr    = desc_repr.astype(np.float64)
         desc_repr    = normalize(desc_repr).T # [dim x 1]
         codes, sims  = [], []
-        line_numbers = []
         threads      = []
         ################ Reload code each time (to simulate usage of database):
         if not self._code_reprs:
             self._code_reprs = data_loader.load_code_reprs(self.data_path + self.data_params['use_codevecs'], self._codebase_chunksize)
         ################
         for i, code_reprs_chunk in enumerate(self._code_reprs):
-            t = threading.Thread(target = self.search_thread, args = (codes, sims, line_numbers, desc_repr, code_reprs_chunk, i, n_results, return_line_numbers))
+            t = threading.Thread(target = self.search_thread, args = (codes, sims, desc_repr, code_reprs_chunk, i, n_results))
             threads.append(t)
         for t in threads:
             t.start()
@@ -225,9 +224,9 @@ class SearchEngine:
         #gc.collect()
         #self._code_reprs = None
         ################
-        return codes, sims, line_numbers
+        return codes, sims
                 
-    def search_thread(self, codes, sims, line_numbers, desc_repr, code_reprs, i, n_results, return_line_numbers = False):        
+    def search_thread(self, codes, sims, desc_repr, code_reprs, i, n_results):        
     #1. compute similarity
         chunk_sims = np.dot(code_reprs, desc_repr) # [pool_size x 1] 
         ################
@@ -243,16 +242,13 @@ class SearchEngine:
         if self._codebase:
             chunk_codes = [self._codebase[i][k] for k in maxinds]
             codes.extend(chunk_codes)
-        if not self._codebase or return_line_numbers:
+        else:
             ################ added ################
             offset = i * self._codebase_chunksize
             for ind in range(0, len(maxinds)):
                 maxinds[ind] = maxinds[ind] + offset
                 #print(ind)
-            if return_line_numbers: 
-                line_numbers.extend(maxinds)
-            else:
-                codes.extend(maxinds)
+            codes.extend(maxinds)
             #######################################
             """chunk_codes = data_loader.load_codebase_lines(self.data_path + self.data_params['use_codebase'], maxinds, self._codebase_chunksize, i)
             codes.extend(chunk_codes)"""
@@ -275,7 +271,7 @@ class SearchEngine:
                 final_sims.append(  sims[i])
         return zip(final_codes, final_sims)
 
-    def postproc_ln(self, codes_sims_lines):
+    """def postproc_ln(self, codes_sims_lines):
         codes_, sims_, lines_ = zip(*codes_sims_lines)
         #codes = [code for code in codes_]
         #sims  = [sim  for sim  in sims_ ]
@@ -292,7 +288,7 @@ class SearchEngine:
                 final_codes.append(codes[i])
                 final_sims.append(  sims[i])
                 final_lines.append(lines[i])
-        return final_codes, final_sims, final_lines
+        return final_codes, final_sims, final_lines"""
     
 def parse_args():
     parser = argparse.ArgumentParser("Train and Test Code Search(Embedding) Model")
@@ -315,8 +311,8 @@ def parse_args():
     return parser.parse_args()
 
 # moved into a function:
-def search_and_print_results(engine, model, vocab, query, n_results, data_path, data_params, return_line_numbers = False):
-    codes, sims, line_numbers = engine.search(model, vocab, query, n_results, return_line_numbers)
+def search_and_print_results(engine, model, vocab, query, n_results, data_path, data_params, return_results = False):
+    codes, sims = engine.search(model, vocab, query, n_results)
     ################ added ################
     if not engine._codebase:
         #codes = data_loader.load_codebase_lines(data_path + data_params['use_codebase'], codes, -1)
@@ -325,15 +321,16 @@ def search_and_print_results(engine, model, vocab, query, n_results, data_path, 
         sims  = list(sims )
         codes = data_loader.load_codebase_lines(data_path + 'sqlite.db', codes, -1) # database
     #######################################
-    if return_line_numbers:
+    """if return_line_numbers:
         zipped  = zip(codes, sims, line_numbers)
         zipped  = sorted(zipped, reverse = True, key = lambda x:x[1])
         final_codes, final_sims, final_lines = engine.postproc_ln(zipped)
-        return final_codes[:n_results], final_sims[:n_results], set(final_lines[:n_results])
+        return final_codes[:n_results], final_sims[:n_results], set(final_lines[:n_results])"""
     zipped  = zip(codes, sims)
     zipped  = sorted(zipped, reverse = True, key = lambda x:x[1])
     zipped  = engine.postproc(zipped)
     zipped  = list(zipped)[:n_results]
+    if return_results: return zip(*zipped)
     results = '\n\n'.join(map(str, zipped)) # combine the result into a returning string
     print(results)
     ################ added ################

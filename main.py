@@ -86,7 +86,7 @@ if __name__ == '__main__':
     index_type  = args.index_type
     memory_mode = args.memory_mode
     indexer     = IndexCreator(args, config)
-    stopwords   = set("a,about,after,also,an,and,another,are,around,as,at,awt,be,because,been,before,being,between,both,but,by,came,can,come,could,did,do,does,each,every,final,got,had,has,have,he,her,here,him,himself,his,how,in,into,io,it,its,java,javax,just,lang,like,make,many,me,might,more,most,much,must,my,never,net,new,no,now,on,only,other,our,out,over,override,private,protected,public,re,return,said,same,see,should,since,so,some,static,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,throw,throws,too,under,unk,UNK,up,use,util,very,void,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
+    stopwords   = set("a,about,after,also,an,and,another,any,are,around,as,at,awt,be,because,been,before,being,between,both,but,by,came,can,come,could,did,do,does,each,every,final,got,had,has,have,he,her,here,him,himself,his,how,if,in,into,io,it,its,java,javax,just,lang,like,make,many,me,might,more,most,much,must,my,never,net,new,no,now,on,only,other,our,out,over,override,private,protected,public,re,return,said,same,see,should,since,so,some,static,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,throw,throws,too,under,unk,UNK,up,use,util,very,void,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
     pattern1    = re.compile(r'[^\[a-zA-Z ]+')
     pattern2    = re.compile(r' \w? +')
     #n_threads   = 8 # number of threads for parallelization of less performance intensive program parts
@@ -157,7 +157,7 @@ if __name__ == '__main__':
                 engine._code_reprs = _full_code_reprs
                 engine._codebase   = _full_codebase
                 query_DeepCS = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
-                deepCS_codes, deepCS_sims, deepCS_result_line_numbers = deepCS_main.search_and_print_results(engine, model, vocab, query_DeepCS, n_results, data_path, config['data_params'], True)
+                deepCS_codes, deepCS_sims = deepCS_main.search_and_print_results(engine, model, vocab, query_DeepCS, n_results, data_path, config['data_params'], True)
             else:
                 query_lines  = list(eval_dict[query].keys())
                 query_scores = list(eval_dict[query].values())
@@ -206,13 +206,13 @@ if __name__ == '__main__':
                 engine._code_reprs = [vector_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
                 codebase_lines = [full_codebase[line] for line in result_line_numbers]
                 engine._codebase = [codebase_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
-                codes, sims, result_line_numbers = deepCS_main.search_and_print_results(engine, model, vocab, query_DeepCS, n_results, data_path, config['data_params'], True)
+                codes, sims = deepCS_main.search_and_print_results(engine, model, vocab, query_DeepCS, n_results, data_path, config['data_params'], True)
                 mean_sims.append(   mean(deepCS_sims))
                 mean_sims_pf.append(mean(       sims))
-                amount_diff.append(len(list(result_line_numbers & deepCS_result_line_numbers)))
+                amount_diff.append(len(list(set(codes) & set(deepCS_codes))))
                 e += 1
                 seperator = f"########################## {e} #################################\n"
-                metrics = "FRank:   | P@1:   | P@5:   | P@10: \n\n"
+                metrics = "\n\nFRank:   | P@1:   | P@5:   | P@10: \n\n"
                 out_file.write(   seperator + '\n\n'.join(map(str, list(zip(deepCS_codes, deepCS_sims)))) + metrics)
                 out_file_pf.write(seperator + '\n\n'.join(map(str, list(zip(       codes,        sims)))) + metrics)
             else:
@@ -229,11 +229,11 @@ if __name__ == '__main__':
             e = 0
             result_file = fileinput.FileInput(data_path + 'eval_difference_results.txt', inplace=1)
             for line in result_file:
-                line = re.sub(r'(&\d+&\d+&\d+\\\\$)', f"&{mean_sims[e]}&{mean_sims_pf[e]}&{10 - amount_diff[e]}\\\\\ ", line)
+                line = re.sub(r'(&[\d\.]+&[\d\.]+&\d+\\\\$)', f"&{round(mean_sims[e], 4)}&{round(mean_sims_pf[e], 4)}&{10 - amount_diff[e]}\\\\\ ", line)
                 print(line.strip())
                 e += 1
-            out_file.write(   f"Mean sims: {mean(mean_sims)}")
-            out_file_pf.write(f"Mean sims: {mean(mean_sims_pf)}")
+            out_file.write(   f"Mean sims: {round(mean(mean_sims), 4)}")
+            out_file_pf.write(f"Mean sims: {round(mean(mean_sims_pf), 4)}")
             out_file.close()
             out_file_pf.close()
         else:
