@@ -33,6 +33,7 @@ import itertools
 import fileinput
 import numpy as np
 from tqdm import tqdm
+from statistics import mean
 from collections import Counter
 from nltk.stem import PorterStemmer
 
