@@ -93,9 +93,9 @@ FRank:   | P@1:   | P@5:   | P@10:
 ########################## 5 #################################
 ('public Integer convertStringToInteger ( String value ) { Integer result ; try { result = Integer . valueOf ( value ) ; } catch ( NumberFormatException e ) { result = DEFAULT_INT_VALUE ; } return result ; } \n', 0.45664081378898785)
 
-('private Integer convertStringToInteger ( final String string ) { if ( string == null ) { return null ; } return Integer . valueOf ( string ) ; } \n', 0.45356001418004277)
-
 ('public Integer convertStringToInteger ( String s ) { return Integer . valueOf ( s ) ; } \n', 0.45356001418004277)
+
+('private Integer convertStringToInteger ( final String string ) { if ( string == null ) { return null ; } return Integer . valueOf ( string ) ; } \n', 0.45356001418004277)
 
 ('public static int convertStringToInteger ( String number ) { int i = 0 ; try { i = Integer . valueOf ( number ) ; } catch ( Exception ex ) { } return i ; } \n', 0.44935041135899767)
 
@@ -109,7 +109,7 @@ FRank:   | P@1:   | P@5:   | P@10:
 
 ('public static int BinStringToInt ( String binaryString ) { return ( Integer . valueOf ( binaryString , 2 ) . intValue ( ) ) ; } \n', 0.43819450678143745)
 
-("long binaryStrToInt ( String sBinary ) { long digit , iResult = 0 ; int iLen = sBinary . length ( ) ; for ( int i = iLen - 1 ; i >= 0 ; i -- ) { if ( sBinary . charAt ( i ) == '1' ) digit = 1 ; else digit = 0 ; iResult += ( digit << ( iLen - i - 1 ) ) ; } return ( iResult ) ; } \n", 0.4364234538363476)
+("static public long binaryStrToInt ( String sBinary ) { long digit , iResult = 0 ; int iLen = sBinary . length ( ) ; for ( int i = iLen - 1 ; i >= 0 ; i -- ) { if ( sBinary . charAt ( i ) == '1' ) digit = 1 ; else digit = 0 ; iResult += ( digit << ( iLen - i - 1 ) ) ; } return ( iResult ) ; } \n", 0.4364234538363476)
 
 FRank:   | P@1:   | P@5:   | P@10: 
 
@@ -214,7 +214,7 @@ FRank:   | P@1:   | P@5:   | P@10:
 
 ('public void addNewArray ( ) { objectArrayList . add ( new Object [ allocationSize ] ) ; maxCount += allocationSize ; } \n', 0.3483606731454827)
 
-('public static Object addArray ( Object list , Object [ ] array ) { for ( int i = 0 ; array != null && i < array . length ; i ++ ) { list = LazyList . add ( list , array [ i ] ) ; } return list ; } \n', 0.34792155853246454)
+('public static Object addArray ( Object list , Object [ ] array ) { for ( int i = 0 ; array != null && i < array . length ; i ++ ) list = LazyList . add ( list , array [ i ] ) ; return list ; } \n', 0.34792155853246454)
 
 ('private void extend ( int i ) { int sz = base . length ; int nsz = Math . max ( i + 0xFFFF , ( int ) ( sz * 1.5 ) ) ; base = Arrays . copyOf ( base , nsz ) ; Arrays . fill ( base , sz , nsz , BASE_EMPTY ) ; check = Arrays . copyOf ( check , nsz ) ; Arrays . fill ( check , sz , nsz , - 1 * Unsafe . ARRAY_INT_INDEX_SCALE ) ; } \n', 0.3447674241704033)
 
@@ -348,7 +348,7 @@ FRank:   | P@1:   | P@5:   | P@10:
 
 ('public static File resourceCopy ( Object object , String resource , String outPath ) { String path = outPath . trim ( ) ; if ( ! path . endsWith ( File . separator ) ) path += File . separator ; int i = resource . lastIndexOf ( "/" ) + 1 ; File outFile = new File ( path + resource . substring ( i ) ) ; BufferedInputStream in = null ; BufferedOutputStream out = null ; if ( copy ( object . getClass ( ) . getResourceAsStream ( resource ) , outFile ) ) return outFile ; else return null ; } \n', 0.3893207591925572)
 
-("private static void createAndStoreFormatter ( String line ) throws BuildException { String formatterClassName = null ; File formatterFile = null ; int pos = line . indexOf ( ',' ) ; if ( pos == - 1 ) formatterClassName = line ; else { formatterClassName = line . substring ( 0 , pos ) ; formatterFile = new File ( line . substring ( pos + 1 ) ) ; } fgFromCmdLine . addElement ( createFormatter ( formatterClassName , formatterFile ) ) ; } \n", 0.3877618471970625)
+("private static void createAndStoreFormatter ( String line ) throws BuildException { String formatterClassName = null ; File formatterFile = null ; int pos = line . indexOf ( ',' ) ; if ( pos == - 1 ) { formatterClassName = line ; } else { formatterClassName = line . substring ( 0 , pos ) ; formatterFile = new File ( line . substring ( pos + 1 ) ) ; } fgFromCmdLine . addElement ( createFormatter ( formatterClassName , formatterFile ) ) ; } \n", 0.3877618471970625)
 
 ('public StringTokenizer ( String inputFileName ) throws FileNotFoundException { try { InputStream is = this . getClass ( ) . getResource ( inputFileName ) . openStream ( ) ; _fileReader = new BufferedReader ( new InputStreamReader ( is ) ) ; } catch ( Exception e ) { System . err . println ( "StringTokenizer-error-opening-file:-" + e ) ; e . printStackTrace ( ) ; } _st = new StreamTokenizer ( _fileReader ) ; _st . eolIsSignificant ( true ) ; _st . wordChars ( 33 , 125 ) ; } \n', 0.38425051408827793)
 
