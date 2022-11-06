@@ -395,7 +395,6 @@ if __name__ == '__main__':
                 #        print(line + "\n")
                 #engine._codebase = data_loader.load_codebase_lines(data_path + config['data_params']['use_codebase'], result_line_numbers, chunk_size)
             print('DeepCS start time: {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
-            codes, sims = deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'], True)
-            print('\n\n'.join(map(str, list(zip(       codes,        sims)))))
+            deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'])
             print('Total time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
             print('System time: {:5.3f}s'.format(time.process_time() - start_proc))
