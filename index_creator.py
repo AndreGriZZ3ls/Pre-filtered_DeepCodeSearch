@@ -38,7 +38,6 @@ class IndexCreator:
         self.data_params  = conf.get('data_params', dict())
         self.index_type   = args.index_type
         self.dataset      = args.dataset
-        self.index_dir    = args.index_dir
         self.n_threads    = 2
         self.chunk_size   = 2000000
         self.methname_vocab = data_loader.load_pickle(self.dataset_path + conf['data_params']['vocab_methname'])
