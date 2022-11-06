@@ -144,13 +144,13 @@ class IndexCreator:
             porter = PorterStemmer()
             
             #for i, line in enum_lines:
-            for i, line in tqdm(enumerate(lines)):
+            for i, line in enumerate(tqdm(lines)):
                 for raw_word in line:
                 #for word in line:
                     #if (length > 1 and not word in stopwords and length < 19) or word == '[':
                     for word in raw_word.split('_'):
                         length = len(word)
-                        if length == 0 or length > 18 or word in stopwords: continue
+                        if length < 2 or length > 18 or word in stopwords: continue
                         word = self.replace_synonyms(word)
                         word = porter.stem(word)
                         word = self.replace_synonyms(word)
