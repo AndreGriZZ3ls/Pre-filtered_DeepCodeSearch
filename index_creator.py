@@ -160,7 +160,7 @@ class IndexCreator:
                         else:
                             #index[word] = [i]
                             cnt = Counter()
-                            cnt[i] += 1
+                            cnt[i] = 1
                             index[word] = cnt
             #index_list.append(index)
             
@@ -174,7 +174,7 @@ class IndexCreator:
                     else:
                         #index[word] = [i]
                         cnt = Counter()
-                        cnt[i] += 1
+                        cnt[i] = 1
                         index[word] = cnt
 
     def create_index(self, stopwords):
