@@ -47,21 +47,24 @@ class IndexCreator:
 
     def replace_synonyms(self, word):
         word = ' ' + word + ' '
-        word = word.replace(' read ', 'load').replace(' write', 'store').replace('save', 'store').replace(' dump', 'store')
-        word = word.replace('object', 'instance').replace(' quit', 'exit').replace('terminate', 'exit').replace(' leave', 'exit')
-        word = word.replace('pop ', 'delete').replace('remove', 'delete').replace(' trim ', 'delete').replace(' strip ', 'delete')
-        word = word.replace(' halt', 'stop').replace('restart', 'continue').replace('append', 'add').replace('push ', 'add')
-        word = word.replace('null ', 'none').replace('method', 'function').replace('concat ', 'combine').replace(' break ', 'exit')
-        word = word.replace(' for ', 'loop').replace(' foreach ', 'loop').replace(' while ', 'loop').replace(' iterat ', 'loop')
-        word = word.replace('tinyint ', 'int').replace(' smallint ', 'int').replace(' bigint ', 'int').replace(' shortint ', 'int')
-        word = word.replace('longint ', 'int').replace(' byte ', 'int').replace(' long ', 'int').replace(' short ', 'int').replace('integer ', 'int')
-        word = word.replace(' double ', 'float').replace(' long ', 'float').replace(' decimal ', 'float').replace(' whitespace ', 'space')
-        word = word.replace('real ', 'float').replace(' array ', '[').replace(' arrays ', '[').replace(' arr ', '[').replace(' fastest ', 'fast')
-        word = word.replace(' define ', 'create').replace(' declare ', 'create').replace(' init ', 'create').replace(' construct ', 'create')
-        word = word.replace(' make ', 'create').replace(' boolean ', 'bool').replace('begin', 'start').replace('run ', 'execute')
-        word = word.replace(' initialize ', 'create').replace(' initialized ', 'create').replace(' initializing ', 'create')
-        word = word.replace(' enumerate ', 'enum').replace(' enumerated ', 'enum').replace(' enumeration ', 'enum').replace(' website ', 'web')
-        return word.replace(' initiate ', 'create').replace(' implements ', 'extends').replace('runnable', 'executable').strip()
+        return word.replace(' read ', 'load').replace(' write', 'store').replace('save', 'store').replace(' dump', 'store')\
+        .replace('object', 'instance').replace(' quit', 'exit').replace('terminate', 'exit').replace(' leave', 'exit')\
+        .replace(' pop ', 'delet').replace('remov', 'delet').replace(' trim ', 'delet').replace(' strip ', 'delet')\
+        .replace(' halt', 'stop').replace('restart', 'continue').replace('push ', 'add')\
+        .replace('null ', 'none').replace('method', 'function').replace('concat ', 'combine').replace(' break ', 'exit')\
+        .replace(' for ', 'loop').replace(' foreach ', 'loop').replace(' while ', 'loop').replace(' iterat ', 'loop')\
+        .replace('integer ', 'int').replace('tinyint ', 'int').replace(' smallint ', 'int').replace(' bigint ', 'int')\
+        .replace(' shortint ', 'int').replace('longint ', 'int').replace(' byte ', 'int').replace(' long ', 'int').replace(' short ', 'int')\
+        .replace(' double ', 'float').replace(' long ', 'float').replace(' decimal ', 'float').replace(' whitespace ', 'space')\
+        .replace('real ', 'float').replace(' array ', '[]').replace(' arrays ', '[]').replace(' arr ', '[]').replace(' fastest ', 'fast')\
+        .replace(' define ', 'create').replace(' declare ', 'create').replace(' init ', 'create').replace(' construct ', 'create')\
+        .replace(' make ', 'create').replace(' boolean ', 'bool').replace('begin', 'start').replace('run ', 'execute')\
+        .replace(' initialize ', 'create').replace(' initialized ', 'create').replace(' initializing ', 'create').replace(' initi ', 'create')\
+        .replace(' enumerate ', 'enum').replace(' enumerated ', 'enum').replace(' enumeration ', 'enum').replace(' website ', 'web')\
+        .replace(' speed ', 'fast').replace(' vertex ', 'node').replace(' arc ', 'edge').replace(' math ', 'calc').replace(' determine ', 'calc')\
+        .replace(' equality ', 'compare').replace(' equals ', 'compare').replace(' equal ', 'compare').replace(' ensure ', 'check')\
+        .replace(' should ', 'check').replace(' test ', 'check').replace(' is ', 'check')\
+        .replace(' initiate ', 'create').replace(' implements ', 'extends').replace('runnable', 'executable').strip()
 
     def load_data(self):
         assert os.path.exists(self.dataset_path + self.data_params['use_methname']), f"Method names of real data not found."
@@ -93,7 +96,7 @@ class IndexCreator:
         pattern1  = re.compile(r'[^\[a-zA-Z ]+')
         pattern2  = re.compile(r'  +')
         pattern3  = re.compile(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))')
-        do_not_split = set("ArrayList,HashMap,heatMapTL,HttpClient,InputStream,OutputStram,ReadOnly,yyyyMMdd,YYYYMMDD".split(',')) # TODO
+        do_not_split = set("ArrayList,HashMap,heatMapTL,HttpClient,InputStream,OutputStram,ReadOnly,StringBuffer,yyyyMMdd,YYYYMMDD".split(',')) # TODO
         for line in tqdm(lines):
             line = re.sub(pattern0, '', line) # remove strings
             line = re.sub(pattern1, ' ', line) # replace all non-alphabetic characters except '[' by ' '
@@ -176,6 +179,7 @@ class IndexCreator:
                         cnt = Counter()
                         cnt[i] = 1
                         index[word] = cnt
+            print(f"Found arrays in {len(list(index['[]'].keys()))} methods.")
 
     def create_index(self, stopwords):
         if self.index_type == "word_indices": print("Nothing to be done."); return

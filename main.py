@@ -47,7 +47,6 @@ from DeepCSKeras.utils import convert, revert
 
 def parse_args():
     parser = argparse.ArgumentParser("Generate Index or perform pre-filtered deep code search")
-    parser.add_argument("--index_dir",  type=str, default="indices",       help="index directory")
     parser.add_argument("--dataset",    type=str, default="codesearchnet", help="dataset name")
     parser.add_argument("--data_path",  type=str, default='./DeepCSKeras/data/',       help="working directory")
     parser.add_argument("--model",      type=str, default="JointEmbeddingModel",       help="DeepCS model name")
@@ -86,8 +85,8 @@ if __name__ == '__main__':
     index_type  = args.index_type
     memory_mode = args.memory_mode
     indexer     = IndexCreator(args, config)
-    stopwords   = set("a,about,after,also,an,and,another,any,are,around,as,at,awt,be,because,been,before,being,between,both,but,by,came,can,come,could,did,do,does,each,every,final,got,had,has,have,he,her,here,him,himself,his,how,if,in,into,io,it,its,java,javax,just,lang,like,make,many,me,might,more,most,much,must,my,never,net,new,no,now,on,only,other,our,out,over,override,private,protected,public,re,return,said,same,see,should,since,so,some,static,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,throw,throws,too,under,unk,UNK,up,use,util,very,void,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
-    pattern1    = re.compile(r'[^\[a-zA-Z ]+')
+    stopwords   = set("a,about,after,also,an,and,another,any,are,around,as,at,awt,be,because,been,before,being,best,between,both,but,by,came,can,come,could,did,do,does,each,every,final,got,had,has,have,he,her,here,him,himself,his,how,if,in,into,io,it,its,java,javax,just,lang,like,many,me,might,more,most,much,must,my,never,net,new,no,now,on,only,other,our,out,over,override,private,protected,public,re,return,said,same,see,should,since,so,some,static,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,throw,throws,too,under,unk,UNK,up,use,util,very,void,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
+    pattern1    = re.compile(r'[^\[\]a-zA-Z \n\r]+')
     pattern2    = re.compile(r' \w? +')
     #n_threads   = 8 # number of threads for parallelization of less performance intensive program parts
     _codebase_chunksize = 2000000
@@ -149,7 +148,7 @@ if __name__ == '__main__':
         n_results = 10
         porter    = PorterStemmer()
         max_filtered = max(500, 50 * n_results + 250)
-        min_filtered = max(500,  25 * n_results + 250)
+        min_filtered = max(500, 25 * n_results + 250)
         
         
         for query in queries:
@@ -165,7 +164,7 @@ if __name__ == '__main__':
             #tmp   = []
             query_proc = re.sub(pattern1, ' ', query) # replace all non-alphabetic characters except '[' by ' '
             query_proc = re.sub(pattern2, ' ', query_proc.strip()) # remove consecutive spaces
-            query_proc = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
+            query_proc = query_proc.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('what is ', '').replace('?', '').replace(' numeric', ' numeric int double decimal').strip()
             query_list = list(set(query_proc.split(' ')) - stopwords)
             """for word in query_list:
                 word_stem = porter.stem(word)
@@ -182,10 +181,10 @@ if __name__ == '__main__':
             cnt        = None
             for word in query_list:
                 if word in index: # for each word of the processed query that the index contains: ...
-                    if cnt == None:
-                        cnt = index[word]
-                    else:
+                    if cnt:
                         cnt.update(index[word])
+                    else:
+                        cnt = index[word]
             #result_line_numbers, values = zip(*cnt.most_common(max_filtered))
             result_line_numbers, values = zip(*itertools.islice(sorted(cnt.items(), key=lambda x: (-x[1], x[0])), max_filtered))
             try:
@@ -201,7 +200,7 @@ if __name__ == '__main__':
             result_line_numbers.sort()
             
             if args.mode == "eval":
-                chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results))
+                chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results / 10))
                 vector_lines = full_code_reprs[result_line_numbers]
                 engine._code_reprs = [vector_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
                 codebase_lines = [full_codebase[line] for line in result_line_numbers]
@@ -304,11 +303,11 @@ if __name__ == '__main__':
             start_proc   = time.process_time()
             max_filtered = max(500, 50 * n_results + 250)
             #max_filtered = max(1000, 75 * n_results)
-            min_filtered = max(500,  25 * n_results + 250)
+            min_filtered = max(500, 25 * n_results + 250)
             ##### Process user query ######
             query_proc = re.sub(pattern1, ' ', query) # replace all non-alphabetic characters except '[' by ' '
             query_proc = re.sub(pattern2, ' ', query_proc.strip()) # remove consecutive spaces and single caracters
-            query_proc = query_proc.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
+            query_proc = query_proc.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('what is ', '').replace('?', '').replace(' numeric', ' numeric int double decimal').strip()
             query      = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query_proc.split(' ')) - stopwords)
             #len_query_without_stems = len(query_list)
@@ -346,10 +345,10 @@ if __name__ == '__main__':
                         if word in index: # for each word of the processed query that the index contains: ...
                             #cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
                             #cnt += Counter(dict(itertools.islice(index[word].items(), max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
-                            if cnt == None:
-                                cnt = index[word]
-                            else:
+                            if cnt:
                                 cnt.update(index[word])
+                            else:
+                                cnt = index[word]
                 else:
                     #counters = data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db') # TODO: compare
                     counters = data_loader.load_index_counters(index_type, query_list, data_path)
@@ -375,7 +374,7 @@ if __name__ == '__main__':
             #print('Time to calculate most relevant lines:  {:5.3f}s'.format(time.time()-start))
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             
-            chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results))
+            chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results / 10))
             #chunk_size = n_results
             if memory_mode in ["performance","vecs_and_code","vecs","vecs_and_index"]:
                 vector_lines = full_code_reprs[result_line_numbers]
@@ -396,6 +395,7 @@ if __name__ == '__main__':
                 #        print(line + "\n")
                 #engine._codebase = data_loader.load_codebase_lines(data_path + config['data_params']['use_codebase'], result_line_numbers, chunk_size)
             print('DeepCS start time: {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
-            deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'])
+            codes, sims = deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'], True)
+            print('\n\n'.join(map(str, list(zip(       codes,        sims)))))
             print('Total time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
             print('System time: {:5.3f}s'.format(time.process_time() - start_proc))
