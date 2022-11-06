@@ -17,7 +17,9 @@
 
 ('public static InputStream toInputStream ( String input , Charset encoding ) { return new ByteArrayInputStream ( input . getBytes ( Charsets . toCharset ( encoding ) ) ) ; } \n', 0.41595540790817354)
 
-('public static InputStream toInputStream ( final String input , final Charset encoding ) { return new ByteArrayInputStream ( input . getBytes ( Charsets . toCharset ( encoding ) ) ) ; } \n', 0.41595540790817354)FRank:   | P@1:   | P@5:   | P@10: 
+('public static InputStream toInputStream ( final String input , final Charset encoding ) { return new ByteArrayInputStream ( input . getBytes ( Charsets . toCharset ( encoding ) ) ) ; } \n', 0.41595540790817354)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 2 #################################
 ('static public ArrayList createArrayList ( Object [ ] a ) { ArrayList al = new ArrayList ( a . length ) ; for ( int i = 0 ; i < a . length ; i ++ ) al . add ( a [ i ] ) ; return al ; } \n', 0.4137767382002263)
@@ -38,7 +40,9 @@
 
 ('private static < E > ArrayList < E > newArrayList ( E ... elements ) { ArrayList < E > list = new ArrayList < E > ( ) ; Collections . addAll ( list , elements ) ; return list ; } \n', 0.3900169162074504)
 
-('public static < T > ArrayList < T > arrayList ( int initialCapacity ) { return new ArrayList < T > ( initialCapacity ) ; } \n', 0.3892778720758593)FRank:   | P@1:   | P@5:   | P@10: 
+('public static < T > ArrayList < T > arrayList ( int initialCapacity ) { return new ArrayList < T > ( initialCapacity ) ; } \n', 0.3892778720758593)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 3 #################################
 ('public HashMap < String , Word > iterateMap ( HashMap < String , Word > localDictionary , HashMap < String , Word > incomingHash ) { HashMap < String , Word > output = new HashMap < String , Word > ( ) ; for ( Word h : incomingHash . values ( ) ) { output . putAll ( iterateWord ( localDictionary , h ) ) ; } return output ; } \n', 0.4002496321063599)
@@ -59,7 +63,9 @@
 
 ('protected BidiOrderedMapIterator ( AbstractDualBidiMap < K , V > parent ) { super ( ) ; this . parent = parent ; iterator = new ArrayList < Map . Entry < K , V >> ( parent . entrySet ( ) ) . listIterator ( ) ; } \n', 0.38692192130537983)
 
-('protected BidiOrderedMapIterator ( final AbstractDualBidiMap < K , V > parent ) { super ( ) ; this . parent = parent ; iterator = new ArrayList < Map . Entry < K , V >> ( parent . entrySet ( ) ) . listIterator ( ) ; } \n', 0.38692192130537983)FRank:   | P@1:   | P@5:   | P@10: 
+('protected BidiOrderedMapIterator ( final AbstractDualBidiMap < K , V > parent ) { super ( ) ; this . parent = parent ; iterator = new ArrayList < Map . Entry < K , V >> ( parent . entrySet ( ) ) . listIterator ( ) ; } \n', 0.38692192130537983)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 4 #################################
 ('public static int getRandomInRange ( int min , int max ) throws IllegalArgumentException { if ( min > max ) { throw new IllegalArgumentException ( "Minimum-cannot-be-larger-than-maximum" ) ; } if ( min == max ) { return min ; } int ret = new Random ( ) . nextInt ( max + 1 - min ) + min ; if ( ret < min || ret > max ) { throw new IllegalStateException ( "Programmer-messed-up:-Value-" + ret + "is-not-within-range-of-" + min + "-and-" + max ) ; } return ret ; } \n', 0.44109220995939147)
@@ -80,7 +86,9 @@
 
 ('public static double randomDoubleInRange ( double rangeMin , double rangeMax ) { Random r = new Random ( ) ; double doubleInRange = rangeMin + ( rangeMax - rangeMin ) * r . nextDouble ( ) ; return doubleInRange ; } \n', 0.42378763477641407)
 
-('private int [ ] generateMutationPositions ( int seqLength ) { Random n = new Random ( ) ; int [ ] positions = new int [ 2 ] ; double [ ] tempprobs = new double [ seqLength ] ; int maxIndex = getMutationProbs ( ) . length - 1 ; for ( int i = 1 ; i <= seqLength ; i ++ ) { int index = Math . min ( i - 1 , maxIndex ) ; double mutProb = getMutationProbs ( ) [ index ] - n . nextDouble ( ) ; if ( mutProb >= 0 ) { tempprobs [ i - 1 ] = mutProb ; } else { tempprobs [ i - 1 ] = 0 ; } } double highest = 0 ; double second = 0 ; for ( int j = 0 ; j < tempprobs . length ; j ++ ) { double current = tempprobs [ j ] ; if ( current > second ) { if ( current > highest ) { positions [ 0 ] = positions [ 1 ] ; second = highest ; positions [ 1 ] = j + 1 ; highest = current ; } else { second = current ; positions [ 0 ] = j + 1 ; } } } if ( positions [ 0 ] > positions [ 1 ] ) { int temp = positions [ 0 ] ; positions [ 0 ] = positions [ 1 ] ; positions [ 1 ] = temp ; } return positions ; } \n', 0.42320925017224476)FRank:   | P@1:   | P@5:   | P@10: 
+('private int [ ] generateMutationPositions ( int seqLength ) { Random n = new Random ( ) ; int [ ] positions = new int [ 2 ] ; double [ ] tempprobs = new double [ seqLength ] ; int maxIndex = getMutationProbs ( ) . length - 1 ; for ( int i = 1 ; i <= seqLength ; i ++ ) { int index = Math . min ( i - 1 , maxIndex ) ; double mutProb = getMutationProbs ( ) [ index ] - n . nextDouble ( ) ; if ( mutProb >= 0 ) { tempprobs [ i - 1 ] = mutProb ; } else { tempprobs [ i - 1 ] = 0 ; } } double highest = 0 ; double second = 0 ; for ( int j = 0 ; j < tempprobs . length ; j ++ ) { double current = tempprobs [ j ] ; if ( current > second ) { if ( current > highest ) { positions [ 0 ] = positions [ 1 ] ; second = highest ; positions [ 1 ] = j + 1 ; highest = current ; } else { second = current ; positions [ 0 ] = j + 1 ; } } } if ( positions [ 0 ] > positions [ 1 ] ) { int temp = positions [ 0 ] ; positions [ 0 ] = positions [ 1 ] ; positions [ 1 ] = temp ; } return positions ; } \n', 0.42320925017224476)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 5 #################################
 ('public Integer convertStringToInteger ( String value ) { Integer result ; try { result = Integer . valueOf ( value ) ; } catch ( NumberFormatException e ) { result = DEFAULT_INT_VALUE ; } return result ; } \n', 0.45664081378898785)
@@ -101,7 +109,9 @@
 
 ('public static int BinStringToInt ( String binaryString ) { return ( Integer . valueOf ( binaryString , 2 ) . intValue ( ) ) ; } \n', 0.43819450678143745)
 
-("long binaryStrToInt ( String sBinary ) { long digit , iResult = 0 ; int iLen = sBinary . length ( ) ; for ( int i = iLen - 1 ; i >= 0 ; i -- ) { if ( sBinary . charAt ( i ) == '1' ) digit = 1 ; else digit = 0 ; iResult += ( digit << ( iLen - i - 1 ) ) ; } return ( iResult ) ; } \n", 0.4364234538363476)FRank:   | P@1:   | P@5:   | P@10: 
+("long binaryStrToInt ( String sBinary ) { long digit , iResult = 0 ; int iLen = sBinary . length ( ) ; for ( int i = iLen - 1 ; i >= 0 ; i -- ) { if ( sBinary . charAt ( i ) == '1' ) digit = 1 ; else digit = 0 ; iResult += ( digit << ( iLen - i - 1 ) ) ; } return ( iResult ) ; } \n", 0.4364234538363476)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 6 #################################
 ('private void initializeArray ( BufferedReader in ) throws IOException { int [ ] vec = null ; int n = 0 ; boolean FirstLine = true ; String line ; while ( ( line = in . readLine ( ) ) != null ) { if ( line . startsWith ( "#" ) || line . startsWith ( "%" ) ) { } else { StringTokenizer st = new StringTokenizer ( line ) ; n = st . countTokens ( ) ; if ( FirstLine ) { vec = new int [ n + 100 ] ; FirstLine = false ; } vec [ n ] ++ ; } } this . r = vec [ this . c ] ; for ( int i = 0 ; i < vec . length ; i ++ ) { if ( vec [ i ] > this . r ) { this . r = vec [ i ] ; this . c = i + 1 ; } } this . c = this . c - 1 ; this . data = new double [ this . r ] [ this . c ] ; } \n', 0.46105403735219797)
@@ -122,7 +132,9 @@
 
 ('protected void initializeCharProbs ( ) { m_charProbs . put ( 65 , .0625 ) ; m_charProbs . put ( 66 , .02083 ) ; m_charProbs . put ( 67 , .02083 ) ; m_charProbs . put ( 68 , .03125 ) ; m_charProbs . put ( 69 , .11458 ) ; m_charProbs . put ( 70 , .02083 ) ; m_charProbs . put ( 71 , .02083 ) ; m_charProbs . put ( 72 , .05208 ) ; m_charProbs . put ( 73 , .0625 ) ; m_charProbs . put ( 74 , .01042 ) ; m_charProbs . put ( 75 , .01042 ) ; m_charProbs . put ( 76 , .04167 ) ; m_charProbs . put ( 77 , .02083 ) ; m_charProbs . put ( 78 , .0625 ) ; m_charProbs . put ( 79 , .07292 ) ; m_charProbs . put ( 80 , .02083 ) ; m_charProbs . put ( 81 , .01042 ) ; m_charProbs . put ( 82 , .05208 ) ; m_charProbs . put ( 83 , .0625 ) ; m_charProbs . put ( 84 , .09375 ) ; m_charProbs . put ( 85 , .03125 ) ; m_charProbs . put ( 86 , .02083 ) ; m_charProbs . put ( 87 , .03125 ) ; m_charProbs . put ( 88 , .01042 ) ; m_charProbs . put ( 89 , .03125 ) ; m_charProbs . put ( 90 , .01042 ) ; } \n', 0.3990293494529179)
 
-('private void initialiseMazeLines ( ) { vertical = new LinkedList < Line2D > ( ) ; horizontal = new LinkedList < Line2D > ( ) ; for ( int i = 0 ; i <= size ; i ++ ) { horizontal . add ( new Line2D . Double ( new Point2D . Double ( 0 , i ) , new Point2D . Double ( size , i ) ) ) ; vertical . add ( new Line2D . Double ( new Point2D . Double ( i , 0 ) , new Point2D . Double ( i , size ) ) ) ; } } \n', 0.39763715753003637)FRank:   | P@1:   | P@5:   | P@10: 
+('private void initialiseMazeLines ( ) { vertical = new LinkedList < Line2D > ( ) ; horizontal = new LinkedList < Line2D > ( ) ; for ( int i = 0 ; i <= size ; i ++ ) { horizontal . add ( new Line2D . Double ( new Point2D . Double ( 0 , i ) , new Point2D . Double ( size , i ) ) ) ; vertical . add ( new Line2D . Double ( new Point2D . Double ( i , 0 ) , new Point2D . Double ( i , size ) ) ) ; } } \n', 0.39763715753003637)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 7 #################################
 ('public static void checkNullAndPutValuesToArray ( int [ ] array , Object obj ) { if ( obj == null ) { throw new RuntimeException ( "Test-failed.-The-array-obtained-via-reflection-is-" + obj ) ; } for ( int i = 0 ; i < Array . getLength ( obj ) ; i ++ ) { System . out . println ( "Test-(Reflection):-" + Array . getInt ( obj , i ) ) ; array [ i ] = Array . getInt ( obj , i ) ; } } \n', 0.3834224945669291)
@@ -143,7 +155,9 @@
 
 ('public static boolean containsValue ( Collection < PrismPropertyValue > collection , PrismPropertyValue value , Comparator comparator ) { for ( PrismPropertyValue < ? > colVal : collection ) { if ( comparator . compare ( colVal , value ) == 0 ) { return true ; } } return false ; } \n', 0.352738845967841)
 
-('public static boolean arrContains ( String [ ] strArray , String value ) { if ( ( strArray != null ) && ( value != null ) ) return Arrays . asList ( strArray ) . contains ( value ) ; return false ; } \n', 0.35241011243361187)FRank:   | P@1:   | P@5:   | P@10: 
+('public static boolean arrContains ( String [ ] strArray , String value ) { if ( ( strArray != null ) && ( value != null ) ) return Arrays . asList ( strArray ) . contains ( value ) ; return false ; } \n', 0.35241011243361187)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 8 #################################
 ('public String lookupEnumString ( int e ) { String result = map . get ( e ) ; return ( result == null ) ? "Unknown-enum-value=" + e : result ; } \n', 0.4212740360120386)
@@ -164,7 +178,9 @@
 
 ('public static < T extends Enum < T >> T readEnum ( JSONObject json , String key , T defaultValue , Class < T > enumClass ) throws JSONException { String name = json . optString ( key ) ; return ( name != null && name . length ( ) > 0 ) ? Enum . valueOf ( enumClass , name ) : defaultValue ; } \n', 0.3942844800100882)
 
-('public static < T extends Enum < T >> T getEnumFromString ( Class < T > c , String string ) { if ( c != null && string != null ) { try { return Enum . valueOf ( c , string . trim ( ) ) ; } catch ( IllegalArgumentException ex ) { } } return null ; } \n', 0.3937211407735509)FRank:   | P@1:   | P@5:   | P@10: 
+('public static < T extends Enum < T >> T getEnumFromString ( Class < T > c , String string ) { if ( c != null && string != null ) { try { return Enum . valueOf ( c , string . trim ( ) ) ; } catch ( IllegalArgumentException ex ) { } } return null ; } \n', 0.3937211407735509)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 9 #################################
 ('private List < QuasiImportPackage > wrapImportPackageSpecifications ( ImportPackageSpecification [ ] importPackageSpecifications ) { List < QuasiImportPackage > quasiImportPackages = new ArrayList < QuasiImportPackage > ( ) ; for ( ImportPackageSpecification importPackageSpecification : importPackageSpecifications ) { quasiImportPackages . add ( new StandardQuasiImportPackage ( importPackageSpecification , this ) ) ; } return Collections . unmodifiableList ( quasiImportPackages ) ; } \n', 0.40216841439515905)
@@ -185,7 +201,9 @@
 
 ('private void importNamed ( DiagnosticPosition pos , final Symbol tsym , Env < AttrContext > env , JCImport imp ) { if ( tsym . kind == TYP ) imp . importScope = env . toplevel . namedImportScope . importType ( tsym . owner . members ( ) , tsym . owner . members ( ) , tsym ) ; } \n', 0.377682353687645)
 
-('public String androidClasspath ( ) { return expandDirs ( substituteVars ( string ( "anasoot.android-classpath" ) ) ) ; } \n', 0.37692766907023467)FRank:   | P@1:   | P@5:   | P@10: 
+('public String androidClasspath ( ) { return expandDirs ( substituteVars ( string ( "anasoot.android-classpath" ) ) ) ; } \n', 0.37692766907023467)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 10 #################################
 ('public static Object [ ] addToArrayFront ( Object [ ] in , Object addTo ) { Class inClass = in . getClass ( ) ; if ( ! inClass . isArray ( ) ) throw new IllegalArgumentException ( "must-pass-array" ) ; int InSize = Array . getLength ( in ) ; Object [ ] ret = ( Object [ ] ) Array . newInstance ( inClass . getComponentType ( ) , InSize + 1 ) ; System . arraycopy ( in , 0 , ret , 1 , InSize ) ; Array . set ( ret , 0 , addTo ) ; return ( ret ) ; } \n', 0.35209403180629245)
@@ -206,7 +224,9 @@
 
 ('public void addAll ( char [ ] [ ] [ ] newElements ) { if ( this . size + newElements . length >= this . maxSize ) { this . maxSize = this . size + newElements . length ; System . arraycopy ( this . elements , 0 , ( this . elements = new char [ this . maxSize ] [ ] [ ] ) , 0 , this . size ) ; } System . arraycopy ( newElements , 0 , this . elements , this . size , newElements . length ) ; this . size += newElements . length ; } \n', 0.34466344512116426)
 
-('public static void addArray ( Collection < Object > col , Object [ ] add ) { if ( ( add == null ) || ( add . length == 0 ) ) return ; col . addAll ( Arrays . asList ( add ) ) ; } \n', 0.3444046747480611)FRank:   | P@1:   | P@5:   | P@10: 
+('public static void addArray ( Collection < Object > col , Object [ ] add ) { if ( ( add == null ) || ( add . length == 0 ) ) return ; col . addAll ( Arrays . asList ( add ) ) ; } \n', 0.3444046747480611)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 11 #################################
 ('private String getRandomString ( ) { return Long . toString ( rand . nextLong ( ) ) ; } \n', 0.4543420333834416)
@@ -227,7 +247,9 @@
 
 ('public static String randomString ( final int bits ) { return new BigInteger ( bits , new Random ( ) ) . toString ( 32 ) ; } \n', 0.44105319888279787)
 
-('String getRandomStr ( ) { String base = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789" ; Random random = new Random ( ) ; StringBuffer sb = new StringBuffer ( ) ; for ( int i = 0 ; i < 16 ; i ++ ) { int number = random . nextInt ( base . length ( ) ) ; sb . append ( base . charAt ( number ) ) ; } return sb . toString ( ) ; } \n', 0.44101767457202296)FRank:   | P@1:   | P@5:   | P@10: 
+('String getRandomStr ( ) { String base = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789" ; Random random = new Random ( ) ; StringBuffer sb = new StringBuffer ( ) ; for ( int i = 0 ; i < 16 ; i ++ ) { int number = random . nextInt ( base . length ( ) ) ; sb . append ( base . charAt ( number ) ) ; } return sb . toString ( ) ; } \n', 0.44101767457202296)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 12 #################################
 ('public static String printArray ( byte [ ] array ) { return printArray ( array , false ) ; } \n', 0.34633338623158627)
@@ -248,7 +270,9 @@
 
 ('private void printArrayProperty ( final StringBuffer sb , final String prefix , final Object array ) { final int length = Array . getLength ( array ) ; for ( int i = 0 ; i < length ; i ++ ) { final Object obj = Array . get ( array , i ) ; printProperty ( sb , String . format ( "%s[%s]" , prefix , i ) , obj ) ; } } \n', 0.3253721760862642)
 
-('protected void printObjectArrayContents ( Object objectArrayToPrint ) { Object [ ] arrayToPrint = ( Object [ ] ) objectArrayToPrint ; System . out . print ( "-RESULT:-" ) ; for ( int i = 0 ; i < arrayToPrint . length ; i ++ ) { if ( i > 0 ) { System . out . print ( ",-" ) ; } System . out . print ( arrayToPrint [ i ] ) ; } System . out . println ( "-" ) ; } \n', 0.3253158161385643)FRank:   | P@1:   | P@5:   | P@10: 
+('protected void printObjectArrayContents ( Object objectArrayToPrint ) { Object [ ] arrayToPrint = ( Object [ ] ) objectArrayToPrint ; System . out . print ( "-RESULT:-" ) ; for ( int i = 0 ; i < arrayToPrint . length ; i ++ ) { if ( i > 0 ) { System . out . print ( ",-" ) ; } System . out . print ( arrayToPrint [ i ] ) ; } System . out . println ( "-" ) ; } \n', 0.3253158161385643)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 13 #################################
 ('public static < K , V extends Comparable < V >> Map < K , V > sortMapByValues ( final Map < K , V > map ) { Comparator < K > valueComparator = new Comparator < K > ( ) { public int compare ( K k1 , K k2 ) { int compare = map . get ( k2 ) . compareTo ( map . get ( k1 ) ) ; if ( compare == 0 ) return 1 ; else return compare ; } } ; Map < K , V > sortedByValues = new TreeMap < K , V > ( valueComparator ) ; sortedByValues . putAll ( map ) ; return sortedByValues ; } \n', 0.47019823717805165)
@@ -269,7 +293,9 @@
 
 ('public < K extends Comparable < K > , V extends Comparable < V >> Map < K , V > sortByValues ( final Map < K , V > map ) { Comparator < K > valueComparator = new Comparator < K > ( ) { public int compare ( K k1 , K k2 ) { int compare = map . get ( k2 ) . compareTo ( map . get ( k1 ) ) ; if ( compare == 0 ) { return k1 . compareTo ( k2 ) ; } else { return compare ; } } } ; Map < K , V > sortedByValues = new TreeMap < K , V > ( valueComparator ) ; sortedByValues . putAll ( map ) ; return sortedByValues ; } \n', 0.4659323568655886)
 
-('private < K , V extends Comparable < V >> Map < K , V > sortByValues ( final Map < K , V > map ) { Comparator < K > valueComparator = new Comparator < K > ( ) { public int compare ( K k1 , K k2 ) { int res = map . get ( k2 ) . compareTo ( map . get ( k1 ) ) ; if ( res == 0 ) return 1 ; else return res ; } } ; Map < K , V > sortedMap = new TreeMap < K , V > ( valueComparator ) ; sortedMap . putAll ( map ) ; return sortedMap ; } \n', 0.4655879162870542)FRank:   | P@1:   | P@5:   | P@10: 
+('private < K , V extends Comparable < V >> Map < K , V > sortByValues ( final Map < K , V > map ) { Comparator < K > valueComparator = new Comparator < K > ( ) { public int compare ( K k1 , K k2 ) { int res = map . get ( k2 ) . compareTo ( map . get ( k1 ) ) ; if ( res == 0 ) return 1 ; else return res ; } } ; Map < K , V > sortedMap = new TreeMap < K , V > ( valueComparator ) ; sortedMap . putAll ( map ) ; return sortedMap ; } \n', 0.4655879162870542)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 14 #################################
 ('private double normalizeRotationalSpeed ( double value ) { double maxIncrementValueY = 0.05 ; if ( lastRotationalSpeed < 0.3 && lastRotationalSpeed > - 0.3 ) { lastRotationalSpeed = ( value > 0 ) ? Math . min ( value , 0.3 ) : Math . max ( value , - 0.3 ) ; return lastRotationalSpeed ; } if ( ( value - lastRotationalSpeed ) > maxIncrementValueY ) { lastRotationalSpeed += maxIncrementValueY ; return lastRotationalSpeed ; } else if ( ( lastRotationalSpeed - value ) > maxIncrementValueY ) { lastRotationalSpeed -= maxIncrementValueY ; return lastRotationalSpeed ; } return lastRotationalSpeed ; } \n', 0.3604027240720582)
@@ -290,7 +316,9 @@
 
 ('public static double trunc ( Number n ) { if ( n == null ) { return 0 ; } return Math . floor ( n . doubleValue ( ) ) ; } \n', 0.34232143120573866)
 
-('public static Node normalize ( Node v ) { double length = Math . sqrt ( Math . pow ( v . getX ( ) , 2 ) + Math . pow ( v . getY ( ) , 2 ) ) ; return VectorHelper . multiply ( v , 1 / length ) ; } \n', 0.3416769049666232)FRank:   | P@1:   | P@5:   | P@10: 
+('public static Node normalize ( Node v ) { double length = Math . sqrt ( Math . pow ( v . getX ( ) , 2 ) + Math . pow ( v . getY ( ) , 2 ) ) ; return VectorHelper . multiply ( v , 1 / length ) ; } \n', 0.3416769049666232)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 15 #################################
 ('protected static Class [ ] combineClassArrays ( Class [ ] ... classArrays ) { int combinedArrayLength = 0 ; for ( Class [ ] classArray : classArrays ) { combinedArrayLength += classArray . length ; } Class [ ] returnArray = new Class [ combinedArrayLength ] ; int copyPos = 0 ; for ( Class [ ] classArray : classArrays ) { System . arraycopy ( classArray , 0 , returnArray , copyPos , classArray . length ) ; copyPos += classArray . length ; } return returnArray ; } \n', 0.38913050927947385)
@@ -311,7 +339,9 @@
 
 ('public DescribeBatchPredictionsRequest withSortOrder ( SortOrder sortOrder ) { this . sortOrder = sortOrder . toString ( ) ; return this ; } \n', 0.36746743497762957)
 
-('public static int [ ] arrayConcatInt ( final int [ ] original , final int [ ] appender ) { final int [ ] result = Arrays . copyOf ( original , original . length + appender . length ) ; System . arraycopy ( appender , 0 , result , original . length , appender . length ) ; return result ; } \n', 0.3651376615915112)FRank:   | P@1:   | P@5:   | P@10: 
+('public static int [ ] arrayConcatInt ( final int [ ] original , final int [ ] appender ) { final int [ ] result = Arrays . copyOf ( original , original . length + appender . length ) ; System . arraycopy ( appender , 0 , result , original . length , appender . length ) ; return result ; } \n', 0.3651376615915112)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 16 #################################
 ('public AsciiFileReader ( String filename ) throws FileNotFoundException , IllegalArgumentException { if ( filename == null || filename . isEmpty ( ) ) { throw new IllegalArgumentException ( ) ; } if ( ! ( new File ( filename ) ) . exists ( ) ) { throw new FileNotFoundException ( ) ; } this . __filename = ( new File ( filename ) . getAbsolutePath ( ) ) ; this . __reading = false ; } \n', 0.39923545991366777)
@@ -332,7 +362,9 @@
 
 ('public ArchiveReader getArchiveReader ( final String url ) throws Exception { final int delim = url . indexOf ( \':\' ) ; if ( delim < 0 ) throw new Exception ( "Missing-prefix-in-URL-" + url ) ; final String prefix = url . substring ( 0 , delim ) ; final ArchiveReaderFactory factory = reader_factories . get ( prefix ) ; if ( factory == null ) throw new Exception ( "Unknown-archive-reader-URL-" + url ) ; return factory . getArchiveReader ( url ) ; } \n', 0.3724777865491602)
 
-('public File createFileFromURL ( URL resource ) { LOGGER . info ( "Resource-is-{}." , resource . getPath ( ) ) ; String [ ] arr = resource . getPath ( ) . split ( "/" ) ; String filenameWithoutPath = arr [ arr . length - 1 ] ; File configFile = null ; try { String fileContent = Resources . toString ( resource , Charset . defaultCharset ( ) ) ; configFile = createFileFromString ( fileContent , filenameWithoutPath ) ; } catch ( IOException e ) { LOGGER . error ( "Error-reading-resource-{}." , resource . getPath ( ) , e ) ; throw new RuntimeException ( e ) ; } return configFile ; } \n', 0.37207679938316557)FRank:   | P@1:   | P@5:   | P@10: 
+('public File createFileFromURL ( URL resource ) { LOGGER . info ( "Resource-is-{}." , resource . getPath ( ) ) ; String [ ] arr = resource . getPath ( ) . split ( "/" ) ; String filenameWithoutPath = arr [ arr . length - 1 ] ; File configFile = null ; try { String fileContent = Resources . toString ( resource , Charset . defaultCharset ( ) ) ; configFile = createFileFromString ( fileContent , filenameWithoutPath ) ; } catch ( IOException e ) { LOGGER . error ( "Error-reading-resource-{}." , resource . getPath ( ) , e ) ; throw new RuntimeException ( e ) ; } return configFile ; } \n', 0.37207679938316557)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 17 #################################
 ('public static StringBuilder transformStackTrace ( StackTraceElement [ ] elements ) { StringBuilder sb = new StringBuilder ( ) ; for ( StackTraceElement element : elements ) { sb . append ( element . toString ( ) ) . append ( "-" ) ; } return sb ; } \n', 0.45468857498635107)
@@ -353,7 +385,9 @@
 
 ('public String getStringFromStackTrace ( StackTraceElement [ ] stackTrace ) { StringBuilder builder = new StringBuilder ( ) ; for ( StackTraceElement e : stackTrace ) { builder . append ( e . toString ( ) ) ; } return builder . toString ( ) ; } \n', 0.4265108452317233)
 
-('protected String getPartialServletStackTrace ( Throwable t ) { StringBuilder trace = new StringBuilder ( ) ; trace . append ( t . toString ( ) ) . append ( \'|n\' ) ; StackTraceElement [ ] elements = t . getStackTrace ( ) ; int pos = elements . length ; for ( int i = 0 ; i < elements . length ; i ++ ) { if ( ( elements [ i ] . getClassName ( ) . startsWith ( "org.apache.catalina.core.ApplicationFilterChain" ) ) && ( elements [ i ] . getMethodName ( ) . equals ( "internalDoFilter" ) ) ) { pos = i ; } } for ( int i = 0 ; i < pos ; i ++ ) { if ( ! ( elements [ i ] . getClassName ( ) . startsWith ( "org.apache.catalina.core." ) ) ) { trace . append ( \'|t\' ) . append ( elements [ i ] . toString ( ) ) . append ( \'|n\' ) ; } } return trace . toString ( ) ; } \n', 0.4264014403405637)FRank:   | P@1:   | P@5:   | P@10: 
+('protected String getPartialServletStackTrace ( Throwable t ) { StringBuilder trace = new StringBuilder ( ) ; trace . append ( t . toString ( ) ) . append ( \'|n\' ) ; StackTraceElement [ ] elements = t . getStackTrace ( ) ; int pos = elements . length ; for ( int i = 0 ; i < elements . length ; i ++ ) { if ( ( elements [ i ] . getClassName ( ) . startsWith ( "org.apache.catalina.core.ApplicationFilterChain" ) ) && ( elements [ i ] . getMethodName ( ) . equals ( "internalDoFilter" ) ) ) { pos = i ; } } for ( int i = 0 ; i < pos ; i ++ ) { if ( ! ( elements [ i ] . getClassName ( ) . startsWith ( "org.apache.catalina.core." ) ) ) { trace . append ( \'|t\' ) . append ( elements [ i ] . toString ( ) ) . append ( \'|n\' ) ; } } return trace . toString ( ) ; } \n', 0.4264014403405637)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 18 #################################
 ('private static int compareHandlesNulls ( CstString a , CstString b ) { if ( a == b ) { return 0 ; } else if ( a == null ) { return - 1 ; } else if ( b == null ) { return 1 ; } else { return a . compareTo ( b ) ; } } \n', 0.3923304797017047)
@@ -374,7 +408,9 @@
 
 ('boolean sameClass ( String cfn ) { String s = cfn ; int i = s . lastIndexOf ( ".class" ) ; if ( i > 0 ) { s = s . substring ( 0 , i ) ; } if ( s . compareTo ( toString ( ) ) == 0 ) return true ; return false ; } \n', 0.3766257978192921)
 
-('public int compare ( Object object1 , Object object2 ) { return compare ( ( String ) object1 , ( String ) object2 ) ; } \n', 0.3732264507775638)FRank:   | P@1:   | P@5:   | P@10: 
+('public int compare ( Object object1 , Object object2 ) { return compare ( ( String ) object1 , ( String ) object2 ) ; } \n', 0.3732264507775638)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 19 #################################
 ('public static List < String > split ( final String string , final String regex ) { final String trimmedString = string == null ? "" : string . trim ( ) ; return Arrays . asList ( trimmedString . length ( ) == 0 ? EMPTY_ARRAY : trimmedString . split ( regex ) ) ; } \n', 0.42211951430628075)
@@ -395,7 +431,9 @@
 
 ('public static List < String > splitLanguageString ( String str ) { int count , index , begin ; List < String > strParts ; index = begin = 0 ; count = 0 ; strParts = new ArrayList < String > ( ) ; while ( index < str . length ( ) ) { char character ; character = str . charAt ( index ) ; if ( character == \'(\' ) { if ( count == 0 && begin < index ) { strParts . add ( str . substring ( begin , index ) ) ; begin = index ; } count ++ ; } if ( character == \')\' ) { count -- ; if ( count == 0 && begin < index ) { strParts . add ( str . substring ( begin , index + 1 ) ) ; begin = index + 1 ; } } if ( character == \'*\' && count == 0 ) { int max ; if ( begin < index ) strParts . add ( str . substring ( begin , index ) ) ; max = strParts . size ( ) - 1 ; if ( max >= 0 ) strParts . set ( max , strParts . get ( max ) + "*" ) ; else throw new IllegalArgumentException ( ) ; begin = index + 1 ; } index ++ ; } if ( begin < index ) strParts . add ( str . substring ( begin , index ) ) ; return strParts ; } \n', 0.41307098233658496)
 
-('public static List < String > split ( String str , String regex ) { return ( Arrays . asList ( str . split ( regex ) ) ) ; } \n', 0.4128187192382976)FRank:   | P@1:   | P@5:   | P@10: 
+('public static List < String > split ( String str , String regex ) { return ( Arrays . asList ( str . split ( regex ) ) ) ; } \n', 0.4128187192382976)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 20 #################################
 ('public HdfsFileWriter ( FileSystem fileSystem , Path path ) throws IOException { LOG . debug ( "Creating-writer-on-{}" , path ) ; this . path = path ; Configuration conf = fileSystem . getConf ( ) ; outputStream = fileSystem . create ( path ) ; } \n', 0.38694100014668437)
@@ -416,7 +454,9 @@
 
 ('private void createLocalKeyStoreFile ( ) throws GeneralSecurityException , IOException { if ( ! mLocalTrustStoreFile . exists ( ) ) { FileOutputStream out = null ; try { out = new FileOutputStream ( mLocalTrustStoreFile ) ; KeyStore localTrustStore = KeyStore . getInstance ( "BKS" ) ; localTrustStore . load ( null , BuildConfig . DB_SECRET . toCharArray ( ) ) ; localTrustStore . store ( out , BuildConfig . DB_SECRET . toCharArray ( ) ) ; } finally { if ( out != null ) { try { out . close ( ) ; } catch ( IOException e ) { AppLog . e ( T . UTILS , e ) ; } } } } } \n', 0.3656250825408104)
 
-('private static void createWritableFile ( File file ) throws IOException { file . createNewFile ( ) ; file . setWritable ( true , false ) ; } \n', 0.3633462029306474)FRank:   | P@1:   | P@5:   | P@10: 
+('private static void createWritableFile ( File file ) throws IOException { file . createNewFile ( ) ; file . setWritable ( true , false ) ; } \n', 0.3633462029306474)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 21 #################################
 ('void initMap ( ) { this . map = new LinkedHashMap < String , Object > ( ) ; this . typeList = new ArrayList < HashMap < String , Object >> ( ) ; this . typeNames = new HashSet < String > ( ) ; this . resourceMap = new HashMap < String , Object > ( ) ; this . fkMap = new HashMap < String , String > ( ) ; this . map . put ( "localQueryComparisonOptions" , "caseInsensitiveSQL" ) ; this . map . put ( "structuralTypes" , typeList ) ; this . map . put ( "resourceEntityTypeMap" , resourceMap ) ; this . map . put ( FK_MAP , fkMap ) ; } \n', 0.4093199707477896)
@@ -437,7 +477,9 @@
 
 ('private void initMappings ( ) throws Exception { if ( mappings != null && mappings . length > 0 ) { Map < String , Collection < String >> indexes = new HashMap < String , Collection < String >> ( ) ; for ( int i = 0 ; i < mappings . length ; i ++ ) { String indexmapping = mappings [ i ] ; String [ ] indexmappingsplitted = indexmapping . split ( "/" ) ; String index = indexmappingsplitted [ 0 ] ; logger . info ( "index:" + index + ",-mapping:" + indexmapping ) ; if ( index == null ) { throw new Exception ( "Can-not-read-index-in-[" + indexmapping + "].-Check-that-mappings-contains-only-indexname/mappingname-elements." ) ; } if ( ! indexes . containsKey ( index ) ) { indexes . put ( index , new ArrayList < String > ( ) ) ; } if ( indexmappingsplitted . length > 1 ) { String mapping = indexmappingsplitted [ 1 ] ; indexes . get ( index ) . add ( mapping ) ; } } for ( String index : indexes . keySet ( ) ) { if ( ! isIndexExist ( index ) ) { createIndex ( index ) ; } else { if ( mergeSettings ) { mergeIndexSettings ( index ) ; } } Collection < String > mappings = indexes . get ( index ) ; for ( Iterator < String > iterator = mappings . iterator ( ) ; iterator . hasNext ( ) ; ) { String type = iterator . next ( ) ; pushMapping ( index , type , rebuildMapping , mergeMapping ) ; logger . info ( "create-mapping-ok.-index=" + index + ",-type=" + type ) ; } } } } \n', 0.399459968429366)
 
-('private void initializeJavaAssertionMaps ( ) { classAssertionStatus = new HashMap < > ( ) ; packageAssertionStatus = new HashMap < > ( ) ; AssertionStatusDirectives directives = retrieveDirectives ( ) ; for ( int i = 0 ; i < directives . classes . length ; i ++ ) classAssertionStatus . put ( directives . classes [ i ] , directives . classEnabled [ i ] ) ; for ( int i = 0 ; i < directives . packages . length ; i ++ ) packageAssertionStatus . put ( directives . packages [ i ] , directives . packageEnabled [ i ] ) ; defaultAssertionStatus = directives . deflt ; } \n', 0.3994092602370087)FRank:   | P@1:   | P@5:   | P@10: 
+('private void initializeJavaAssertionMaps ( ) { classAssertionStatus = new HashMap < > ( ) ; packageAssertionStatus = new HashMap < > ( ) ; AssertionStatusDirectives directives = retrieveDirectives ( ) ; for ( int i = 0 ; i < directives . classes . length ; i ++ ) classAssertionStatus . put ( directives . classes [ i ] , directives . classEnabled [ i ] ) ; for ( int i = 0 ; i < directives . packages . length ; i ++ ) packageAssertionStatus . put ( directives . packages [ i ] , directives . packageEnabled [ i ] ) ; defaultAssertionStatus = directives . deflt ; } \n', 0.3994092602370087)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 22 #################################
 ('final boolean popIfNext ( ForkJoinTask < ? > t ) { int s ; ForkJoinTask < ? > [ ] q = queue ; if ( t != null && q != null && casSlotNull ( q , ( q . length - 1 ) & ( s = sp - 1 ) , t ) ) { setSp ( s ) ; return true ; } return false ; } \n', 0.42554242701403777)
@@ -458,7 +500,9 @@
 
 ('public void failNextPreview ( ) { final ReentrantLock lock = this . mLock ; lock . lock ( ) ; try { CaptureHolder h1 = mPreviewCaptureQueue . peek ( ) ; CaptureHolder h2 = mPreviewProduceQueue . peek ( ) ; CaptureHolder h = ( h1 == null ) ? h2 : ( ( h2 == null ) ? h1 : ( ( h1 . compareTo ( h2 ) <= 0 ) ? h1 : h2 ) ) ; if ( h != null ) { mPreviewCaptureQueue . remove ( h ) ; mPreviewProduceQueue . remove ( h ) ; mActiveRequests . remove ( h ) ; h . setPreviewFailed ( ) ; } } finally { lock . unlock ( ) ; } } \n', 0.400308853077054)
 
-('@ Override protected void selectorIterationComplete ( ) throws IOException { TNonblockingTransport newClient ; while ( ( newClient = newConnections . poll ( ) ) != null ) { SelectionKey clientKey = newClient . registerSelector ( selector , SelectionKey . OP_READ ) ; clientKey . attach ( new Message ( newClient , clientKey , thriftFactories , useHeapBasedAllocation , alwaysReallocateBuffers ) ) ; } } \n', 0.39587907287151014)FRank:   | P@1:   | P@5:   | P@10: 
+('@ Override protected void selectorIterationComplete ( ) throws IOException { TNonblockingTransport newClient ; while ( ( newClient = newConnections . poll ( ) ) != null ) { SelectionKey clientKey = newClient . registerSelector ( selector , SelectionKey . OP_READ ) ; clientKey . attach ( new Message ( newClient , clientKey , thriftFactories , useHeapBasedAllocation , alwaysReallocateBuffers ) ) ; } } \n', 0.39587907287151014)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 23 #################################
 ('public static MessageDigest buildMd5 ( ) { try { MessageDigest digest = MessageDigest . getInstance ( "MD5" ) ; return digest ; } catch ( NoSuchAlgorithmException e ) { throw new RuntimeException ( "Could-not-find-md5-algorithm" , e ) ; } } \n', 0.44545234346248797)
@@ -479,7 +523,9 @@
 
 ('public static String generateMD5 ( String aToken ) { MessageDigest aMessageDigest = null ; try { aMessageDigest = MessageDigest . getInstance ( "MD5" ) ; } catch ( NoSuchAlgorithmException e ) { System . out . println ( "Algoritmo-solicitado-nÃ£o-encontrado." ) ; } BigInteger hash = new BigInteger ( 1 , aMessageDigest . digest ( aToken . getBytes ( ) ) ) ; String aMD5 = hash . toString ( 16 ) ; return aMD5 ; } \n', 0.42880152081697065)
 
-('private static byte [ ] generateKeyFromPasswordSaltWithMD5 ( byte [ ] password , byte [ ] salt , int keyLen ) throws IOException { if ( salt . length < 8 ) throw new IllegalArgumentException ( "Salt-needs-to-be-at-least-8-bytes-for-key-generation." ) ; MessageDigest md5 ; try { md5 = MessageDigest . getInstance ( "MD5" ) ; } catch ( NoSuchAlgorithmException e ) { throw new IllegalArgumentException ( "VM-does-not-support-MD5" , e ) ; } byte [ ] key = new byte [ keyLen ] ; byte [ ] tmp = new byte [ md5 . getDigestLength ( ) ] ; while ( true ) { md5 . update ( password , 0 , password . length ) ; md5 . update ( salt , 0 , 8 ) ; int copy = ( keyLen < tmp . length ) ? keyLen : tmp . length ; try { md5 . digest ( tmp , 0 , tmp . length ) ; } catch ( DigestException e ) { IOException ex = new IOException ( "could-not-digest-password" ) ; ex . initCause ( e ) ; throw ex ; } System . arraycopy ( tmp , 0 , key , key . length - keyLen , copy ) ; keyLen -= copy ; if ( keyLen == 0 ) return key ; md5 . update ( tmp , 0 , tmp . length ) ; } } \n', 0.4277104097002139)FRank:   | P@1:   | P@5:   | P@10: 
+('private static byte [ ] generateKeyFromPasswordSaltWithMD5 ( byte [ ] password , byte [ ] salt , int keyLen ) throws IOException { if ( salt . length < 8 ) throw new IllegalArgumentException ( "Salt-needs-to-be-at-least-8-bytes-for-key-generation." ) ; MessageDigest md5 ; try { md5 = MessageDigest . getInstance ( "MD5" ) ; } catch ( NoSuchAlgorithmException e ) { throw new IllegalArgumentException ( "VM-does-not-support-MD5" , e ) ; } byte [ ] key = new byte [ keyLen ] ; byte [ ] tmp = new byte [ md5 . getDigestLength ( ) ] ; while ( true ) { md5 . update ( password , 0 , password . length ) ; md5 . update ( salt , 0 , 8 ) ; int copy = ( keyLen < tmp . length ) ? keyLen : tmp . length ; try { md5 . digest ( tmp , 0 , tmp . length ) ; } catch ( DigestException e ) { IOException ex = new IOException ( "could-not-digest-password" ) ; ex . initCause ( e ) ; throw ex ; } System . arraycopy ( tmp , 0 , key , key . length - keyLen , copy ) ; keyLen -= copy ; if ( keyLen == 0 ) return key ; md5 . update ( tmp , 0 , tmp . length ) ; } } \n', 0.4277104097002139)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 24 #################################
 ('public static StackTraceElement getCurrentStackTraceElement ( ) { return Thread . currentThread ( ) . getStackTrace ( ) [ 3 ] ; } \n', 0.4429996253804881)
@@ -500,7 +546,9 @@
 
 ('public static final String getBriefStackTrace ( Throwable t ) { return formatStackTrace ( null , t , ">>" , 6 ) . toString ( ) ; } \n', 0.43848245578733636)
 
-('public static String getStackTrace ( Exception exception ) { return getStackTrace ( ( Throwable ) exception ) ; } \n', 0.43762904330370306)FRank:   | P@1:   | P@5:   | P@10: 
+('public static String getStackTrace ( Exception exception ) { return getStackTrace ( ( Throwable ) exception ) ; } \n', 0.43762904330370306)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 25 #################################
 ('public static List < IFeature > sortFeatures ( Collection < IFeature > features ) { List < IFeature > result = new ArrayList < IFeature > ( features ) ; Collections . sort ( result ) ; return result ; } \n', 0.43808639493842644)
@@ -521,7 +569,9 @@
 
 ('public Collection sort ( Object object , String property ) { List properties = new ArrayList ( 1 ) ; properties . add ( property ) ; if ( object instanceof Collection ) { return sort ( ( Collection ) object , properties ) ; } else if ( object instanceof Object [ ] ) { return sort ( ( Object [ ] ) object , properties ) ; } else if ( object instanceof Map ) { return sort ( ( Map ) object , properties ) ; } return null ; } \n', 0.41263685074800294)
 
-('private void sortProperties ( Property [ ] properties ) { Arrays . sort ( properties ) ; } \n', 0.4111116867002739)FRank:   | P@1:   | P@5:   | P@10: 
+('private void sortProperties ( Property [ ] properties ) { Arrays . sort ( properties ) ; } \n', 0.4111116867002739)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 26 #################################
 ('public static double roundToDecimalPlaces ( final double val , final int decimalPlaces ) { String zeros = "1" ; for ( int i = 0 ; i < decimalPlaces ; i ++ ) { zeros += "0" ; } int decimal = Integer . valueOf ( zeros ) . intValue ( ) ; if ( ! isNullOrZero ( val ) ) { return ( double ) Math . round ( val * decimal ) / decimal ; } return val ; } \n', 0.47474848012569243)
@@ -542,7 +592,9 @@
 
 ('protected double roundToDecimalPlaces ( double number , int decimalPlace , boolean place ) { int temp = 1 ; for ( int i = 0 ; i < decimalPlace ; i ++ ) { temp = temp * 10 ; } if ( place ) { number = number / temp ; number = Math . round ( number ) ; number = number * temp ; } else { number = number * temp ; number = Math . round ( number ) ; number = number / temp ; } return number ; } \n', 0.462814356628056)
 
-('public static double [ ] round ( final double [ ] vs , final int decimals ) { for ( int i = 0 ; i < vs . length ; i ++ ) { vs [ i ] = round ( vs [ i ] , decimals ) ; } return vs ; } \n', 0.4625068539745365)FRank:   | P@1:   | P@5:   | P@10: 
+('public static double [ ] round ( final double [ ] vs , final int decimals ) { for ( int i = 0 ; i < vs . length ; i ++ ) { vs [ i ] = round ( vs [ i ] , decimals ) ; } return vs ; } \n', 0.4625068539745365)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 27 #################################
 ("static public final String zeroPad ( final int i , final int n_digits ) { final StringBuilder sb = new StringBuilder ( ) ; sb . append ( i ) ; int len = sb . length ( ) ; while ( len < n_digits ) { sb . insert ( 0 , '0' ) ; len ++ ; } return sb . toString ( ) ; } \n", 0.4161426531480492)
@@ -563,7 +615,9 @@
 
 ('public static String leftPad ( String input , int length , char pad ) { if ( input . length ( ) < length ) { StringBuilder sb = new StringBuilder ( ) ; for ( int i = 0 , len = length - input . length ( ) ; i < len ; i ++ ) { sb . append ( pad ) ; } sb . append ( input ) ; return sb . toString ( ) ; } return input ; } \n', 0.40544681800255356)
 
-('protected static byte [ ] truncateOrPad ( byte [ ] source , int length ) { byte [ ] result = new byte [ length ] ; System . arraycopy ( source , 0 , result , 0 , Math . min ( length , source . length ) ) ; if ( length > source . length ) { for ( int i = source . length ; i < length ; i ++ ) { result [ i ] = 0 ; } } return result ; } \n', 0.4037978924079052)FRank:   | P@1:   | P@5:   | P@10: 
+('protected static byte [ ] truncateOrPad ( byte [ ] source , int length ) { byte [ ] result = new byte [ length ] ; System . arraycopy ( source , 0 , result , 0 , Math . min ( length , source . length ) ) ; if ( length > source . length ) { for ( int i = source . length ; i < length ; i ++ ) { result [ i ] = 0 ; } } return result ; } \n', 0.4037978924079052)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 28 #################################
 ('public static Array createDoubleArray ( String name , Double [ ] values , StatMLSerializer ser ) throws StatMLSerializationException , IOException { Array array = new Array ( ) ; array . setDimensions ( String . valueOf ( values . length ) ) ; array . setName ( name ) ; array . setType ( "java.lang.Double" ) ; String encoded = ser . serialize ( null , values ) ; array . setBase64Value ( encoded ) ; return array ; } \n', 0.39682953240456487)
@@ -584,7 +638,9 @@
 
 ('public static Object instantiateWrapperArray ( Class < ? > type , String [ ] values ) { validateParams ( type , values ) ; boolean condition = ( isWrapperArray ( type ) || hasOneArgStringConstructor ( type . getComponentType ( ) ) ) ; checkArgument ( condition , type . getName ( ) + "-is-neither-awrapper-type-nor-has-a-1-arg-String-constructor-defined." ) ; Class < ? > componentType = type . getComponentType ( ) ; Object arrayToReturn = Array . newInstance ( componentType , values . length ) ; for ( int i = 0 ; i < values . length ; i ++ ) { try { Array . set ( arrayToReturn , i , componentType . getConstructor ( String . class ) . newInstance ( values [ i ] ) ) ; } catch ( ArrayIndexOutOfBoundsException | IllegalArgumentException | InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | SecurityException e ) { throw new ReflectionException ( e ) ; } } return arrayToReturn ; } \n', 0.3805221651977695)
 
-('public static char [ ] createStaticArraySignature ( char [ ] type , char [ ] dimension ) { int dimensionLength = dimension . length ; int dimensionLengthStringLength = lenghtOfLengthToString ( dimension ) ; char [ ] ret = new char [ 3 + type . length + dimensionLengthStringLength + dimensionLength ] ; ret [ 0 ] = C_STATIC_ARRAY ; System . arraycopy ( type , 0 , ret , 1 , type . length ) ; ret [ type . length + 1 ] = C_STATIC_ARRAY2 ; copyNumber ( dimensionLength , dimensionLengthStringLength , ret , 2 + type . length ) ; ret [ 2 + type . length + dimensionLengthStringLength ] = C_STATIC_ARRAY ; System . arraycopy ( dimension , 0 , ret , 3 + type . length + dimensionLengthStringLength , dimensionLength ) ; return ret ; } \n', 0.3796523149638734)FRank:   | P@1:   | P@5:   | P@10: 
+('public static char [ ] createStaticArraySignature ( char [ ] type , char [ ] dimension ) { int dimensionLength = dimension . length ; int dimensionLengthStringLength = lenghtOfLengthToString ( dimension ) ; char [ ] ret = new char [ 3 + type . length + dimensionLengthStringLength + dimensionLength ] ; ret [ 0 ] = C_STATIC_ARRAY ; System . arraycopy ( type , 0 , ret , 1 , type . length ) ; ret [ type . length + 1 ] = C_STATIC_ARRAY2 ; copyNumber ( dimensionLength , dimensionLengthStringLength , ret , 2 + type . length ) ; ret [ 2 + type . length + dimensionLengthStringLength ] = C_STATIC_ARRAY ; System . arraycopy ( dimension , 0 , ret , 3 + type . length + dimensionLengthStringLength , dimensionLength ) ; return ret ; } \n', 0.3796523149638734)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 29 #################################
 ('public static List < String > readTextFileAsStringList ( String filePath ) { BufferedReader reader ; List < String > lineList = new ArrayList < String > ( ) ; try { reader = new BufferedReader ( new FileReader ( filePath ) ) ; String line = reader . readLine ( ) ; while ( line != null ) { lineList . add ( line ) ; line = reader . readLine ( ) ; } reader . close ( ) ; } catch ( FileNotFoundException e ) { e . printStackTrace ( ) ; } catch ( IOException e ) { e . printStackTrace ( ) ; } return lineList ; } \n', 0.4280808360647729)
@@ -605,7 +661,9 @@
 
 ('private Hashtable readProgramListFromTextFile ( ) throws IOException { final Hashtable result = new Hashtable ( ) ; final InputStream is = getClass ( ) . getResourceAsStream ( "/programs/programs.txt" ) ; int c = 0 ; while ( c >= 0 ) { final StringBuffer line = new StringBuffer ( ) ; while ( ( c = is . read ( ) ) > 0 && c != \'|n\' && c != \'|r\' ) { line . append ( ( char ) c ) ; } if ( ! line . toString ( ) . startsWith ( "#" ) && line . length ( ) > 0 ) { result . put ( line . toString ( ) , "/programs/" + line . toString ( ) ) ; } } return result ; } \n', 0.4191684070453872)
 
-('public static String readTextFile ( File file ) { Scanner s = null ; try { s = new Scanner ( file ) . useDelimiter ( "" ) ; } catch ( FileNotFoundException ex ) { ChatterBox . error ( "utilities.BitStylus" , "splitTextFile" , "Not-a-valid-text-file" ) ; } String text = "" ; while ( s . hasNext ( ) ) { text = text + s . next ( ) ; } return text ; } \n', 0.4184221904598358)FRank:   | P@1:   | P@5:   | P@10: 
+('public static String readTextFile ( File file ) { Scanner s = null ; try { s = new Scanner ( file ) . useDelimiter ( "" ) ; } catch ( FileNotFoundException ex ) { ChatterBox . error ( "utilities.BitStylus" , "splitTextFile" , "Not-a-valid-text-file" ) ; } String text = "" ; while ( s . hasNext ( ) ) { text = text + s . next ( ) ; } return text ; } \n', 0.4184221904598358)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 30 #################################
 ('void invokeIORInterceptors ( POAImpl poaImpl ) { if ( enabled ) { IORInfoImpl info = new IORInfoImpl ( orb , poaImpl ) ; IORInterceptor [ ] iorInterceptors = ( IORInterceptor [ ] ) interceptorList . getInterceptors ( InterceptorList . INTERCEPTOR_TYPE_IOR ) ; int size = iorInterceptors . length ; for ( int i = ( size - 1 ) ; i >= 0 ; i -- ) { IORInterceptor interceptor = iorInterceptors [ i ] ; try { interceptor . establish_components ( info ) ; } catch ( Exception e ) { } } } } \n', 0.4037760204291455)
@@ -626,7 +684,9 @@
 
 ('DependencyCheck ( Iterable < String > typeNames ) { this . typeNames = FluentIterable . from ( typeNames ) ; } \n', 0.38594235665534776)
 
-('private void processEnumsInCollections ( @ SuppressWarnings ( "rawtypes" ) List list , Object [ ] cValues , IDecisionVariable dc ) { @ SuppressWarnings ( "rawtypes" ) Class classType = dc . getDeclaration ( ) . getType ( ) . getTypeClass ( ) ; if ( classType . equals ( Sequence . class ) ) { Container container = ( Container ) dc . getDeclaration ( ) . getType ( ) ; if ( container . getContainedType ( ) . isAssignableFrom ( Enum . TYPE ) ) { Enum en = ( Enum ) container . getContainedType ( ) ; for ( int i = 0 ; i < list . size ( ) ; i ++ ) { cValues [ i ] = en . getLiteralByOrdinal ( ( Integer ) list . get ( i ) ) ; } } if ( container . getContainedType ( ) . isAssignableFrom ( OrderedEnum . TYPE ) ) { OrderedEnum en = ( OrderedEnum ) container . getContainedType ( ) ; for ( int i = 0 ; i < list . size ( ) ; i ++ ) { cValues [ i ] = en . getLiteralByOrdinal ( ( Integer ) list . get ( i ) ) ; } } } } \n', 0.38573480756099837)FRank:   | P@1:   | P@5:   | P@10: 
+('private void processEnumsInCollections ( @ SuppressWarnings ( "rawtypes" ) List list , Object [ ] cValues , IDecisionVariable dc ) { @ SuppressWarnings ( "rawtypes" ) Class classType = dc . getDeclaration ( ) . getType ( ) . getTypeClass ( ) ; if ( classType . equals ( Sequence . class ) ) { Container container = ( Container ) dc . getDeclaration ( ) . getType ( ) ; if ( container . getContainedType ( ) . isAssignableFrom ( Enum . TYPE ) ) { Enum en = ( Enum ) container . getContainedType ( ) ; for ( int i = 0 ; i < list . size ( ) ; i ++ ) { cValues [ i ] = en . getLiteralByOrdinal ( ( Integer ) list . get ( i ) ) ; } } if ( container . getContainedType ( ) . isAssignableFrom ( OrderedEnum . TYPE ) ) { OrderedEnum en = ( OrderedEnum ) container . getContainedType ( ) ; for ( int i = 0 ; i < list . size ( ) ; i ++ ) { cValues [ i ] = en . getLiteralByOrdinal ( ( Integer ) list . get ( i ) ) ; } } } } \n', 0.38573480756099837)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 31 #################################
 ('public boolean isSkipVerify ( ) { return skipPhases . contains ( TestExecutionPhase . VERIFY ) ; } \n', 0.41393100504370417)
@@ -647,7 +707,9 @@
 
 ('public boolean isValidSuccessor ( ProcessState predecessor ) { return predecessor == this || predecessors . contains ( predecessor ) ; } \n', 0.39899734481151616)
 
-('public static boolean isValid ( double value ) { return Double . compare ( value , 0.0 ) != 0 ; } \n', 0.3988949180079333)FRank:   | P@1:   | P@5:   | P@10: 
+('public static boolean isValid ( double value ) { return Double . compare ( value , 0.0 ) != 0 ; } \n', 0.3988949180079333)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 32 #################################
 ('public static Integer convertirStringToInteger ( String value ) { Integer intValue ; try { intValue = Integer . valueOf ( value ) ; } catch ( Exception e ) { return null ; } return intValue ; } \n', 0.4400905798676506)
@@ -668,7 +730,9 @@
 
 ('@ Validate public static int fromStringToInt32 ( @ NotNull final String value ) { return Integer . parseInt ( value , 10 ) ; } \n', 0.4297234678270203)
 
-('public static Integer stringToInteger ( final String str ) { if ( ( str != null ) && ( str . length ( ) > 0 ) ) { return Integer . valueOf ( str ) ; } else { return null ; } } \n', 0.42969043929345024)FRank:   | P@1:   | P@5:   | P@10: 
+('public static Integer stringToInteger ( final String str ) { if ( ( str != null ) && ( str . length ( ) > 0 ) ) { return Integer . valueOf ( str ) ; } else { return null ; } } \n', 0.42969043929345024)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 33 #################################
 ("public static short javaStringToInt ( java . lang . String str ) { StringCharacterIterator i = new StringCharacterIterator ( str ) ; i . first ( ) ; boolean neg = false ; if ( i . current ( ) == '-' ) { neg = true ; i . next ( ) ; } int value = 0 ; for ( ; i . current ( ) != CharacterIterator . DONE ; i . next ( ) ) { char c = i . current ( ) ; if ( i . current ( ) < '0' || c > '9' ) break ; value = value * 10 + ( c - '0' ) ; } if ( neg ) { return ( short ) - value ; } else { return ( short ) value ; } } \n", 0.4097863904555822)
@@ -689,7 +753,9 @@
 
 ('protected Character [ ] convertObjectToCharacterArray ( Object sourceObject ) throws ConversionException { String stringValue = convertObjectToString ( sourceObject ) ; Character [ ] chars = new Character [ stringValue . length ( ) ] ; for ( int index = 0 ; index < stringValue . length ( ) ; index ++ ) { chars [ index ] = Character . valueOf ( stringValue . charAt ( index ) ) ; } return chars ; } \n', 0.38405123188509505)
 
-('public static long fromUnicodeStringToLong ( String s , int numBits ) throws NumberFormatException { if ( s . length ( ) * 16 > numBits ) throw new NumberFormatException ( "value-won\'t-fit-in-the-given-bits" ) ; long result = 0 ; for ( int i = 0 ; i < s . length ( ) ; i ++ ) result = ( result << 16 ) + s . codePointAt ( i ) ; return result ; } \n', 0.38191435247907174)FRank:   | P@1:   | P@5:   | P@10: 
+('public static long fromUnicodeStringToLong ( String s , int numBits ) throws NumberFormatException { if ( s . length ( ) * 16 > numBits ) throw new NumberFormatException ( "value-won\'t-fit-in-the-given-bits" ) ; long result = 0 ; for ( int i = 0 ; i < s . length ( ) ; i ++ ) result = ( result << 16 ) + s . codePointAt ( i ) ; return result ; } \n', 0.38191435247907174)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 34 #################################
 ('private void checkIfLocalFileExistsAndCanRead ( ) throws FileTransferException { if ( ! localFile . exists ( ) ) { throw new FileTransferException ( localFile . getAbsolutePath ( ) , new FileNotFoundException ( localFile . getAbsolutePath ( ) ) , true ) ; } if ( ! localFile . canRead ( ) ) { throw new FileTransferException ( localFile . getAbsolutePath ( ) , "File-exists-but-cannot-be-read" , true ) ; } } \n', 0.4041461995914023)
@@ -710,7 +776,9 @@
 
 ('@ Override public boolean isWriteable ( Class < ? > type , Type genericType , Annotation [ ] annotations , MediaType mediaType ) { LOG . info ( "called-isWriteable-method" ) ; if ( type == null ) { return false ; } if ( type . isAssignableFrom ( GenericFile . class ) ) { LOG . debug ( "-isWriteable-true" ) ; return true ; } return false ; } \n', 0.38886060586432153)
 
-('File findValidFile ( final String fileName , final File curDir ) { if ( fileName == null || curDir == null || ! isValid ( curDir , true ) ) { throw new IllegalArgumentException ( "ConstMetaData.findValidFile(String,File)" ) ; } File file = new File ( curDir , fileName ) ; if ( ! file . exists ( ) ) { invalidReason = fileName + "-does-not-exist-in-" + curDir . getAbsolutePath ( ) ; return null ; } if ( ! file . canRead ( ) ) { invalidReason = "Can\'t-read-" + fileName ; return null ; } return curDir ; } \n', 0.3872791577270325)FRank:   | P@1:   | P@5:   | P@10: 
+('File findValidFile ( final String fileName , final File curDir ) { if ( fileName == null || curDir == null || ! isValid ( curDir , true ) ) { throw new IllegalArgumentException ( "ConstMetaData.findValidFile(String,File)" ) ; } File file = new File ( curDir , fileName ) ; if ( ! file . exists ( ) ) { invalidReason = fileName + "-does-not-exist-in-" + curDir . getAbsolutePath ( ) ; return null ; } if ( ! file . canRead ( ) ) { invalidReason = "Can\'t-read-" + fileName ; return null ; } return curDir ; } \n', 0.3872791577270325)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 35 #################################
 ('public static Date convertBirthdayStringToDate ( String userDateString ) { DateTimeFormatter dateTimeConvert = DateTimeFormat . forPattern ( birthdayFormat ) ; try { DateTime dateTimeParser = dateTimeConvert . parseDateTime ( userDateString ) ; return dateTimeParser . toDate ( ) ; } catch ( IllegalArgumentException e ) { return null ; } } \n', 0.43949680460688345)
@@ -731,7 +799,9 @@
 
 ('public static String dateStringToShortLocaleString ( String dateString , String formatString ) throws ParseException { SimpleDateFormat defaultSdf = new SimpleDateFormat ( UtilDateTime . getDateTimeFormat ( Locale . getDefault ( ) ) ) ; SimpleDateFormat sdf = new SimpleDateFormat ( formatString ) ; return defaultSdf . format ( sdf . parse ( dateString ) ) ; } \n', 0.429811752769706)
 
-('public java . sql . Date convertStringToSqlDateFormat ( String strDate ) { java . sql . Date retSqlDate = null ; SimpleDateFormat sdfInput = null ; SimpleDateFormat sdfOutput = null ; java . util . Date utilDate = null ; String tempSqlDate = null ; String inputFormat = "MM/dd/yyyy" ; String outputFormat = "yyyy-MM-dd" ; sdfInput = new SimpleDateFormat ( inputFormat ) ; sdfOutput = new SimpleDateFormat ( outputFormat ) ; try { if ( strDate != null ) { utilDate = sdfInput . parse ( strDate ) ; tempSqlDate = sdfOutput . format ( utilDate ) ; retSqlDate = java . sql . Date . valueOf ( tempSqlDate ) ; } } catch ( Exception e ) { System . out . println ( e . getLocalizedMessage ( ) ) ; e . printStackTrace ( ) ; } return retSqlDate ; } \n', 0.42933124296196745)FRank:   | P@1:   | P@5:   | P@10: 
+('public java . sql . Date convertStringToSqlDateFormat ( String strDate ) { java . sql . Date retSqlDate = null ; SimpleDateFormat sdfInput = null ; SimpleDateFormat sdfOutput = null ; java . util . Date utilDate = null ; String tempSqlDate = null ; String inputFormat = "MM/dd/yyyy" ; String outputFormat = "yyyy-MM-dd" ; sdfInput = new SimpleDateFormat ( inputFormat ) ; sdfOutput = new SimpleDateFormat ( outputFormat ) ; try { if ( strDate != null ) { utilDate = sdfInput . parse ( strDate ) ; tempSqlDate = sdfOutput . format ( utilDate ) ; retSqlDate = java . sql . Date . valueOf ( tempSqlDate ) ; } } catch ( Exception e ) { System . out . println ( e . getLocalizedMessage ( ) ) ; e . printStackTrace ( ) ; } return retSqlDate ; } \n', 0.42933124296196745)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 36 #################################
 ('public static byte [ ] readBytesToNull ( InputStream inStream ) throws IOException { ByteArrayOutputStream outStream = new ByteArrayOutputStream ( ) ; int b ; while ( inStream . available ( ) > 0 && ( b = inStream . read ( ) ) != 0 ) { outStream . write ( b ) ; } return outStream . toByteArray ( ) ; } \n', 0.41523948719849085)
@@ -752,7 +822,9 @@
 
 ('public static byte [ ] convertStreamToBytes ( InputStream stream ) throws IOException { if ( stream == null ) { return null ; } ByteArrayOutputStream output = new ByteArrayOutputStream ( ) ; copyStream ( stream , output ) ; return output . toByteArray ( ) ; } \n', 0.4017717341597527)
 
-('public static byte [ ] readToBytes ( InputStream inputStream , boolean close ) throws IOException { if ( inputStream == null ) return null ; ByteArrayOutputStream outputStream = new ByteArrayOutputStream ( ) ; StreamHelper . copy ( inputStream , outputStream , close ) ; return outputStream . toByteArray ( ) ; } \n', 0.40087824797102056)FRank:   | P@1:   | P@5:   | P@10: 
+('public static byte [ ] readToBytes ( InputStream inputStream , boolean close ) throws IOException { if ( inputStream == null ) return null ; ByteArrayOutputStream outputStream = new ByteArrayOutputStream ( ) ; StreamHelper . copy ( inputStream , outputStream , close ) ; return outputStream . toByteArray ( ) ; } \n', 0.40087824797102056)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 37 #################################
 ('private static final boolean isNumeric ( final char formatChar , final int count ) { int i = NUMERIC_FORMAT_CHARS . indexOf ( formatChar ) ; return ( i > 0 || ( i == 0 && count < 3 ) ) ; } \n', 0.4319100778826536)
@@ -773,7 +845,9 @@
 
 ('private boolean isDecimal ( String str ) { for ( int i = 0 ; i < str . length ( ) ; i ++ ) { if ( ! Character . isDigit ( str . charAt ( i ) ) ) { return false ; } } return true ; } \n', 0.41990142832284594)
 
-('static boolean intCheck ( String a ) { if ( ( a . matches ( "[0-9]+" ) ) && ( a . length ( ) <= 1 ) ) { int b = ( Integer . valueOf ( a ) ) ; if ( ( b >= 0 ) && ( b <= 10 ) ) { return true ; } } return false ; } \n', 0.41912154898998194)FRank:   | P@1:   | P@5:   | P@10: 
+('static boolean intCheck ( String a ) { if ( ( a . matches ( "[0-9]+" ) ) && ( a . length ( ) <= 1 ) ) { int b = ( Integer . valueOf ( a ) ) ; if ( ( b >= 0 ) && ( b <= 10 ) ) { return true ; } } return false ; } \n', 0.41912154898998194)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 38 #################################
 ('Object copyIfCloneable ( Object toCopy ) { Object result = null ; if ( toCopy instanceof Cloneable ) { try { Method m = toCopy . getClass ( ) . getMethod ( "clone" , ArrayUtils . EMPTY_CLASS_ARRAY ) ; result = m . invoke ( toCopy , null ) ; } catch ( Exception e ) { throw new OJBRuntimeException ( "Can\'t-invoke-method-\'clone\'-on-object:-" + toCopy , e ) ; } } return result ; } \n', 0.43151399183229155)
@@ -794,7 +868,9 @@
 
 ('public static List < Constant > copyConstants ( List < Constant > source ) { List < Constant > dest = new ArrayList < Constant > ( source . size ( ) ) ; for ( Constant c : source ) dest . add ( c . copy ( ) ) ; return dest ; } \n', 0.4037901785878951)
 
-('@ SuppressWarnings ( "unchecked" ) public static < T > T getCopy ( final T orig ) { T copy = null ; if ( orig != null ) { try { if ( orig instanceof Serializable ) { final ByteArrayOutputStream baos = new ByteArrayOutputStream ( ) ; final ObjectOutputStream oos = new ObjectOutputStream ( baos ) ; try { oos . writeObject ( orig ) ; } finally { oos . close ( ) ; } final ObjectInputStream ois = new ObjectInputStream ( new ByteArrayInputStream ( baos . toByteArray ( ) ) ) ; try { copy = ( T ) ois . readObject ( ) ; } finally { ois . close ( ) ; } } else { final Class < T > type = ( Class < T > ) orig . getClass ( ) ; if ( orig instanceof Cloneable ) { copy = ( T ) type . getMethod ( "clone" , ( Class < ? > [ ] ) null ) . invoke ( orig , ( Object [ ] ) null ) ; } else { if ( TypeUtils . isInstantiableType ( type ) ) { copy = ( T ) cloneBean ( orig ) ; } else { copy = orig ; } } } } catch ( final Exception exception ) { throw new RuntimeException ( exception ) ; } } return copy ; } \n', 0.4034522915100132)FRank:   | P@1:   | P@5:   | P@10: 
+('@ SuppressWarnings ( "unchecked" ) public static < T > T getCopy ( final T orig ) { T copy = null ; if ( orig != null ) { try { if ( orig instanceof Serializable ) { final ByteArrayOutputStream baos = new ByteArrayOutputStream ( ) ; final ObjectOutputStream oos = new ObjectOutputStream ( baos ) ; try { oos . writeObject ( orig ) ; } finally { oos . close ( ) ; } final ObjectInputStream ois = new ObjectInputStream ( new ByteArrayInputStream ( baos . toByteArray ( ) ) ) ; try { copy = ( T ) ois . readObject ( ) ; } finally { ois . close ( ) ; } } else { final Class < T > type = ( Class < T > ) orig . getClass ( ) ; if ( orig instanceof Cloneable ) { copy = ( T ) type . getMethod ( "clone" , ( Class < ? > [ ] ) null ) . invoke ( orig , ( Object [ ] ) null ) ; } else { if ( TypeUtils . isInstantiableType ( type ) ) { copy = ( T ) cloneBean ( orig ) ; } else { copy = orig ; } } } } catch ( final Exception exception ) { throw new RuntimeException ( exception ) ; } } return copy ; } \n', 0.4034522915100132)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 39 #################################
 ('protected long currentTimeMillis ( ) { try { Method mNanoTime = System . class . getDeclaredMethod ( "nanoTime" , ( Class [ ] ) null ) ; return ( ( Long ) mNanoTime . invoke ( null , ( Object [ ] ) null ) ) . longValue ( ) / 1000000 ; } catch ( Exception ex ) { return System . currentTimeMillis ( ) ; } } \n', 0.41670148549420843)
@@ -815,7 +891,9 @@
 
 ('private boolean isExpiredException ( Throwable e ) { do { if ( e instanceof CertificateExpiredException ) return true ; e = e . getCause ( ) ; } while ( e != null ) ; return false ; } \n', 0.3723962304982412)
 
-('private TimeUtils ( ) { _timestampOffset = Calendar . getInstance ( TimeZone . getTimeZone ( "GMT" ) ) . getTimeInMillis ( ) - System . currentTimeMillis ( ) ; } \n', 0.3685393396122325)FRank:   | P@1:   | P@5:   | P@10: 
+('private TimeUtils ( ) { _timestampOffset = Calendar . getInstance ( TimeZone . getTimeZone ( "GMT" ) ) . getTimeInMillis ( ) - System . currentTimeMillis ( ) ; } \n', 0.3685393396122325)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 40 #################################
 ('public static String readFileAsStringWithNewline ( File file ) { String content = "" ; try { BufferedReader br = new BufferedReader ( new InputStreamReader ( new FileInputStream ( file ) ) ) ; StringBuffer contentOfFile = new StringBuffer ( ) ; String line ; while ( ( line = br . readLine ( ) ) != null ) { content += line + lineFeed ; } } catch ( IOException e ) { content = "Error-reading-the-file-" + file . getName ( ) + "-msg:" + e . getMessage ( ) ; } return content ; } \n', 0.43801682416026033)
@@ -836,7 +914,9 @@
 
 ("public final String readLine ( ) throws IOException { StringBuilder input = new StringBuilder ( ) ; int c = - 1 ; boolean eol = false ; while ( ! eol ) { switch ( c = read ( ) ) { case - 1 : case '|n' : eol = true ; break ; case '|r' : eol = true ; long cur = getFilePointer ( ) ; if ( ( read ( ) ) != '|n' ) { seek ( cur ) ; } break ; default : input . append ( ( char ) c ) ; break ; } } if ( ( c == - 1 ) && ( input . length ( ) == 0 ) ) { return null ; } return input . toString ( ) ; } \n", 0.42893899210343495)
 
-('public static String readFirstLineFromFile ( File file ) { BufferedReader reader = null ; try { try { reader = new BufferedReader ( new InputStreamReader ( new FileInputStream ( file ) , "UTF-8" ) ) ; } catch ( UnsupportedEncodingException e ) { reader = new BufferedReader ( new FileReader ( file ) ) ; } String text = reader . readLine ( ) ; return text ; } catch ( IOException e ) { throw new PersistenceException ( e ) ; } finally { DBHelper . closeQuietly ( reader ) ; } } \n', 0.4285793071263141)FRank:   | P@1:   | P@5:   | P@10: 
+('public static String readFirstLineFromFile ( File file ) { BufferedReader reader = null ; try { try { reader = new BufferedReader ( new InputStreamReader ( new FileInputStream ( file ) , "UTF-8" ) ) ; } catch ( UnsupportedEncodingException e ) { reader = new BufferedReader ( new FileReader ( file ) ) ; } String text = reader . readLine ( ) ; return text ; } catch ( IOException e ) { throw new PersistenceException ( e ) ; } finally { DBHelper . closeQuietly ( reader ) ; } } \n', 0.4285793071263141)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 41 #################################
 ('protected Collection < T_BEAN > makeBeanCollection ( ) { return new ArrayList < T_BEAN > ( ) ; } \n', 0.39330798517084425)
@@ -857,7 +937,9 @@
 
 ('private MXBeanMapping makeArrayOrCollectionMapping ( Type collectionType , Type elementType , MXBeanMappingFactory factory ) throws OpenDataException { final MXBeanMapping elementMapping = factory . mappingForType ( elementType , factory ) ; final OpenType < ? > elementOpenType = elementMapping . getOpenType ( ) ; final ArrayType < ? > openType = ArrayType . getArrayType ( elementOpenType ) ; final Class < ? > elementOpenClass = elementMapping . getOpenClass ( ) ; final Class < ? > openArrayClass ; final String openArrayClassName ; if ( elementOpenClass . isArray ( ) ) openArrayClassName = "[" + elementOpenClass . getName ( ) ; else openArrayClassName = "[L" + elementOpenClass . getName ( ) + ";" ; try { openArrayClass = Class . forName ( openArrayClassName ) ; } catch ( ClassNotFoundException e ) { throw openDataException ( "Cannot-obtain-array-class" , e ) ; } if ( collectionType instanceof ParameterizedType ) { return new CollectionMapping ( collectionType , openType , openArrayClass , elementMapping ) ; } else { if ( isIdentity ( elementMapping ) ) { return new IdentityMapping ( collectionType , openType ) ; } else { return new ArrayMapping ( collectionType , openType , openArrayClass , elementMapping ) ; } } } \n', 0.38344966347280623)
 
-('@ SuppressWarnings ( { "unchecked" , "rawtypes" } ) protected < T extends Collection > T wrapInCollection ( Class < T > aCollectionType , Object anArrayOrSingleType ) { T tempCollectionInstance ; try { tempCollectionInstance = aCollectionType . newInstance ( ) ; } catch ( IllegalAccessException exc ) { throw new RuntimeException ( "Failed-to-create-collection-instance" , exc ) ; } catch ( InstantiationException exc ) { throw new RuntimeException ( "Failed-to-create-collection-instance" , exc ) ; } if ( anArrayOrSingleType . getClass ( ) . isArray ( ) ) { for ( int i = 0 ; i < Array . getLength ( anArrayOrSingleType ) ; i ++ ) { Collections . addAll ( tempCollectionInstance , Array . get ( anArrayOrSingleType , i ) ) ; } } else { Collections . addAll ( tempCollectionInstance , anArrayOrSingleType ) ; } return tempCollectionInstance ; } \n', 0.38310648530816177)FRank:   | P@1:   | P@5:   | P@10: 
+('@ SuppressWarnings ( { "unchecked" , "rawtypes" } ) protected < T extends Collection > T wrapInCollection ( Class < T > aCollectionType , Object anArrayOrSingleType ) { T tempCollectionInstance ; try { tempCollectionInstance = aCollectionType . newInstance ( ) ; } catch ( IllegalAccessException exc ) { throw new RuntimeException ( "Failed-to-create-collection-instance" , exc ) ; } catch ( InstantiationException exc ) { throw new RuntimeException ( "Failed-to-create-collection-instance" , exc ) ; } if ( anArrayOrSingleType . getClass ( ) . isArray ( ) ) { for ( int i = 0 ; i < Array . getLength ( anArrayOrSingleType ) ; i ++ ) { Collections . addAll ( tempCollectionInstance , Array . get ( anArrayOrSingleType , i ) ) ; } } else { Collections . addAll ( tempCollectionInstance , anArrayOrSingleType ) ; } return tempCollectionInstance ; } \n', 0.38310648530816177)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 42 #################################
 ('public void appendLineToFile ( String data ) { p . append ( data + "-" ) ; } \n', 0.43190102535773933)
@@ -878,7 +960,9 @@
 
 ('public static final void appendTextToFile ( String file , String text ) { try { PrintWriter out = new PrintWriter ( new BufferedWriter ( new FileWriter ( file , true ) ) ) ; out . print ( text ) ; out . close ( ) ; } catch ( IOException e ) { e . printStackTrace ( ) ; } } \n', 0.4087415830487894)
 
-('public static void AppendTextToFile ( String filePath , String text ) throws Exception { PrintWriter out = new PrintWriter ( new BufferedWriter ( new FileWriter ( filePath , true ) ) ) ; out . write ( text ) ; out . close ( ) ; } \n', 0.4060239352322367)FRank:   | P@1:   | P@5:   | P@10: 
+('public static void AppendTextToFile ( String filePath , String text ) throws Exception { PrintWriter out = new PrintWriter ( new BufferedWriter ( new FileWriter ( filePath , true ) ) ) ; out . write ( text ) ; out . close ( ) ; } \n', 0.4060239352322367)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 43 #################################
 ('public Calendar convertDateStringToCalendar ( String dateString , String dateFormatPattern , TimeZone zone , Locale locale ) { SimpleDateFormat dateFormat = ( SimpleDateFormat ) DateFormat . getDateInstance ( ) ; dateFormat . setLenient ( false ) ; dateFormat . applyPattern ( dateFormatPattern ) ; try { Date date = dateFormat . parse ( dateString ) ; if ( date != null ) { Calendar calendar = new GregorianCalendar ( zone , locale ) ; calendar . setTime ( date ) ; return calendar ; } else { return null ; } } catch ( Exception e ) { logger . warn ( "The-date-string:" + dateString + "-has-an-invalid-format.-The-valid-form-is:" + dateFormatPattern , e ) ; return null ; } } \n', 0.44563291649013537)
@@ -899,7 +983,9 @@
 
 ('public static Date convertStringToDate ( String input , DateFormat format ) { Date date = null ; if ( input == null || input . trim ( ) . length ( ) < 1 ) { return null ; } try { if ( format == null ) { format = new SimpleDateFormat ( DATE_TIME_FORMAT_STR_US_4 ) ; } format . setLenient ( false ) ; date = format . parse ( input ) ; } catch ( ParseException e ) { } return date ; } \n', 0.43761422596674976)
 
-('public static Calendar convertStringToCalendar ( String str ) throws ParseException { Date date = DateParser . dateFormatter . parse ( str ) ; Calendar calendar = Calendar . getInstance ( ) ; calendar . setTime ( date ) ; return calendar ; } \n', 0.43646003432130487)FRank:   | P@1:   | P@5:   | P@10: 
+('public static Calendar convertStringToCalendar ( String str ) throws ParseException { Date date = DateParser . dateFormatter . parse ( str ) ; Calendar calendar = Calendar . getInstance ( ) ; calendar . setTime ( date ) ; return calendar ; } \n', 0.43646003432130487)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 44 #################################
 ('public final void setSampleFilter ( String sampleFilter ) { if ( ! Objects . equals ( this . sampleFilter , sampleFilter ) ) { this . sampleFilter = sampleFilter ; filteredSamples . clear ( ) ; if ( sampleFilter != null ) { for ( String item : sampleFilter . split ( "," ) ) { filteredSamples . add ( item . trim ( ) ) ; } } } } \n', 0.36728296549864536)
@@ -920,7 +1006,9 @@
 
 ('private Set < Integer > findUnhandledLoadIndexes ( final Set < Integer > handledLoadIndexes , final List < Instruction > lastVisitedInstructions ) { final Set < Integer > lastLoadIndexes = InstructionFinder . findLoadIndexes ( lastVisitedInstructions , RelevantInstructionReducer :: isLoadIgnored ) ; return lastLoadIndexes . stream ( ) . filter ( k -> ! handledLoadIndexes . contains ( k ) ) . collect ( Collectors . toSet ( ) ) ; } \n', 0.3545090670822124)
 
-('public List < T > findByIds ( final List < UUID > ids ) { return FluentIterable . from ( entities . values ( ) ) . filter ( new Predicate < T > ( ) { @ Override public boolean apply ( @ Nullable T input ) { return ids . contains ( input ) ; } } ) . toList ( ) ; } \n', 0.354427758456381)FRank:   | P@1:   | P@5:   | P@10: 
+('public List < T > findByIds ( final List < UUID > ids ) { return FluentIterable . from ( entities . values ( ) ) . filter ( new Predicate < T > ( ) { @ Override public boolean apply ( @ Nullable T input ) { return ids . contains ( input ) ; } } ) . toList ( ) ; } \n', 0.354427758456381)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 45 #################################
 ('static void deleteWhitespace ( String str , int [ ] index ) { while ( ! isEnd ( str , index [ 0 ] ) && Character . isWhitespace ( str . charAt ( index [ 0 ] ) ) ) { index [ 0 ] ++ ; } } \n', 0.4297482270438622)
@@ -941,7 +1029,9 @@
 
 ('public boolean swallowWhitespace ( ) { if ( my_index == my_line . length ( ) || my_line . substring ( my_index ) . startsWith ( InstructionParserHelper . getEOL ( ) ) ) return false ; while ( Character . isWhitespace ( my_line . charAt ( my_index ) ) ) { my_index ++ ; if ( my_index == my_line . length ( ) || my_line . substring ( my_index ) . startsWith ( InstructionParserHelper . getEOL ( ) ) ) return false ; } return true ; } \n', 0.4173878791568522)
 
-('private StringBuffer deleteLastSpace ( StringBuffer sb ) { if ( sb == null || sb . length ( ) == 0 ) return sb ; if ( sb . charAt ( sb . length ( ) - 1 ) == CHAR_SPACE ) sb . deleteCharAt ( sb . length ( ) - 1 ) ; return sb ; } \n', 0.41622087291279375)FRank:   | P@1:   | P@5:   | P@10: 
+('private StringBuffer deleteLastSpace ( StringBuffer sb ) { if ( sb == null || sb . length ( ) == 0 ) return sb ; if ( sb . charAt ( sb . length ( ) - 1 ) == CHAR_SPACE ) sb . deleteCharAt ( sb . length ( ) - 1 ) ; return sb ; } \n', 0.41622087291279375)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 46 #################################
 ("public static int splitOnWhitespace ( String str , String [ ] words ) { int pos = 0 , n = str . length ( ) , count = 0 ; for ( int i = 0 ; i < n ; i ++ ) { if ( str . charAt ( i ) <= '-' ) { if ( i > pos ) words [ count ++ ] = str . substring ( pos , i ) ; pos = i + 1 ; } } if ( pos < n ) words [ count ++ ] = str . substring ( pos ) ; return count ; } \n", 0.4269950146963016)
@@ -962,7 +1052,9 @@
 
 ('public static String [ ] splitAfter ( String toSplit , int index , String regex ) { return toSplit . substring ( index ) . split ( regex ) ; } \n', 0.4059343775948142)
 
-('public static String splitStringOnWhitespace ( String input , int lineLength ) { ArgumentNotValid . checkNotNull ( input , "input" ) ; ArgumentNotValid . checkPositive ( lineLength , "lineLength" ) ; input = input . trim ( ) ; String [ ] inputLines = input . split ( "-" ) ; StringBuffer output = new StringBuffer ( ) ; for ( int i = 0 ; i < inputLines . length ; i ++ ) { int foundIndex = 0 ; String inputLine = inputLines [ i ] ; while ( foundIndex != - 1 ) { foundIndex = inputLine . indexOf ( "-" , foundIndex + lineLength ) ; if ( foundIndex != - 1 && inputLine . length ( ) > foundIndex + 1 ) { inputLine = inputLine . substring ( 0 , foundIndex + 1 ) + "-" + inputLine . substring ( foundIndex + 1 ) ; } } output . append ( inputLine ) ; output . append ( "-" ) ; } return output . toString ( ) ; } \n', 0.4056895517697813)FRank:   | P@1:   | P@5:   | P@10: 
+('public static String splitStringOnWhitespace ( String input , int lineLength ) { ArgumentNotValid . checkNotNull ( input , "input" ) ; ArgumentNotValid . checkPositive ( lineLength , "lineLength" ) ; input = input . trim ( ) ; String [ ] inputLines = input . split ( "-" ) ; StringBuffer output = new StringBuffer ( ) ; for ( int i = 0 ; i < inputLines . length ; i ++ ) { int foundIndex = 0 ; String inputLine = inputLines [ i ] ; while ( foundIndex != - 1 ) { foundIndex = inputLine . indexOf ( "-" , foundIndex + lineLength ) ; if ( foundIndex != - 1 && inputLine . length ( ) > foundIndex + 1 ) { inputLine = inputLine . substring ( 0 , foundIndex + 1 ) + "-" + inputLine . substring ( foundIndex + 1 ) ; } } output . append ( inputLine ) ; output . append ( "-" ) ; } return output . toString ( ) ; } \n', 0.4056895517697813)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 47 #################################
 ('@ Override public int getNumImages ( boolean allowSearch ) throws IOException { try { return delegate . getNumImages ( allowSearch ) ; } catch ( ArrayIndexOutOfBoundsException ignore ) { return 0 ; } } \n', 0.3805277348589855)
@@ -983,7 +1075,9 @@
 
 ('private boolean findBestPreviewSize ( List < Size > supportedSizes , boolean need4To3 , boolean needSmaller ) { int pixelsDiff = DEFAULT_CAPTURE_PIXELS ; boolean hasFound = false ; for ( Size size : supportedSizes ) { int h = size . height ; int w = size . width ; int d = DEFAULT_CAPTURE_PIXELS - h * w ; if ( needSmaller && d < 0 ) { continue ; } if ( need4To3 && ( h * 4 != w * 3 ) ) { continue ; } d = Math . abs ( d ) ; if ( d < pixelsDiff ) { mPreviewWidth = w ; mPreviewHeight = h ; pixelsDiff = d ; hasFound = true ; } } return hasFound ; } \n', 0.3487544902986562)
 
-('static int updateLimitForQuery ( int limit , Slices slices ) { if ( ! slices . hasLowerBound ( ) && ! slices . hasUpperBound ( ) ) return limit ; for ( Slice slice : slices ) { if ( limit == Integer . MAX_VALUE ) return limit ; if ( ! slice . start ( ) . isInclusive ( ) ) limit ++ ; if ( ! slice . end ( ) . isInclusive ( ) ) limit ++ ; } return limit ; } \n', 0.34831861583724083)FRank:   | P@1:   | P@5:   | P@10: 
+('static int updateLimitForQuery ( int limit , Slices slices ) { if ( ! slices . hasLowerBound ( ) && ! slices . hasUpperBound ( ) ) return limit ; for ( Slice slice : slices ) { if ( limit == Integer . MAX_VALUE ) return limit ; if ( ! slice . start ( ) . isInclusive ( ) ) limit ++ ; if ( ! slice . end ( ) . isInclusive ( ) ) limit ++ ; } return limit ; } \n', 0.34831861583724083)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 48 #################################
 ('@ Override public String alias ( Class < ? > clazz ) { if ( clazz . getPackage ( ) . getName ( ) . startsWith ( clientPackagePrefix ) ) return clazz . getName ( ) . replaceFirst ( clientPackagePrefix . replace ( "." , "|." ) , serverPackagePrefix ) ; return clazz . getName ( ) ; } \n', 0.34490704133025485)
@@ -1004,7 +1098,9 @@
 
 ('public static String quoteMethodName ( String name ) { return Naming . quoteIfJavaKeyword ( name ) ; } \n', 0.3317813870746634)
 
-('protected Object createProcessBean ( Name name ) { try { return classMap . get ( name . getLocalPart ( ) ) . newInstance ( ) ; } catch ( InstantiationException e ) { throw new RuntimeException ( e ) ; } catch ( IllegalAccessException e ) { throw new RuntimeException ( e ) ; } } \n', 0.3312074079460498)FRank:   | P@1:   | P@5:   | P@10: 
+('protected Object createProcessBean ( Name name ) { try { return classMap . get ( name . getLocalPart ( ) ) . newInstance ( ) ; } catch ( InstantiationException e ) { throw new RuntimeException ( e ) ; } catch ( IllegalAccessException e ) { throw new RuntimeException ( e ) ; } } \n', 0.3312074079460498)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 49 #################################
 ('public static String getPlatformLineSeparator ( ) { return System . getProperty ( "line.separator" ) ; } \n', 0.40091865661075077)
@@ -1025,7 +1121,9 @@
 
 ('public static String getOSPathSeparator ( ) { if ( System . getProperty ( "os.name" ) . equalsIgnoreCase ( "linux" ) ) return "/" ; else return "|" ; } \n', 0.3625507689213412)
 
-('private JSplitPane getInteractiveCenterSplitPane ( ) { if ( interactiveCenterSplitPane == null ) { interactiveCenterSplitPane = new JSplitPane ( ) ; interactiveCenterSplitPane . setDividerSize ( 6 ) ; interactiveCenterSplitPane . setLeftComponent ( getInteractiveCenterSouthPanel ( ) ) ; interactiveCenterSplitPane . setRightComponent ( getInteractiveCenterTopPanel ( ) ) ; interactiveCenterSplitPane . setDividerLocation ( 200 ) ; } return interactiveCenterSplitPane ; } \n', 0.3607782447935197)FRank:   | P@1:   | P@5:   | P@10: 
+('private JSplitPane getInteractiveCenterSplitPane ( ) { if ( interactiveCenterSplitPane == null ) { interactiveCenterSplitPane = new JSplitPane ( ) ; interactiveCenterSplitPane . setDividerSize ( 6 ) ; interactiveCenterSplitPane . setLeftComponent ( getInteractiveCenterSouthPanel ( ) ) ; interactiveCenterSplitPane . setRightComponent ( getInteractiveCenterTopPanel ( ) ) ; interactiveCenterSplitPane . setDividerLocation ( 200 ) ; } return interactiveCenterSplitPane ; } \n', 0.3607782447935197)
+
+FRank:   | P@1:   | P@5:   | P@10: 
 
 ########################## 50 #################################
 ('public static < E > List < E > convertMapToList ( Map < ? , E > map ) { if ( ( map == null ) || ( map . size ( ) == 0 ) ) return new ArrayList < E > ( 0 ) ; List < E > list = new ArrayList < E > ( map . size ( ) ) ; for ( E e : map . values ( ) ) list . add ( e ) ; return list ; } \n', 0.45326748932659766)
@@ -1046,6 +1144,8 @@
 
 ('public static List < ReplicationDestinationRs > listMapToObject ( List < Map < String , String >> maps ) throws Exception { List < ReplicationDestinationRs > replicationDestinations = new ArrayList < ReplicationDestinationRs > ( ) ; if ( maps != null && maps . size ( ) > 0 ) { for ( Map < String , String > map : maps ) { ReplicationDestinationRs replicationDestination = mapToObject ( map ) ; replicationDestinations . add ( replicationDestination ) ; } } return replicationDestinations ; } \n', 0.4357610784892097)
 
-('public static List < NetworkSlaveInterfaceRs > listMapToObject ( List < String > listIfaces ) { List < NetworkSlaveInterfaceRs > listSlaves = new ArrayList < NetworkSlaveInterfaceRs > ( ) ; if ( listIfaces != null && listIfaces . size ( ) > 0 ) { for ( String nameIface : listIfaces ) { NetworkSlaveInterfaceRs j = toObject ( nameIface ) ; listSlaves . add ( j ) ; } } return listSlaves ; } \n', 0.43405167517813775)FRank:   | P@1:   | P@5:   | P@10: 
+('public static List < NetworkSlaveInterfaceRs > listMapToObject ( List < String > listIfaces ) { List < NetworkSlaveInterfaceRs > listSlaves = new ArrayList < NetworkSlaveInterfaceRs > ( ) ; if ( listIfaces != null && listIfaces . size ( ) > 0 ) { for ( String nameIface : listIfaces ) { NetworkSlaveInterfaceRs j = toObject ( nameIface ) ; listSlaves . add ( j ) ; } } return listSlaves ; } \n', 0.43405167517813775)
 
-Mean sims: 0.4043157283076615
+FRank:   | P@1:   | P@5:   | P@10: 
+
+Mean sims: 0.4043
