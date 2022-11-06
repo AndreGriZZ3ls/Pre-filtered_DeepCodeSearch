@@ -47,23 +47,22 @@ class IndexCreator:
     def replace_synonyms(self, word):
         word = ' ' + word + ' '
         return word.replace(' read ', 'load').replace(' write', 'store').replace('save', 'store').replace(' dump', 'store')\
-        .replace('object', 'instance').replace(' quit', 'exit').replace('terminate', 'exit').replace(' leave', 'exit')\
+        .replace(' quit', 'exit').replace('termin', 'exit').replace(' leav', 'exit').replace(' break ', 'exit')\
         .replace(' pop ', 'delet').replace('remov', 'delet').replace(' trim ', 'delet').replace(' strip ', 'delet')\
-        .replace(' halt', 'stop').replace('restart', 'continue').replace('push ', 'add')\
-        .replace('null ', 'none').replace('method', 'function').replace('concat ', 'combine').replace(' break ', 'exit')\
+        .replace(' halt', 'stop').replace('restart', 'continu').replace('push ', 'add').replace('object', 'instanc')\
+        .replace('null ', 'none').replace('method', 'function').replace('concat ', 'combin')\
         .replace(' for ', 'loop').replace(' foreach ', 'loop').replace(' while ', 'loop').replace(' iterat ', 'loop')\
-        .replace('integer ', 'int').replace('tinyint ', 'int').replace(' smallint ', 'int').replace(' bigint ', 'int')\
-        .replace(' shortint ', 'int').replace('longint ', 'int').replace(' byte ', 'int').replace(' long ', 'int').replace(' short ', 'int')\
-        .replace(' double ', 'float').replace(' long ', 'float').replace(' decimal ', 'float').replace(' whitespace ', 'space')\
-        .replace('real ', 'float').replace(' array ', '[]').replace(' arrays ', '[]').replace(' arr ', '[]').replace(' fastest ', 'fast')\
-        .replace(' define ', 'create').replace(' declare ', 'create').replace(' init ', 'create').replace(' construct ', 'create')\
-        .replace(' make ', 'create').replace(' boolean ', 'bool').replace('begin', 'start').replace('run ', 'execute')\
-        .replace(' initialize ', 'create').replace(' initialized ', 'create').replace(' initializing ', 'create').replace(' initi ', 'create')\
-        .replace(' enumerate ', 'enum').replace(' enumerated ', 'enum').replace(' enumeration ', 'enum').replace(' website ', 'web')\
-        .replace(' speed ', 'fast').replace(' vertex ', 'node').replace(' arc ', 'edge').replace(' math ', 'calc').replace(' determine ', 'calc')\
-        .replace(' equality ', 'compare').replace(' equals ', 'compare').replace(' equal ', 'compare').replace(' ensure ', 'check')\
-        .replace(' should ', 'check').replace(' test ', 'check').replace(' is ', 'check')\
-        .replace(' initiate ', 'create').replace(' implements ', 'extends').replace('runnable', 'executable').strip()
+        .replace('integ ', 'int').replace('tinyint ', 'int').replace(' smallint ', 'int').replace(' bigint ', 'int')\
+        .replace(' shortint ', 'int').replace('longint ', 'int').replace(' byte ', 'int').replace(' short ', 'int')\
+        .replace(' doubl ', 'float').replace(' long ', 'float').replace(' decim ', 'float').replace('real ', 'float')\
+        .replace(' array ', '[]').replace(' arr ', '[]').replace(' fastest ', 'fast').replace(' speed ', 'fast')\
+        .replace(' defin ', 'creat').replace(' declar ', 'creat').replace(' init ', 'creat').replace(' construct ', 'creat')\
+        .replace(' make ', 'creat').replace(' initi ', 'creat').replace(' initid ', 'creat')\
+        .replace(' boolean ', 'bool').replace('begin', 'start').replace('run ', 'execut').replace('runnabl', 'execut')\
+        .replace(' enumer ', 'enum').replace(' enumerd ', 'enum').replace(' websit ', 'web')\
+        .replace(' vertex ', 'node').replace(' arc ', 'edg').replace(' math ', 'calc').replace(' determin ', 'calc')\
+        .replace(' should ', 'check').replace(' test ', 'check').replace(' is ', 'check').replace(' ensur ', 'check')\
+        .replace(' equal ', 'compar').replace(' implement ', 'extend').replace(' whitespac ', 'space').strip()
 
     def load_data(self):
         assert os.path.exists(self.dataset_path + self.data_params['use_methname']), f"Method names of real data not found."
@@ -153,7 +152,6 @@ class IndexCreator:
                     for word in raw_word.split('_'):
                         length = len(word)
                         if length < 2 or length > 18 or word in stopwords: continue
-                        word = self.replace_synonyms(word)
                         word = porter.stem(word)
                         word = self.replace_synonyms(word)
                         if word in index:

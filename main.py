@@ -104,6 +104,29 @@ if __name__ == '__main__':
         #data_loader.codebase_to_sqlite(data_path + config['data_params']['use_codebase'], data_path + 'sqlite.db')
         #data_loader.index_to_sqlite(index_type, data_path + index_type + '.pkl', data_path + 'sqlite.db')
         #indexer.process_raw_code()
+        """porter = PorterStemmer()
+        to_stem = ".replace(' read ', 'load').replace(' write', 'store').replace('save', 'store').replace(' dump', 'store')\
+        .replace('object', 'instance').replace(' quit', 'exit').replace('terminate', 'exit').replace(' leave', 'exit')\
+        .replace(' pop ', 'delet').replace('remov', 'delet').replace(' trim ', 'delet').replace(' strip ', 'delet')\
+        .replace(' halt', 'stop').replace('restart', 'continue').replace('push ', 'add')\
+        .replace('null ', 'none').replace('method', 'function').replace('concat ', 'combine').replace(' break ', 'exit')\
+        .replace(' for ', 'loop').replace(' foreach ', 'loop').replace(' while ', 'loop').replace(' iterat ', 'loop')\
+        .replace('integer ', 'int').replace('tinyint ', 'int').replace(' smallint ', 'int').replace(' bigint ', 'int')\
+        .replace(' shortint ', 'int').replace('longint ', 'int').replace(' byte ', 'int').replace(' long ', 'int').replace(' short ', 'int')\
+        .replace(' double ', 'float').replace(' long ', 'float').replace(' decimal ', 'float').replace(' whitespace ', 'space')\
+        .replace('real ', 'float').replace(' array ', '[]').replace(' arrays ', '[]').replace(' arr ', '[]').replace(' fastest ', 'fast')\
+        .replace(' define ', 'create').replace(' declare ', 'create').replace(' init ', 'create').replace(' construct ', 'create')\
+        .replace(' make ', 'create').replace(' boolean ', 'bool').replace('begin', 'start').replace('run ', 'execute')\
+        .replace(' initialize ', 'create').replace(' initialized ', 'create').replace(' initializing ', 'create').replace(' initi ', 'create')\
+        .replace(' enumerate ', 'enum').replace(' enumerated ', 'enum').replace(' enumeration ', 'enum').replace(' website ', 'web')\
+        .replace(' speed ', 'fast').replace(' vertex ', 'node').replace(' arc ', 'edge').replace(' math ', 'calc').replace(' determine ', 'calc')\
+        .replace(' equality ', 'compare').replace(' equals ', 'compare').replace(' equal ', 'compare').replace(' ensure ', 'check')\
+        .replace(' should ', 'check').replace(' test ', 'check').replace(' is ', 'check')\
+        .replace(' initiate ', 'create').replace(' implements ', 'extends').replace('runnable', 'executable')"
+        for word in re.findall(r'[a-z]+', to_stem):
+            if word == 'replace': continue
+            to_stem = to_stem.replace(word, porter.stem(word))
+        print(to_stem)"""
         print('Nothing done.')
     
     elif args.mode == 'create_index':
@@ -170,7 +193,6 @@ if __name__ == '__main__':
                 word_stem = porter.stem(word)
                 if word != word_stem and word_stem not in stopwords:
                     tmp.append(word_stem) # include stems of query words """
-            query_list = [indexer.replace_synonyms(w) for w in query_list]
             for i in range(0, len(query_list)):
                 query_list[i] = porter.stem(query_list[i])
             #query_list.extend(tmp)
@@ -315,7 +337,6 @@ if __name__ == '__main__':
                 word_stem = porter.stem(word)
                 if word != word_stem and word_stem not in stopwords:
                     tmp.append(word_stem) # include stems of query words"""
-            query_list = [indexer.replace_synonyms(w) for w in query_list]
             for i in range(0, len(query_list)):
                 query_list[i] = porter.stem(query_list[i])
             #query_list.extend(tmp)
