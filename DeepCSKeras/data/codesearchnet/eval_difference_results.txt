@@ -1,71 +1,71 @@
-    01&create cookie&0 / 0&0 / 2&1 / 1&20\\
-    02&read properties file&0 / 2&1 / 2&0 / 1&20\\
-    03&get executable path&0 / 2&0 / 0&1 / 2&20\\
-    04&all permutations of a list&1 / 1&0 / 0&1 / 2&20\\
-    05&string to date&1 / 1&0 / 0&1 / 1&20\\
-    06&how to make the checkbox checked&1 / 2&0 / 0&1 / 2&20\\
-    07&sorting multiple arrays based on another arrays sorted order&0 / 0&1 / 2&1 / 1&20\\
-    08&format date&0 / 1&0 / 1&0 / 0&20\\
-    09&how to get current date&0 / 1&1 / 1&0 / 1&20\\
-    10&how to randomly pick a number&0 / 0&1 / 2&0 / 2&20\\
-    11&deserialize json&0 / 0&3 / 3&1 / 1&20\\
-    12&copy to clipboard&2 / 3&1 / 1&1 / 1&20\\
-    13&matrix multiply&2 / 2&0 / 0&2 / 2&20\\
-    14&sort string list&0 / 0&0 / 0&2 / 2&20\\
-    15&convert decimal to hex&0 / 0&0 / 0&0 / 1&20\\
-    16&convert a date string into yyyymmdd&0 / 0&0 / 1&0 / 3&20\\
-    17&parse command line argument&0 / 1&0 / 1&1 / 3&20\\
-    18&get name of enumerated value&0 / 1&0 / 0&0 / 0&20\\
-    19&export to excel&1 / 1&0 / 0&2 / 2&20\\
-    20&set working directory&0 / 0&0 / 0&1 / 2&20\\
-    21&get the description of a http status code&0 / 0&1 / 2&0 / 0&20\\
-    22&httpclient post json&1 / 1&1 / 1&2 / 2&20\\
-    23&postgresql connection&0 / 0&0 / 1&0 / 1&20\\
-    24&copying a file to a path&0 / 2&0 / 0&0 / 0&20\\
-    25&buffered file reader read text&0 / 1&0 / 2&0 / 1&20\\
-    26&finding time elapsed using a timer&0 / 1&0 / 4&0 / 0&20\\
-    27&how to reverse a string&6 / 6&0 / 0&0 / 0&20\\
-    28&extract data from html content&0 / 1&2 / 2&1 / 1&20\\
-    29&how to get html of website&1 / 2&0 / 0&0 / 0&20\\
-    30&output to html file&0 / 1&0 / 0&0 / 0&20\\
-    31&get current ip address&0 / 0&0 / 1&0 / 1&20\\
-    32&string similarity levenshtein&0 / 1&1 / 1&1 / 2&20\\
-    33&binomial distribution&1 / 2&0 / 0&1 / 2&20\\
-    34&write csv&3 / 3&0 / 0&0 / 0&20\\
-    35&how to check if a checkbox is checked&0 / 2&0 / 0&0 / 1&20\\
-    36&underline text in label widget&0 / 0&0 / 0&0 / 2&20\\
-    37&convert string to number&0 / 1&0 / 0&0 / 0&20\\
-    38&save list to file&0 / 1&0 / 0&0 / 1&20\\
-    39&concatenate several file remove header lines&0 / 0&1 / 1&0 / 0&20\\
-    40&replace in file&1 / 1&0 / 0&1 / 1&20\\
-    41&scatter plot&3 / 3&1 / 1&0 / 0&20\\
-    42&how to extract zip file recursively&2 / 3&1 / 1&0 / 0&20\\
-    43&parse json file&0 / 0&0 / 1&2 / 2&20\\
-    44&reading element from html - <td>&0 / 0&0 / 1&0 / 0&20\\
-    45&normal distribution&0 / 0&0 / 1&0 / 2&20\\
-    46&convert json to csv&0 / 0&0 / 0&1 / 1&20\\
-    47&socket recv timeout&1 / 1&0 / 1&1 / 1&20\\
-    48&how to read the contents of a .gz compressed file?&0 / 2&1 / 1&0 / 0&20\\
-    49&priority queue&0 / 0&0 / 0&0 / 1&20\\
-    50&k means clustering&0 / 1&2 / 2&2 / 3&20\\
-    51&get current process id&0 / 0&1 / 1&0 / 0&20\\
-    52&sending binary data over a serial connection&0 / 0&0 / 1&0 / 1&20\\
-    53&connect to sql&1 / 1&0 / 0&0 / 0&20\\
-    54&memoize to disk  - persistent memoization&0 / 0&0 / 0&0 / 1&20\\
-    55&regex case insensitive&0 / 1&0 / 0&0 / 0&20\\
-    56&deducting the median from each column&0 / 0&0 / 0&1 / 1&20\\
-    57&filter array&1 / 2&1 / 1&0 / 0&20\\
-    58&randomly extract x items from a list&0 / 1&0 / 0&0 / 1&20\\
-    59&aes encryption&1 / 1&0 / 0&1 / 1&20\\
-    60&unique elements&0 / 0&0 / 0&0 / 1&20\\
-    61&confusion matrix&1 / 1&0 / 0&0 / 0&20\\
-    62&html entities replace&1 / 1&1 / 1&0 / 0&20\\
-    63&json to xml conversion&0 / 0&0 / 0&1 / 1&20\\
-    64&encode url&0 / 1&0 / 1&0 / 0&20\\
-    65&heatmap from 3d coordinates&0 / 0&0 / 0&0 / 1&20\\
-    66&unzipping large files&0 / 1&0 / 0&0 / 0&20\\
-    67&convert a utc time to epoch&0 / 0&1 / 1&0 / 0&20\\
-    68&get current observable value&0 / 0&0 / 0&0 / 1&20\\
-    69&print model summary&0 / 0&0 / 0&1 / 1&20\\
-    70&linear regression&0 / 1&0 / 0&0 / 0&20\\
-    71&convert html to pdf&0 / 0&1 / 1&0 / 0&20\\
+01&create cookie&0 / 0&0 / 2&1 / 1&8\\
+02&read properties file&0 / 2&1 / 2&0 / 1&8\\
+03&get executable path&0 / 2&0 / 0&1 / 2&8\\
+04&all permutations of a list&1 / 1&0 / 0&1 / 2&9\\
+05&string to date&1 / 1&0 / 0&1 / 1&9\\
+06&how to make the checkbox checked&1 / 2&0 / 0&1 / 2&10\\
+07&sorting multiple arrays based on another arrays sorted order&0 / 0&1 / 2&1 / 1&9\\
+08&format date&0 / 1&0 / 1&0 / 0&8\\
+09&how to get current date&0 / 1&1 / 1&0 / 1&8\\
+10&how to randomly pick a number&0 / 0&1 / 2&0 / 2&10\\
+11&deserialize json&0 / 0&3 / 3&1 / 1&7\\
+12&copy to clipboard&2 / 3&1 / 1&1 / 1&0\\
+13&matrix multiply&2 / 2&0 / 0&2 / 2&10\\
+14&sort string list&0 / 0&0 / 0&2 / 2&6\\
+15&convert decimal to hex&0 / 0&0 / 0&0 / 1&8\\
+16&convert a date string into yyyymmdd&0 / 0&0 / 1&0 / 3&9\\
+17&parse command line argument&0 / 1&0 / 1&1 / 3&7\\
+18&get name of enumerated value&0 / 1&0 / 0&0 / 0&9\\
+19&export to excel&1 / 1&0 / 0&2 / 2&10\\
+20&set working directory&0 / 0&0 / 0&1 / 2&9\\
+21&get the description of a http status code&0 / 0&1 / 2&0 / 0&10\\
+22&httpclient post json&1 / 1&1 / 1&2 / 2&9\\
+23&postgresql connection&0 / 0&0 / 1&0 / 1&10\\
+24&copying a file to a path&0 / 2&0 / 0&0 / 0&10\\
+25&buffered file reader read text&0 / 1&0 / 2&0 / 1&10\\
+26&finding time elapsed using a timer&0 / 1&0 / 4&0 / 0&10\\
+27&how to reverse a string&6 / 6&0 / 0&0 / 0&10\\
+28&extract data from html content&0 / 1&2 / 2&1 / 1&4\\
+29&how to get html of website&1 / 2&0 / 0&0 / 0&9\\
+30&output to html file&0 / 1&0 / 0&0 / 0&8\\
+31&get current ip address&0 / 0&0 / 1&0 / 1&10\\
+32&string similarity levenshtein&0 / 1&1 / 1&1 / 2&9\\
+33&binomial distribution&1 / 2&0 / 0&1 / 2&10\\
+34&write csv&3 / 3&0 / 0&0 / 0&3\\
+35&how to check if a checkbox is checked&0 / 2&0 / 0&0 / 1&10\\
+36&underline text in label widget&0 / 0&0 / 0&0 / 2&10\\
+37&convert string to number&0 / 1&0 / 0&0 / 0&8\\
+38&save list to file&0 / 1&0 / 0&0 / 1&9\\
+39&concatenate several file remove header lines&0 / 0&1 / 1&0 / 0&9\\
+40&replace in file&1 / 1&0 / 0&1 / 1&6\\
+41&scatter plot&3 / 3&1 / 1&0 / 0&10\\
+42&how to extract zip file recursively&2 / 3&1 / 1&0 / 0&6\\
+43&parse json file&0 / 0&0 / 1&2 / 2&8\\
+44&reading element from html - <td>&0 / 0&0 / 1&0 / 0&7\\
+45&normal distribution&0 / 0&0 / 1&0 / 2&9\\
+46&convert json to csv&0 / 0&0 / 0&1 / 1&4\\
+47&socket recv timeout&1 / 1&0 / 1&1 / 1&10\\
+48&how to read the contents of a .gz compressed file?&0 / 2&1 / 1&0 / 0&10\\
+49&priority queue&0 / 0&0 / 0&0 / 1&2\\
+50&k means clustering&0 / 1&2 / 2&2 / 3&10\\
+51&get current process id&0 / 0&1 / 1&0 / 0&2\\
+52&sending binary data over a serial connection&0 / 0&0 / 1&0 / 1&10\\
+53&connect to sql&1 / 1&0 / 0&0 / 0&6\\
+54&memoize to disk  - persistent memoization&0 / 0&0 / 0&0 / 1&10\\
+55&regex case insensitive&0 / 1&0 / 0&0 / 0&10\\
+56&deducting the median from each column&0 / 0&0 / 0&1 / 1&10\\
+57&filter array&1 / 2&1 / 1&0 / 0&10\\
+58&randomly extract x items from a list&0 / 1&0 / 0&0 / 1&10\\
+59&aes encryption&1 / 1&0 / 0&1 / 1&10\\
+60&unique elements&0 / 0&0 / 0&0 / 1&9\\
+61&confusion matrix&1 / 1&0 / 0&0 / 0&10\\
+62&html entities replace&1 / 1&1 / 1&0 / 0&8\\
+63&json to xml conversion&0 / 0&0 / 0&1 / 1&3\\
+64&encode url&0 / 1&0 / 1&0 / 0&8\\
+65&heatmap from 3d coordinates&0 / 0&0 / 0&0 / 1&10\\
+66&unzipping large files&0 / 1&0 / 0&0 / 0&10\\
+67&convert a utc time to epoch&0 / 0&1 / 1&0 / 0&7\\
+68&get current observable value&0 / 0&0 / 0&0 / 1&10\\
+69&print model summary&0 / 0&0 / 0&1 / 1&10\\
+70&linear regression&0 / 1&0 / 0&0 / 0&10\\
+71&convert html to pdf&0 / 0&1 / 1&0 / 0&9\\
