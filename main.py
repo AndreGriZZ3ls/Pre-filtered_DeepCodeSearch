@@ -249,7 +249,8 @@ if __name__ == '__main__':
             e = 0
             result_file = fileinput.FileInput(data_path + 'eval_difference_results.txt', inplace=1)
             for line in result_file:
-                line = re.sub(r'(&[\d\.]+&[\d\.]+&\d+\\\\$)', f"&{round(mean_sims[e], 4)}&{round(mean_sims_pf[e], 4)}&{10 - amount_diff[e]}\\\\\ ", line)
+                line = re.sub(r'(&[\d,]+&[\d,]+&)', f"&{round(mean_sims[e], 4)}&{round(mean_sims_pf[e], 4)}&", line)
+                line = re.sub(r'(&\d+\\\\$)', f"&{10 - amount_diff[e]}\\\\\ ", line)
                 print(line.strip())
                 e += 1
             out_file.write(   f"Mean sims: {round(mean(mean_sims), 4)}")

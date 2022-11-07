@@ -94,7 +94,7 @@ class IndexCreator:
         pattern1  = re.compile(r'[^\[a-zA-Z ]+')
         pattern2  = re.compile(r'  +')
         pattern3  = re.compile(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))')
-        do_not_split = set("ArrayList,HashMap,heatMapTL,HttpClient,InputStream,OutputStram,ReadOnly,StringBuffer,yyyyMMdd,YYYYMMDD".split(',')) # TODO
+        do_not_split = set("ArrayList,ArrayType,HashMap,heatMapTL,HttpClient,InputStream,OutputStram,ReadOnly,StringBuffer,yyyyMMdd,YYYYMMDD".split(',')) # TODO
         for line in tqdm(lines):
             line = re.sub(pattern0, '', line) # remove strings
             line = re.sub(pattern1, ' ', line) # replace all non-alphabetic characters except '[' by ' '
