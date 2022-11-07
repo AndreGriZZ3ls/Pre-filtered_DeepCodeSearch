@@ -199,14 +199,13 @@ if __name__ == '__main__':
             query_list = [indexer.replace_synonyms(w) for w in query_list]
             query_list = list(set(query_list))
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
-            query_cnt  = Counter()
-            cnt        = None
+            query_cnt, cnt = Counter(), Counter()
             for word in query_list:
                 if word in index: # for each word of the processed query that the index contains: ...
-                    if cnt:
-                        cnt.update(index[word])
-                    else:
-                        cnt = index[word]
+                    #if cnt:
+                    cnt.update(index[word])
+                    #else:
+                    #    cnt = index[word]
             #result_line_numbers, values = zip(*cnt.most_common(max_filtered))
             result_line_numbers, values = zip(*itertools.islice(sorted(cnt.items(), key=lambda x: (-x[1], x[0])), max_filtered))
             try:
@@ -360,16 +359,16 @@ if __name__ == '__main__':
                 result_line_numbers = list(result_line_numbers)
                 
             elif index_type == "inverted_index":
-                cnt = None
+                cnt = Counter()
                 if memory_mode in ["performance","vecs_and_index"]:
                     for word in query_list:
                         if word in index: # for each word of the processed query that the index contains: ...
                             #cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
                             #cnt += Counter(dict(itertools.islice(index[word].items(), max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
-                            if cnt:
-                                cnt.update(index[word])
-                            else:
-                                cnt = index[word]
+                            #if cnt:
+                            cnt.update(index[word])
+                            #else:
+                            #    cnt = index[word]
                 else:
                     #counters = data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db') # TODO: compare
                     counters = data_loader.load_index_counters(index_type, query_list, data_path)
