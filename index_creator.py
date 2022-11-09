@@ -57,7 +57,7 @@ class IndexCreator:
         .replace(' doubl ', 'float').replace(' long ', 'float').replace(' decim ', 'float').replace('real ', 'float')\
         .replace(' array ', '[]').replace(' arr ', '[]').replace(' fastest ', 'fast').replace(' speed ', 'fast')\
         .replace(' defin ', 'creat').replace(' declar ', 'creat').replace(' init ', 'creat').replace(' construct ', 'creat')\
-        .replace(' make ', 'creat').replace(' initi ', 'creat').replace(' initid ', 'creat')\
+        .replace(' new ', 'creat').replace(' make ', 'creat').replace(' initi ', 'creat').replace(' initid ', 'creat')\
         .replace(' boolean ', 'bool').replace('begin', 'start').replace('run ', 'execut').replace('runnabl', 'execut')\
         .replace(' enumer ', 'enum').replace(' enumerd ', 'enum').replace(' websit ', 'web')\
         .replace(' vertex ', 'node').replace(' arc ', 'edg').replace(' math ', 'calc').replace(' determin ', 'calc')\
@@ -191,7 +191,7 @@ class IndexCreator:
         if self.index_type == "inverted_index":
             print("Adding lines to the index...   Please wait.")
             self.add_to_index(index, methnames, stopwords)
-            self.add_to_index(index, tokens,    stopwords)
+            self.add_to_index(index, tokens,    stopwords.add('new'))
             self.add_to_index(index, apiseqs,   None)
             number_of_code_fragments = len(methnames)
             

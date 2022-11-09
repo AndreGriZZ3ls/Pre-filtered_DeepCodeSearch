@@ -85,7 +85,7 @@ if __name__ == '__main__':
     index_type  = args.index_type
     memory_mode = args.memory_mode
     indexer     = IndexCreator(args, config)
-    stopwords   = set("a,about,after,also,an,and,another,any,are,around,as,at,awt,be,because,been,before,being,best,between,both,but,by,came,can,come,could,did,do,does,each,every,final,got,had,has,have,he,her,here,him,himself,his,how,if,in,into,io,it,its,java,javax,just,lang,like,many,me,might,more,most,much,must,my,never,net,new,no,now,on,only,other,our,out,over,override,private,protected,public,re,return,said,same,see,should,since,so,some,static,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,throw,throws,too,under,unk,UNK,up,use,util,very,void,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
+    stopwords   = set("a,about,after,also,an,and,another,any,are,around,as,at,awt,be,because,been,before,being,best,between,both,but,by,came,can,come,could,did,do,does,each,every,final,got,had,has,have,he,her,here,him,himself,his,how,if,in,into,io,it,its,java,javax,just,lang,like,many,me,might,more,most,much,must,my,never,net,no,now,on,only,other,our,out,over,override,private,protected,public,re,return,said,same,see,should,since,so,some,static,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,throw,throws,too,under,unk,UNK,up,use,util,very,void,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
     pattern1    = re.compile(r'[^\[\]a-zA-Z \n\r]+')
     pattern2    = re.compile(r' \w? +')
     #n_threads   = 8 # number of threads for parallelization of less performance intensive program parts
@@ -140,11 +140,11 @@ if __name__ == '__main__':
             queries     = source_file.readlines()
             source_file.close()
             amount_diff, mean_sims, mean_sims_pf = [], [], []
-            out_path    = data_path + 'search_results.txt'
+            #out_path    = data_path + 'search_results.txt'
             out_path_pf = data_path + 'search_results_filtered.txt'
-            if os.path.exists(out_path   ): os.remove(out_path)
+            #if os.path.exists(out_path   ): os.remove(out_path)
             if os.path.exists(out_path_pf): os.remove(out_path_pf)
-            out_file    = io.open(out_path   , "a", encoding='utf8', errors='replace')
+            #out_file    = io.open(out_path   , "a", encoding='utf8', errors='replace')
             out_file_pf = io.open(out_path_pf, "a", encoding='utf8', errors='replace')
             
             engine = deepCS_main.SearchEngine(args, config)
@@ -184,29 +184,19 @@ if __name__ == '__main__':
                 query_lines  = list(eval_dict[query].keys())
                 query_scores = list(eval_dict[query].values())
             ##### Process user query ######
-            #tmp   = []
             query_proc = re.sub(pattern1, ' ', query) # replace all non-alphabetic characters except '[' by ' '
             query_proc = re.sub(pattern2, ' ', query_proc.strip()) # remove consecutive spaces
             query_proc = query_proc.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('what is ', '').replace('?', '').replace(' numeric', ' numeric int double decimal').strip()
             query_list = list(set(query_proc.split(' ')) - stopwords)
-            """for word in query_list:
-                word_stem = porter.stem(word)
-                if word != word_stem and word_stem not in stopwords:
-                    tmp.append(word_stem) # include stems of query words """
             for i in range(0, len(query_list)):
                 query_list[i] = porter.stem(query_list[i])
-            #query_list.extend(tmp)
             query_list = [indexer.replace_synonyms(w) for w in query_list]
             query_list = list(set(query_list))
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
             query_cnt, cnt = Counter(), Counter()
             for word in query_list:
                 if word in index: # for each word of the processed query that the index contains: ...
-                    #if cnt:
                     cnt.update(index[word])
-                    #else:
-                    #    cnt = index[word]
-            #result_line_numbers, values = zip(*cnt.most_common(max_filtered))
             result_line_numbers, values = zip(*itertools.islice(sorted(cnt.items(), key=lambda x: (-x[1], x[0])), max_filtered))
             try:
                 last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val >= tf_idf_threshold)
@@ -217,7 +207,6 @@ if __name__ == '__main__':
                 result_line_numbers = result_line_numbers[:last_threshold_index]
             else:
                 result_line_numbers = result_line_numbers[:min_filtered]
-            #print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             result_line_numbers.sort()
             
             if args.mode == "eval":
@@ -233,7 +222,7 @@ if __name__ == '__main__':
                 e += 1
                 seperator = f"########################## {e} #################################\n"
                 metrics = "\n\nFRank:   | P@1:   | P@5:   | P@10: \n\n"
-                out_file.write(   seperator + '\n\n'.join(map(str, list(zip(deepCS_codes, deepCS_sims)))) + metrics)
+                #out_file.write(   seperator + '\n\n'.join(map(str, list(zip(deepCS_codes, deepCS_sims)))) + metrics)
                 out_file_pf.write(seperator + '\n\n'.join(map(str, list(zip(       codes,        sims)))) + metrics)
             else:
                 for s, line in enumerate(query_lines):
@@ -249,13 +238,13 @@ if __name__ == '__main__':
             e = 0
             result_file = fileinput.FileInput(data_path + 'eval_difference_results.txt', inplace=1)
             for line in result_file:
-                line = re.sub(r'(&[\d,]+&[\d,]+&)', f"&{round(mean_sims[e], 4)}&{round(mean_sims_pf[e], 4)}&", line)
+                line = re.sub(r'(&[\d,]+&[\d,]+&)', f"&{format(round(mean_sims[e], 4), '.4f')}&{format(round(mean_sims_pf[e], 4), '.4f')}&", line)
                 line = re.sub(r'(&\d+\\\\$)', f"&{10 - amount_diff[e]}\\\\\ ", line)
                 print(line.strip())
                 e += 1
-            out_file.write(   f"Mean sims: {round(mean(mean_sims), 4)}")
-            out_file_pf.write(f"Mean sims: {round(mean(mean_sims_pf), 4)}")
-            out_file.close()
+            #out_file.write(   f"Mean sims: {format(round(mean(mean_sims), 4), '.4f')}")
+            out_file_pf.write(f"Mean sims: {format(round(mean(mean_sims_pf), 4), '.4f')}")
+            #out_file.close()
             out_file_pf.close()
         else:
             result_file.write(f"&Insgesamt&{global_cnt['found_3']} / {global_cnt['total_3']}&{global_cnt['found_2']} / {global_cnt['total_2']}&{global_cnt['found_1']} / {global_cnt['total_1']}\\\\\n")
