@@ -349,16 +349,16 @@ if __name__ == '__main__':
                 result_line_numbers = list(result_line_numbers)
                 
             elif index_type == "inverted_index":
-                cnt = Counter()
+                cnt = None
                 if memory_mode in ["performance","vecs_and_index"]:
                     for word in query_list:
                         if word in index: # for each word of the processed query that the index contains: ...
                             #cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
                             #cnt += Counter(dict(itertools.islice(index[word].items(), max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
-                            #if cnt:
-                            cnt.update(index[word])
-                            #else:
-                            #    cnt = index[word]
+                            if cnt:
+                                cnt.update(index[word])
+                            else:
+                                cnt = index[word].copy()
                 else:
                     #counters = data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db') # TODO: compare
                     counters = data_loader.load_index_counters(index_type, query_list, data_path)
