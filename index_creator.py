@@ -191,7 +191,8 @@ class IndexCreator:
         if self.index_type == "inverted_index":
             print("Adding lines to the index...   Please wait.")
             self.add_to_index(index, methnames, stopwords)
-            self.add_to_index(index, tokens,    stopwords.add('new'))
+            stopwords.add('new')
+            self.add_to_index(index, tokens,    stopwords)
             self.add_to_index(index, apiseqs,   None)
             number_of_code_fragments = len(methnames)
             
