@@ -331,6 +331,7 @@ if __name__ == '__main__':
             #query_list.extend(tmp)
             query_list = [indexer.replace_synonyms(w) for w in query_list]
             query_list = list(set(query_list))
+            print('Time to prepare query:  {:5.3f}s'.format(time.time()-start))
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
             #####
             #print("Processing...  Please wait.")
@@ -367,9 +368,8 @@ if __name__ == '__main__':
                         cnt.update(counters[i]) # sum tf-idf values for each identical line and merge counters in general 
                 print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
                 ##################################################################################################################
-                #result_line_numbers, values = zip(*cnt.most_common(max_filtered))
+                result_line_numbers, values = zip(*cnt.most_common(max_filtered))
                 #result_line_numbers, values = zip(*itertools.islice(sorted(cnt.items(), key=lambda x: (-x[1], x[0])), max_filtered))
-                result_line_numbers, values = zip(*itertools.islice(sorted(cnt.items(), key=lambda x: -x[1]), max_filtered))
                 print('Time to sort and slice:  {:5.3f}s'.format(time.time()-start))
                 try:
                     last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val >= tf_idf_threshold)
