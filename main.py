@@ -20,6 +20,7 @@ __copyright__ = "Copyright (c) 2022, Andre Warnecke"
 import os
 import io
 import re
+import gc
 import sys
 import math
 import time
@@ -31,7 +32,6 @@ import operator
 import traceback
 import itertools
 import fileinput
-import threading
 import numpy as np
 from tqdm import tqdm
 from statistics import mean
@@ -61,7 +61,7 @@ def parse_args():
                         " to be created or used: The 'word_indices' mode [not recommended at all] utilizes parts of the dataset "
                         " already existing for DeepCS to work (simple but not usable for more accurete similarity measurements. "
                         " For each meaningful word the 'inverted_index' stores IDs and tf-idf weights of code fragment that contain it. ")
-    parser.add_argument("--memory_mode", choices=["performance","vecs_and_code","vecs_and_index","vecs","code","nothing"], 
+    parser.add_argument("--memory_mode", choices=["performance","vecs_and_code","vecs_and_index","vecs","code_and_index","code","index","nothing"], 
                         default="nothing", help="'performance': [fastest, overly memory intensive, not recommended] All data "
                         " are loaded just one time at program start and kept in memory for fast access. 'vecs_and_code': "
                         " [insignificantly slower, less memory usage] Vectors and raw code are loaded at program start and kept in "
@@ -70,34 +70,22 @@ def parse_args():
                         " in memory; for each query just pre-filtered elements of raw code and index are loaded. 'code':   "
                         " 'nothing': [slowest, least memory usage]  ") # TODO: complete
     return parser.parse_args()
-   
-def merge_counters_from_index(index, cnt_list, query_list):
-    cnt = None
-    for word in query_list:
-        if word in index: # for each word of the processed query that the index contains: ...
-            #cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
-            #cnt += Counter(dict(itertools.islice(index[word].items(), max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
-            if cnt:
-                cnt.update(index[word])
-            else:
-                cnt = index[word].copy()
-    cnt_list.append(cnt)
-
-def merge_counters(counters, cnt):
-    for counter in counters:
-        cnt.update(counter)
+    
 
 if __name__ == '__main__':
-    args        = parse_args()
-    config      = getattr(configs, 'config_' + args.model)()
-    data_path   = args.data_path + args.dataset + '/'
-    index_type  = args.index_type
-    memory_mode = args.memory_mode
-    indexer     = IndexCreator(args, config)
-    stopwords   = set("a,about,after,also,an,and,another,any,are,around,as,at,awt,be,because,been,before,being,best,between,both,but,by,came,can,come,could,did,do,does,each,every,final,got,had,has,have,he,her,here,him,himself,his,how,if,in,into,io,it,its,java,javax,just,lang,like,many,me,might,more,most,much,must,my,never,net,no,now,on,only,other,our,out,over,override,private,protected,public,re,return,said,same,see,should,since,so,some,static,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,throw,throws,too,under,unk,UNK,up,use,util,very,void,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
-    pattern1    = re.compile(r'[^\[\]a-zA-Z \n\r]+')
-    pattern2    = re.compile(r' \w? +')
-    #n_threads   = 8 # number of threads for parallelization of less performance intensive program parts
+    args         = parse_args()
+    config       = getattr(configs, 'config_' + args.model)()
+    data_path    = args.data_path + args.dataset + '/'
+    index_type   = args.index_type
+    memory_mode  = args.memory_mode
+    index_in_mem = memory_mode in ["performance","vecs_and_index","code_and_index","index"]
+    vecs_in_mem  = memory_mode in ["performance","vecs_and_code","vecs_and_index","vecs"]
+    code_in_mem  = memory_mode in ["performance","vecs_and_code","code_and_index","code"]
+    indexer      = IndexCreator(args, config)
+    stopwords    = set("a,about,after,also,an,and,another,any,are,around,as,at,awt,be,because,been,before,being,best,between,both,but,by,came,can,come,could,did,do,does,each,every,final,got,had,has,have,he,her,here,him,himself,his,how,if,in,into,io,it,its,java,javax,just,lang,like,many,me,might,more,most,much,must,my,never,net,no,now,on,only,other,our,out,over,override,private,protected,public,re,return,said,same,see,should,since,so,some,static,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,throw,throws,too,under,unk,UNK,up,use,util,very,void,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
+    pattern1     = re.compile(r'[^\[\]a-zA-Z \n\r]+')
+    pattern2     = re.compile(r' \w? +')
+    #n_threads    = 8 # number of threads for parallelization of less performance intensive program parts
     _codebase_chunksize = 2000000
     tf_idf_threshold    = 1.0 #2.79 # 2.00
     
@@ -295,10 +283,10 @@ if __name__ == '__main__':
         porter = PorterStemmer()
         vocab  = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
         
-        if memory_mode in ["performance","vecs_and_code","vecs","vecs_and_index"]: 
+        if vecs_in_mem: 
             full_code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1)
             #full_code_reprs = np.array(data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], -1))
-        if memory_mode in ["performance","vecs_and_code","code"]: 
+        if code_in_mem: 
             #full_codebase   = np.array(data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1))
             full_codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], -1)
         
@@ -306,7 +294,7 @@ if __name__ == '__main__':
             methname_vocab  = data_loader.load_pickle(data_path + config['data_params']['vocab_methname'])
             token_vocab     = data_loader.load_pickle(data_path + config['data_params']['vocab_tokens'])
             methnames, tokens = indexer.load_index()
-        elif memory_mode in ["performance","vecs_and_index"]:
+        elif index_in_mem:
             index = indexer.load_index()
         
         while True:
@@ -360,32 +348,30 @@ if __name__ == '__main__':
                 result_line_numbers = list(result_line_numbers)
                 
             elif index_type == "inverted_index":
-                if memory_mode in ["performance","vecs_and_index"]:
-                    cnt_list = []
-                    length = len(query_list)
-                    if length > 3:
-                        t1 = threading.Thread(target = merge_counters_from_index, args = (index, cnt_list, query_list[:math.ceil(length / 2)]))
-                        t2 = threading.Thread(target = merge_counters_from_index, args = (index, cnt_list, query_list[math.ceil(length / 2):]))
-                        t1.start()
-                        t2.start()
-                        t1.join()
-                        t2.join()
-                        cnt = cnt_list[0]
-                        cnt.update(cnt_list[1])
-                    else:
-                        merge_counters_from_index(index, cnt_list, query_list)
-                        cnt = cnt_list[0]
+                if index_in_mem:
+                    cnt = None
+                    for word in query_list:
+                        if word in index: # for each word of the processed query that the index contains: ...
+                            #cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
+                            #cnt += Counter(dict(itertools.islice(index[word].items(), max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
+                            if cnt:
+                                cnt.update(index[word])
+                            else:
+                                cnt = index[word].copy()
                 else:
                     #counters = data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db') # TODO: compare
                     counters = data_loader.load_index_counters(index_type, query_list, data_path)
                     cnt = counters[0]
-                    merge_counters(counters[1:], cnt)
-                    #for i in range(1, len(counters)):
-                    #    cnt.update(counters[i]) # sum tf-idf values for each identical line and merge counters in general 
+                    for i in range(1, len(counters)):
+                        cnt.update(counters[i]) # sum tf-idf values for each identical line and merge counters in general 
+                        del counters[i]
+                        gc.collect()
                 print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
                 ##################################################################################################################
                 result_line_numbers, values = zip(*cnt.most_common(max_filtered))
                 #result_line_numbers, values = zip(*itertools.islice(sorted(cnt.items(), key=lambda x: (-x[1], x[0])), max_filtered))
+                del cnt
+                gc.collect()
                 print('Time to sort and slice:  {:5.3f}s'.format(time.time()-start))
                 try:
                     last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val >= tf_idf_threshold)
@@ -403,26 +389,23 @@ if __name__ == '__main__':
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             
             chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results / 10))
-            #chunk_size = n_results
-            if memory_mode in ["performance","vecs_and_code","vecs","vecs_and_index"]:
+            if vecs_in_mem:
                 vector_lines = full_code_reprs[result_line_numbers]
-                #vector_lines = [full_code_reprs[line] for line in result_line_numbers]
                 engine._code_reprs = [vector_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
             else:
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, chunk_size)
-            if memory_mode in ["performance","vecs_and_code","code"]:
-                #f = operator.itemgetter(*result_line_numbers)
-                #codebase_lines = list(f(full_codebase))
+            
+            if code_in_mem:
                 codebase_lines = [full_codebase[line] for line in result_line_numbers]
-                #codebase_lines = full_codebase[result_line_numbers]
                 engine._codebase = [codebase_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
             else:
                 engine._codebase = data_loader.load_codebase_lines(data_path + 'sqlite.db', result_line_numbers, chunk_size) # database
-                #for chunk in engine._codebase: 
-                #    for line in chunk:
-                #        print(line + "\n")
-                #engine._codebase = data_loader.load_codebase_lines(data_path + config['data_params']['use_codebase'], result_line_numbers, chunk_size)
+            del result_line_numbers
+            gc.collect()
             print('DeepCS start time: {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'])
+            if not vecs_in_mem: del engine._code_reprs
+            if not code_in_mem: del engine._codebase
+            gc.collect()
             print('Total time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
             print('System time: {:5.3f}s'.format(time.process_time() - start_proc))
