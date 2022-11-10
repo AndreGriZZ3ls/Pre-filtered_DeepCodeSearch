@@ -2,7 +2,6 @@ import os
 os.environ['NUMEXPR_MAX_THREADS'] = '128'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-import gc
 import sys
 import random
 import traceback
@@ -230,8 +229,8 @@ class SearchEngine:
     #1. compute similarity
         chunk_sims = np.dot(code_reprs, desc_repr) # [pool_size x 1] 
         ################
-        del code_reprs
-        gc.collect()
+        #del code_reprs
+        #gc.collect()
         ################
         chunk_sims = np.squeeze(chunk_sims, axis = 1)
     #2. choose top results

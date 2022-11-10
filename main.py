@@ -20,7 +20,6 @@ __copyright__ = "Copyright (c) 2022, Andre Warnecke"
 import os
 import io
 import re
-import gc
 import sys
 import math
 import time
