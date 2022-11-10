@@ -391,8 +391,9 @@ if __name__ == '__main__':
         vocab = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
         while True:
             try:
-                query     =     input('Input Query: ')
-                n_results = int(input('How many results? '))
+                query        =     input('Input Query: ')
+                n_results    = int(input('How many results? '))
+                if n_results < 1: raise ValueError('Number of results has to be at least 1!')
             except Exception:
                 print("Exception while parsing your input: ")
                 traceback.print_exc()

@@ -31,6 +31,7 @@ import operator
 import traceback
 import itertools
 import fileinput
+import threading
 import numpy as np
 from tqdm import tqdm
 from statistics import mean
@@ -70,13 +71,11 @@ def parse_args():
                         " 'nothing': [slowest, least memory usage]  ") # TODO: complete
     return parser.parse_args()
    
-'''def generate_sublist(list, indices):
-    g = lambda lst: (lst[i] for i in indices)
-    yield g(list)
-    
-def chunk_of_iter(iterable, chunk_size):
-    chunks = [iter(iterable)] * chunk_size
-    return zip(*chunks)'''
+"""def merge_counters_parallel(index_or_counters, query_list = None):
+    if query_list:
+        
+    else:
+        """
 
 if __name__ == '__main__':
     args        = parse_args()
@@ -304,8 +303,9 @@ if __name__ == '__main__':
             #tmp = []
             ##### Get user input ######
             try:
-                query     =     input('Input query: ')
-                n_results = int(input('How many results? '))
+                query        =     input('Input query: ')
+                n_results    = int(input('How many results? '))
+                if n_results < 1: raise ValueError('Number of results has to be at least 1!')
             except Exception:
                 print("Exception while parsing your input: ")
                 traceback.print_exc()
@@ -349,8 +349,8 @@ if __name__ == '__main__':
                 result_line_numbers = list(result_line_numbers)
                 
             elif index_type == "inverted_index":
-                cnt = None
                 if memory_mode in ["performance","vecs_and_index"]:
+                    cnt = None
                     for word in query_list:
                         if word in index: # for each word of the processed query that the index contains: ...
                             #cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
@@ -369,18 +369,21 @@ if __name__ == '__main__':
                 ##################################################################################################################
                 #result_line_numbers, values = zip(*cnt.most_common(max_filtered))
                 result_line_numbers, values = zip(*itertools.islice(sorted(cnt.items(), key=lambda x: (-x[1], x[0])), max_filtered))
+                print('Time to sort and slice:  {:5.3f}s'.format(time.time()-start))
                 try:
                     last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val >= tf_idf_threshold)
                 except ValueError:
                     last_threshold_index = -1
                 #for i in range(0, 1000):
                 #    print(values[i])
+                print('Time to find last_threshold_index:  {:5.3f}s'.format(time.time()-start))
                 result_line_numbers = list(result_line_numbers)
                 if last_threshold_index >= min_filtered:
                     result_line_numbers = result_line_numbers[:last_threshold_index]
                 else:
                     result_line_numbers = result_line_numbers[:min_filtered]
                 result_line_numbers.sort()
+                print('Time to slice and sort result_line_numbers:  {:5.3f}s'.format(time.time()-start))
             #print('Time to calculate most relevant lines:  {:5.3f}s'.format(time.time()-start))
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             
