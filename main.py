@@ -368,7 +368,8 @@ if __name__ == '__main__':
                 print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
                 ##################################################################################################################
                 #result_line_numbers, values = zip(*cnt.most_common(max_filtered))
-                result_line_numbers, values = zip(*itertools.islice(sorted(cnt.items(), key=lambda x: (-x[1], x[0])), max_filtered))
+                #result_line_numbers, values = zip(*itertools.islice(sorted(cnt.items(), key=lambda x: (-x[1], x[0])), max_filtered))
+                result_line_numbers, values = zip(*itertools.islice(sorted(cnt.items(), key=lambda x: -x[1]), max_filtered))
                 print('Time to sort and slice:  {:5.3f}s'.format(time.time()-start))
                 try:
                     last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val >= tf_idf_threshold)
@@ -376,14 +377,12 @@ if __name__ == '__main__':
                     last_threshold_index = -1
                 #for i in range(0, 1000):
                 #    print(values[i])
-                print('Time to find last_threshold_index:  {:5.3f}s'.format(time.time()-start))
                 result_line_numbers = list(result_line_numbers)
                 if last_threshold_index >= min_filtered:
                     result_line_numbers = result_line_numbers[:last_threshold_index]
                 else:
                     result_line_numbers = result_line_numbers[:min_filtered]
                 result_line_numbers.sort()
-                print('Time to slice and sort result_line_numbers:  {:5.3f}s'.format(time.time()-start))
             #print('Time to calculate most relevant lines:  {:5.3f}s'.format(time.time()-start))
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             
