@@ -71,11 +71,19 @@ def parse_args():
                         " 'nothing': [slowest, least memory usage]  ") # TODO: complete
     return parser.parse_args()
    
-"""def merge_counters_parallel(index_or_counters, query_list = None):
-    if query_list:
-        
-    else:
-        """
+def merge_counters_from_index(index, cnt, query_list):
+    for word in query_list:
+        if word in index: # for each word of the processed query that the index contains: ...
+            #cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
+            #cnt += Counter(dict(itertools.islice(index[word].items(), max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
+            if cnt:
+                cnt.update(index[word])
+            else:
+                cnt = index[word].copy()
+
+def merge_counters(counters, cnt):
+    for counter in counters:
+        cnt.update(counter)
 
 if __name__ == '__main__':
     args        = parse_args()
@@ -351,21 +359,25 @@ if __name__ == '__main__':
                 
             elif index_type == "inverted_index":
                 if memory_mode in ["performance","vecs_and_index"]:
-                    cnt = None
-                    for word in query_list:
-                        if word in index: # for each word of the processed query that the index contains: ...
-                            #cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
-                            #cnt += Counter(dict(itertools.islice(index[word].items(), max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
-                            if cnt:
-                                cnt.update(index[word])
-                            else:
-                                cnt = index[word].copy()
+                    cnt, cnt2 = None, None
+                    length = len(query_list)
+                    if length > 3:
+                        t1 = threading.Thread(target = merge_counters_from_index, args = (index, cnt,  query_list[:math.ceil(length / 2)]))
+                        t2 = threading.Thread(target = merge_counters_from_index, args = (index, cnt2, query_list[math.ceil(length / 2):]))
+                        t1.start()
+                        t2.start()
+                        t1.join()
+                        t2.join()
+                        cnt.update(cnt2)
+                    else:
+                        merge_counters_from_index(index, cnt, query_list)
                 else:
                     #counters = data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db') # TODO: compare
                     counters = data_loader.load_index_counters(index_type, query_list, data_path)
                     cnt = counters[0]
-                    for i in range(1, len(counters)):
-                        cnt.update(counters[i]) # sum tf-idf values for each identical line and merge counters in general 
+                    merge_counters(counters[1:], cnt)
+                    #for i in range(1, len(counters)):
+                    #    cnt.update(counters[i]) # sum tf-idf values for each identical line and merge counters in general 
                 print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
                 ##################################################################################################################
                 result_line_numbers, values = zip(*cnt.most_common(max_filtered))
