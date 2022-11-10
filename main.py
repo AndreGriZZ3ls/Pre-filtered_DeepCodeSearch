@@ -301,6 +301,7 @@ if __name__ == '__main__':
             ##### Get user input ######
             try:
                 query        =     input('Input query: ')
+                if query    == 'q': break
                 n_results    = int(input('How many results? '))
                 if n_results < 1: raise ValueError('Number of results has to be at least 1!')
             except Exception:
@@ -328,7 +329,7 @@ if __name__ == '__main__':
             #query_list.extend(tmp)
             query_list = [indexer.replace_synonyms(w) for w in query_list]
             query_list = list(set(query_list))
-            print('Time to prepare query:  {:5.3f}s'.format(time.time()-start))
+            #print('Time to prepare query:  {:5.3f}s'.format(time.time()-start))
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
             #####
             #print("Processing...  Please wait.")
@@ -369,8 +370,6 @@ if __name__ == '__main__':
                 ##################################################################################################################
                 result_line_numbers, values = zip(*cnt.most_common(max_filtered))
                 #result_line_numbers, values = zip(*itertools.islice(sorted(cnt.items(), key=lambda x: (-x[1], x[0])), max_filtered))
-                #del cnt
-                #gc.collect()
                 print('Time to sort and slice:  {:5.3f}s'.format(time.time()-start))
                 try:
                     last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val >= tf_idf_threshold)
@@ -399,12 +398,7 @@ if __name__ == '__main__':
                 engine._codebase = [codebase_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
             else:
                 engine._codebase = data_loader.load_codebase_lines(data_path + 'sqlite.db', result_line_numbers, chunk_size) # database
-            #del result_line_numbers
-            #gc.collect()
             print('DeepCS start time: {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'])
-            #if not vecs_in_mem: del engine._code_reprs
-            #if not code_in_mem: del engine._codebase
-            #gc.collect()
             print('Total time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
             print('System time: {:5.3f}s'.format(time.process_time() - start_proc))

@@ -391,6 +391,7 @@ if __name__ == '__main__':
         while True:
             try:
                 query        =     input('Input Query: ')
+                if query    == 'q': break
                 n_results    = int(input('How many results? '))
                 if n_results < 1: raise ValueError('Number of results has to be at least 1!')
             except Exception:
