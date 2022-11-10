@@ -363,13 +363,13 @@ if __name__ == '__main__':
                     cnt = counters[0]
                     for i in range(1, len(counters)):
                         cnt.update(counters[i]) # sum tf-idf values for each identical line and merge counters in general 
-                        del counters[i]
+                        #del counters[i]
                         #gc.collect()
                 print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
                 ##################################################################################################################
                 result_line_numbers, values = zip(*cnt.most_common(max_filtered))
                 #result_line_numbers, values = zip(*itertools.islice(sorted(cnt.items(), key=lambda x: (-x[1], x[0])), max_filtered))
-                del cnt
+                #del cnt
                 #gc.collect()
                 print('Time to sort and slice:  {:5.3f}s'.format(time.time()-start))
                 try:
@@ -399,12 +399,12 @@ if __name__ == '__main__':
                 engine._codebase = [codebase_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
             else:
                 engine._codebase = data_loader.load_codebase_lines(data_path + 'sqlite.db', result_line_numbers, chunk_size) # database
-            del result_line_numbers
+            #del result_line_numbers
             #gc.collect()
             print('DeepCS start time: {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'])
-            if not vecs_in_mem: del engine._code_reprs
-            if not code_in_mem: del engine._codebase
+            #if not vecs_in_mem: del engine._code_reprs
+            #if not code_in_mem: del engine._codebase
             #gc.collect()
             print('Total time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
             print('System time: {:5.3f}s'.format(time.process_time() - start_proc))
