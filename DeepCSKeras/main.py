@@ -211,13 +211,16 @@ class SearchEngine:
         if not self._code_reprs:
             self._code_reprs = data_loader.load_code_reprs(self.data_path + self.data_params['use_codevecs'], self._codebase_chunksize)
         ################
-        for i, code_reprs_chunk in enumerate(self._code_reprs):
-            t = threading.Thread(target = self.search_thread, args = (codes, sims, desc_repr, code_reprs_chunk, i, n_results))
-            threads.append(t)
-        for t in threads:
-            t.start()
-        for t in threads:# wait until all sub-threads finish
-            t.join()
+        if len(self._code_reprs) == 1:
+            self.search_thread(codes, sims, desc_repr, self._code_reprs[0], 0, n_results)
+        else:
+            for i, code_reprs_chunk in enumerate(self._code_reprs):
+                t = threading.Thread(target = self.search_thread, args = (codes, sims, desc_repr, code_reprs_chunk, i, n_results))
+                threads.append(t)
+            for t in threads:
+                t.start()
+            for t in threads:# wait until all sub-threads finish
+                t.join()
         ################
         #del self._code_reprs
         #gc.collect()
