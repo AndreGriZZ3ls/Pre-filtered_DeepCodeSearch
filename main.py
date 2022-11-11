@@ -341,7 +341,7 @@ if __name__ == '__main__':
                                 cnt.update(index[word])
                             else:
                                 cnt = index[word].copy()"""
-                    counters = [dict(index[word]) for word in query_list if word in index]
+                    counters = [index[word] for word in query_list if word in index]
                     if len(counters) == 1:
                         cnt = counters[0]
                     else:
