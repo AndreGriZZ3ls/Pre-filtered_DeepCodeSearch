@@ -308,9 +308,9 @@ if __name__ == '__main__':
                 if word != word_stem and word_stem not in stopwords:
                     tmp.append(word_stem) # include stems of query words"""
             for i in range(0, len(query_list)):
-                query_list[i] = porter.stem(query_list[i])
+                query_list[i] = indexer.replace_synonyms(porter.stem(query_list[i]))
             #query_list.extend(tmp)
-            query_list = [indexer.replace_synonyms(w) for w in query_list]
+            #query_list = [indexer.replace_synonyms(w) for w in query_list]
             query_list = list(set(query_list))
             #print('Time to prepare query:  {:5.3f}s'.format(time.time()-start))
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
@@ -333,23 +333,26 @@ if __name__ == '__main__':
             elif index_type == "inverted_index":
                 if index_in_mem:
                     cnt = None
-                    for word in query_list:
+                    """for word in query_list:
                         if word in index: # for each word of the processed query that the index contains: ...
                             #cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
                             #cnt += Counter(dict(itertools.islice(index[word].items(), max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
                             if cnt:
                                 cnt.update(index[word])
                             else:
-                                cnt = index[word].copy()
-                    """#counters = sorted([index[word] for word in query_list if word in index], key = len, reverse = True)
-                    counters = sorted([index[word] for word in query_list if word in index], key = lambda x: -)
+                                cnt = index[word].copy()"""
+                    #counters = sorted([index[word] for word in query_list if word in index], key = len, reverse = True)
+                    counters = sorted([index[word] for word in query_list if word in index], key = lambda x: -next(iter(x.values())))
                     #counters = [index[word] for word in query_list if word in index]
                     if len(counters) == 1:
                         cnt = counters[0]
                     else:
                         cnt = counters[0].copy()
                         for i in range(1, len(counters)):
-                            cnt.update(counters[i])"""
+                            if i == 1:
+                                cnt.update(counters[i])
+                            else:
+                                cnt.update(Counter(dict(itertools.islice(counters[i].items(), max_filtered))))
                 else:
                     #counters = data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db') # TODO: compare
                     counters = data_loader.load_index_counters(index_type, query_list, data_path)
