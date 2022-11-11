@@ -345,8 +345,8 @@ if __name__ == '__main__':
                     if len(counters) == 1:
                         cnt = counters[0]
                     else:
-                        cnt = counters[0] + counters[1]
-                        for i in range(2, len(counters)):
+                        cnt = counters[0].copy()
+                        for i in range(1, len(counters)):
                             cnt.update(counters[i])
                 else:
                     #counters = data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db') # TODO: compare
