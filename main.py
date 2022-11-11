@@ -346,8 +346,8 @@ if __name__ == '__main__':
                         cnt = counters[0]
                     else:
                         cnt = counters[0] + counters[1]
-                        for counter in counters[2:]:
-                            cnt.update(counter)
+                        for i in range(2, len(counters)):
+                            cnt.update(counters[i])
                 else:
                     #counters = data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db') # TODO: compare
                     counters = data_loader.load_index_counters(index_type, query_list, data_path)
