@@ -293,7 +293,7 @@ if __name__ == '__main__':
                 break
             start        = time.time()
             start_proc   = time.process_time()
-            max_filtered = max(500, 500 * n_results + 250)
+            max_filtered = max(5000, 500 * n_results + 2500)
             #max_filtered = max(1000, 75 * n_results)
             min_filtered = max(500, 25 * n_results + 250)
             ##### Process user query ######
