@@ -304,6 +304,8 @@ if __name__ == '__main__':
                 if query    == 'q': break
                 n_results    = int(input('How many results? '))
                 if n_results < 1: raise ValueError('Number of results has to be at least 1!')
+                n_threads    = int(input('How many threads? '))
+                if n_threads < 1: raise ValueError('Number of threads has to be at least 1!')
             except Exception:
                 print("Exception while parsing your input: ")
                 traceback.print_exc()
@@ -388,7 +390,7 @@ if __name__ == '__main__':
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             
             #chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results / 10))
-            chunk_size = math.ceil(len(result_line_numbers) / 2)
+            chunk_size = math.ceil(len(result_line_numbers) / n_threads)
             if vecs_in_mem:
                 vector_lines = full_code_reprs[result_line_numbers]
                 engine._code_reprs = [vector_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
