@@ -28,7 +28,7 @@ def load_pickle(path):
 def save_pickle(path, index):
     pickle.dump(index, open(path, 'wb'), pickle.HIGHEST_PROTOCOL) #
     
-def load_index_counters(name, word_list, index_path):
+def load_index_counters(name, word_list, index_path, max_items):
     """db = UnQLite(filename = './DeepCSKeras/data/database.udb', open_database = True)
     collec = db.collection(name)
     if not collec.exists():
@@ -68,7 +68,9 @@ def load_index_counters(name, word_list, index_path):
         #    #word = word.encode()
         #    cond = f'word == b"{word}"'
         cond = "|".join(['(word == b"%s")'%w for w in word_list])
-        for row in meta.where(cond):
+        rows = meta.where(cond)
+        
+        for i, row in enumerate(rows):
             l = row['len']
             p = row['pos']
             #k = keys[p:p + min(l, max_items)]
