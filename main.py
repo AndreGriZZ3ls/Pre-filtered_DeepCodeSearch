@@ -340,8 +340,8 @@ if __name__ == '__main__':
                             if cnt:
                                 cnt.update(index[word])
                             else:
-                                cnt = index[word].copy()"""
-                    #counters = sorted([index[word] for word in query_list if word in index], key = len, reverse = True)
+                                cnt = index[word].copy()
+                    """#counters = sorted([index[word] for word in query_list if word in index], key = len, reverse = True)
                     counters = sorted([index[word] for word in query_list if word in index], key = lambda x: -)
                     #counters = [index[word] for word in query_list if word in index]
                     if len(counters) == 1:
