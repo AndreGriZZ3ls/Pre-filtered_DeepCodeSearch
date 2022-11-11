@@ -84,7 +84,7 @@ if __name__ == '__main__':
     stopwords    = set("a,about,after,also,an,and,another,any,are,around,as,at,awt,be,because,been,before,being,best,between,both,but,by,came,can,come,could,did,do,does,each,every,final,got,had,has,have,he,her,here,him,himself,his,how,if,in,into,io,it,its,java,javax,just,lang,like,many,me,might,more,most,much,must,my,never,net,no,now,on,only,other,our,out,over,override,private,protected,public,re,return,said,same,see,should,since,so,some,static,still,such,take,than,that,the,their,them,then,there,these,they,this,those,through,throw,throws,too,under,unk,UNK,up,use,util,very,void,want,was,way,we,well,were,what,when,where,which,who,will,with,would,you,your".split(','))
     pattern1     = re.compile(r'[^\[\]a-zA-Z \n\r]+')
     pattern2     = re.compile(r' \w? +')
-    #n_threads    = 8 # number of threads for parallelization of less performance intensive program parts
+    n_threads    = 8 # number of threads for parallelization
     _codebase_chunksize = 2000000
     tf_idf_threshold    = 1.0 #2.79 # 2.00
     
@@ -247,28 +247,6 @@ if __name__ == '__main__':
         result_file.close()
     
     elif args.mode == 'search':
-        """try:
-            shutil.rmtree('__pycache__')
-            print('Info: Cleared index_creator cache.')
-        except FileNotFoundError:
-            print('Info: index_creator cache is not present --> nothing to be cleared.')
-            pass
-        except:
-            print("Exception while trying to clear cache directory '__pycache__'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
-            traceback.print_exc()
-            pass
-            
-        try:
-            shutil.rmtree('DeepCSKeras/__pycache__')
-            print('Info: Cleared DeepCSKeras cache.')
-        except FileNotFoundError:
-            print('Info: DeepCSKeras cache is not present --> nothing to be cleared.')
-            pass
-        except:
-            print("Exception while trying to clear cache directory 'DeepCSKeras/__pycache__'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
-            traceback.print_exc()
-            pass"""
-        
         ##### Initialize DeepCS search engine and model ######
         engine = deepCS_main.SearchEngine(args, config)
         model  = getattr(models, args.model)(config) # initialize the model
@@ -304,8 +282,6 @@ if __name__ == '__main__':
                 if query    == 'q': break
                 n_results    = int(input('How many results? '))
                 if n_results < 1: raise ValueError('Number of results has to be at least 1!')
-                n_threads    = int(input('How many threads? '))
-                if n_threads < 1: raise ValueError('Number of threads has to be at least 1!')
             except Exception:
                 print("Exception while parsing your input: ")
                 traceback.print_exc()
@@ -351,23 +327,24 @@ if __name__ == '__main__':
                 
             elif index_type == "inverted_index":
                 if index_in_mem:
-                    cnt = None
-                    for word in query_list:
+                    #cnt = None
+                    """for word in query_list:
                         if word in index: # for each word of the processed query that the index contains: ...
                             #cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
                             #cnt += Counter(dict(itertools.islice(index[word].items(), max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
                             if cnt:
                                 cnt.update(index[word])
                             else:
-                                cnt = index[word].copy()
+                                cnt = index[word].copy()"""
+                    counters = [index[word] for word in query_list if word in index]
+                    cnt = sum(counters[1:], counters[0].copy())
                 else:
                     #counters = data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db') # TODO: compare
                     counters = data_loader.load_index_counters(index_type, query_list, data_path)
-                    cnt = counters[0]
+                    """cnt = counters[0]
                     for i in range(1, len(counters)):
-                        cnt.update(counters[i]) # sum tf-idf values for each identical line and merge counters in general 
-                        #del counters[i]
-                        #gc.collect()
+                        cnt.update(counters[i]) # sum tf-idf values for each identical line and merge counters in general """
+                    cnt = sum(counters[1:], counters[0])
                 print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
                 ##################################################################################################################
                 result_line_numbers, values = zip(*cnt.most_common(max_filtered))
