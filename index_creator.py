@@ -46,13 +46,13 @@ class IndexCreator:
 
     def replace_synonyms(self, word):
         word = ' ' + word + ' '
-        return word.replace(' read ', 'load').replace(' write', 'store').replace('save', 'store').replace(' dump', 'store')\
-        .replace(' quit', 'exit').replace('termin', 'exit').replace(' leav', 'exit').replace(' break ', 'exit')\
+        return word.replace(' read ', 'load').replace(' write', 'store').replace(' save', 'store').replace(' dump', 'store')\
+        .replace(' quit', 'exit').replace(' termin ', 'exit').replace(' leav', 'exit').replace(' break ', 'exit')\
         .replace(' pop ', 'delet').replace('remov', 'delet').replace(' trim ', 'delet').replace(' strip ', 'delet')\
         .replace(' halt', 'stop').replace('restart', 'continu').replace('push ', 'add').replace('object', 'instanc')\
-        .replace('null ', 'none').replace('method', 'function').replace('concat ', 'combin')\
+        .replace(' null ', 'none').replace('method', 'function').replace('concat ', 'combin')\
         .replace(' for ', 'loop').replace(' foreach ', 'loop').replace(' while ', 'loop').replace(' iterat ', 'loop')\
-        .replace('integ ', 'int').replace('tinyint ', 'int').replace(' smallint ', 'int').replace(' bigint ', 'int')\
+        .replace(' integ ', 'int').replace('tinyint ', 'int').replace(' smallint ', 'int').replace(' bigint ', 'int')\
         .replace(' shortint ', 'int').replace('longint ', 'int').replace(' byte ', 'int').replace(' short ', 'int')\
         .replace(' doubl ', 'float').replace(' long ', 'float').replace(' decim ', 'float').replace('real ', 'float')\
         .replace(' array ', '[]').replace(' arr ', '[]').replace(' fastest ', 'fast').replace(' speed ', 'fast')\

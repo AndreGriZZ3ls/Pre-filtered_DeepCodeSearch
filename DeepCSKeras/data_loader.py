@@ -56,6 +56,9 @@ def load_index_counters(name, word_list, index_path, max_items):
             #counters.append(Counter(dict(zip(keys, vals))))
             counters.append(Counter(dict(raw)))
         conn.close()
+        counters.sort(key = lambda x: -next(iter(x.values())))
+        for i in range(2, len(counters)):
+            counters[i] = Counter(dict(itertools.islice(counters[i].items(), max_items)))
         print(f"Successfully loaded tf-idf value counters from index '{name}' in database '{index_path}'.")
     else:
         index_file = index_path + name + '.h5'
@@ -68,15 +71,16 @@ def load_index_counters(name, word_list, index_path, max_items):
         #    #word = word.encode()
         #    cond = f'word == b"{word}"'
         cond = "|".join(['(word == b"%s")'%w for w in word_list])
-        rows = meta.where(cond)
-        
+        rows = sorted(meta.where(cond), key = lambda row: -vals[row['pos']])
         for i, row in enumerate(rows):
             l = row['len']
             p = row['pos']
-            #k = keys[p:p + min(l, max_items)]
-            #v = vals[p:p + min(l, max_items)]
-            k = keys[p:p + l]
-            v = vals[p:p + l]
+            if i > 1:
+                k = keys[p:p + min(l, max_items)]
+                v = vals[p:p + min(l, max_items)]
+            else:
+                k = keys[p:p + l]
+                v = vals[p:p + l]
             counters.append(Counter(dict(zip(k, v))))
         h5f.close()
         print('Total load_index_counters time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
