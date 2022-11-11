@@ -387,18 +387,19 @@ if __name__ == '__main__':
             #print('Time to calculate most relevant lines:  {:5.3f}s'.format(time.time()-start))
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             
-            chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results / 10))
+            #chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results / 10))
+            chunk_size = math.ceil(len(result_line_numbers) / 2)
             if vecs_in_mem:
                 vector_lines = full_code_reprs[result_line_numbers]
-                #engine._code_reprs = [vector_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
-                engine._code_reprs = [vector_lines]
+                engine._code_reprs = [vector_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
+                #engine._code_reprs = [vector_lines]
             else:
                 engine._code_reprs = data_loader.load_code_reprs_lines(data_path + config['data_params']['use_codevecs'], result_line_numbers, chunk_size)
             
             if code_in_mem:
                 codebase_lines = [full_codebase[line] for line in result_line_numbers]
-                #engine._codebase = [codebase_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
-                engine._codebase = [codebase_lines]
+                engine._codebase = [codebase_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
+                #engine._codebase = [codebase_lines]
             else:
                 engine._codebase = data_loader.load_codebase_lines(data_path + 'sqlite.db', result_line_numbers, chunk_size) # database
             #result_line_numbers = None
