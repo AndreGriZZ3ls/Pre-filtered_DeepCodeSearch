@@ -34,7 +34,7 @@ import fileinput
 import numpy as np
 from tqdm import tqdm
 from statistics import mean
-from collections import Counter
+from collections import Counter, defaultdict
 from nltk.stem import PorterStemmer
 
 from index_creator import IndexCreator
@@ -70,6 +70,11 @@ def parse_args():
                         " 'nothing': [slowest, least memory usage]  ") # TODO: complete
     return parser.parse_args()
     
+def merge(*args):
+    keys = set()
+    for arg in args:
+        keys = keys.union(arg.keys())
+    return {k: sum(arg.get(k,0) for arg in args) for k in keys}
 
 if __name__ == '__main__':
     args         = parse_args()
@@ -327,8 +332,8 @@ if __name__ == '__main__':
                 
             elif index_type == "inverted_index":
                 if index_in_mem:
-                    #cnt = None
-                    """for word in query_list:
+                    """cnt = None
+                    for word in query_list:
                         if word in index: # for each word of the processed query that the index contains: ...
                             #cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
                             #cnt += Counter(dict(itertools.islice(index[word].items(), max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
@@ -336,15 +341,14 @@ if __name__ == '__main__':
                                 cnt.update(index[word])
                             else:
                                 cnt = index[word].copy()"""
-                    counters = [index[word] for word in query_list if word in index]
-                    cnt = sum(counters[1:], counters[0].copy())
+                    counters = [dict(index[word]) for word in query_list if word in index]
+                    cnt = Counter(merge(counters))
                 else:
                     #counters = data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db') # TODO: compare
                     counters = data_loader.load_index_counters(index_type, query_list, data_path)
-                    """cnt = counters[0]
+                    cnt = counters[0]
                     for i in range(1, len(counters)):
-                        cnt.update(counters[i]) # sum tf-idf values for each identical line and merge counters in general """
-                    cnt = sum(counters[1:], counters[0])
+                        cnt.update(counters[i]) # sum tf-idf values for each identical line and merge counters in general 
                 print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
                 ##################################################################################################################
                 result_line_numbers, values = zip(*cnt.most_common(max_filtered))
