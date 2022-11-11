@@ -70,11 +70,11 @@ def parse_args():
                         " 'nothing': [slowest, least memory usage]  ") # TODO: complete
     return parser.parse_args()
     
-def merge(*args):
+def merge(dcts):
     keys = set()
-    for arg in args:
-        keys = keys.union(arg.keys())
-    return {k: sum(arg.get(k,0.0) for arg in args) for k in keys}
+    for dct in dcts:
+        keys = keys.union(dct.keys())
+    return {k: sum(dct.get(k,0.0) for dct in dcts) for k in keys}
 
 if __name__ == '__main__':
     args         = parse_args()
