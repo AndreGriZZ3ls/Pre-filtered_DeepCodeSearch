@@ -332,7 +332,7 @@ if __name__ == '__main__':
                 
             elif index_type == "inverted_index":
                 if index_in_mem:
-                    """cnt = None
+                    cnt = None
                     for word in query_list:
                         if word in index: # for each word of the processed query that the index contains: ...
                             #cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
@@ -342,13 +342,14 @@ if __name__ == '__main__':
                             else:
                                 cnt = index[word].copy()"""
                     #counters = sorted([index[word] for word in query_list if word in index], key = len, reverse = True)
-                    counters = [index[word] for word in query_list if word in index]
+                    counters = sorted([index[word] for word in query_list if word in index], key = lambda x: -)
+                    #counters = [index[word] for word in query_list if word in index]
                     if len(counters) == 1:
                         cnt = counters[0]
                     else:
                         cnt = counters[0].copy()
                         for i in range(1, len(counters)):
-                            cnt.update(counters[i])
+                            cnt.update(counters[i])"""
                 else:
                     #counters = data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db') # TODO: compare
                     counters = data_loader.load_index_counters(index_type, query_list, data_path)
