@@ -74,7 +74,7 @@ def merge(*args):
     keys = set()
     for arg in args:
         keys = keys.union(arg.keys())
-    return {k: sum(arg.get(k,0) for arg in args) for k in keys}
+    return {k: sum(arg.get(k,0.0) for arg in args) for k in keys}
 
 if __name__ == '__main__':
     args         = parse_args()
