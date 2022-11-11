@@ -352,7 +352,7 @@ if __name__ == '__main__':
                             if i == 1:
                                 cnt.update(counters[i])
                             else:
-                                cnt.update(Counter(dict(itertools.islice(counters[i].items(), max_filtered))))
+                                cnt.update(Counter(dict(itertools.islice(counters[i].items(), math.ceil((max_filtered * 3) / i)))))
                 else:
                     #counters = data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db') # TODO: compare
                     counters = data_loader.load_index_counters(index_type, query_list, data_path)
