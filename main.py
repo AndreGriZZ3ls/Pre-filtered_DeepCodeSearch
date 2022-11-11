@@ -70,11 +70,11 @@ def parse_args():
                         " 'nothing': [slowest, least memory usage]  ") # TODO: complete
     return parser.parse_args()
     
-def merge(dcts):
+def merge(*args):
     keys = set()
-    for dct in dcts:
-        keys = keys.union(dct.keys())
-    return {k: sum(dct.get(k,0.0) for dct in dcts) for k in keys}
+    for arg in args:
+        keys = keys.union(arg.keys())
+    return {k: sum(arg.get(k,0) for arg in args) for k in keys}
 
 if __name__ == '__main__':
     args         = parse_args()
@@ -342,7 +342,12 @@ if __name__ == '__main__':
                             else:
                                 cnt = index[word].copy()"""
                     counters = [dict(index[word]) for word in query_list if word in index]
-                    cnt = Counter(merge(counters))
+                    if len(counters) == 1:
+                        cnt = counters[0]
+                    else:
+                        cnt = counters[0] + counters[1]
+                        for counter in counters[2:]:
+                            cnt.update(counter)
                 else:
                     #counters = data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db') # TODO: compare
                     counters = data_loader.load_index_counters(index_type, query_list, data_path)
