@@ -343,6 +343,7 @@ if __name__ == '__main__':
                                 cnt = index[word].copy()"""
                     #counters = sorted([index[word] for word in query_list if word in index], key = len, reverse = True)
                     counters = sorted([index[word] for word in query_list if word in index], key = lambda x: -next(iter(x.values())))
+                    for counter in counters: print(counter.values())
                     #counters = [index[word] for word in query_list if word in index]
                     if len(counters) == 1:
                         cnt = counters[0]
