@@ -57,7 +57,7 @@ def load_index_counters(name, word_list, index_path, max_items):
             counters.append(Counter(dict(raw)))
         conn.close()
         counters.sort(key = lambda x: -next(iter(x.values())))
-        counters[1] = Counter(dict(itertools.islice(counters[i].items(), max_items * 2)))
+        counters[1] = Counter(dict(itertools.islice(counters[i].items(), math.ceil(max_items * 1.5))))
         for i in range(2, len(counters)):
             counters[i] = Counter(dict(itertools.islice(counters[i].items(), max_items)))
         print(f"Successfully loaded tf-idf value counters from index '{name}' in database '{index_path}'.")
@@ -77,8 +77,8 @@ def load_index_counters(name, word_list, index_path, max_items):
                 k = keys[p:p + min(l, max_items)]
                 v = vals[p:p + min(l, max_items)]
             elif i == 1:
-                k = keys[p:p + min(l, max_items * 2)]
-                v = vals[p:p + min(l, max_items * 2)]
+                k = keys[p:p + min(l, math.ceil(max_items * 1.5))]
+                v = vals[p:p + min(l, math.ceil(max_items * 1.5))]
             else:
                 k = keys[p:p + l]
                 v = vals[p:p + l]

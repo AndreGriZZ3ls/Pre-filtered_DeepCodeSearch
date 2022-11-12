@@ -352,15 +352,15 @@ if __name__ == '__main__':
                         for i in range(1, len(counters)):
                             if i == 1:
                                 #cnt.update(dict(itertools.islice(counters[i].items(), max_filtered * 20)))
-                                cnt.update(dict(itertools.islice(counters[i].items(), max_filtered * 74)))
+                                cnt.update(dict(itertools.islice(counters[i].items(), max_filtered * 57)))
                             else:
                                 #cnt.update(Counter(dict(itertools.islice(counters[i].items(), math.ceil((max_filtered * 10) / (i / 10 + 1.0))))))
                                 #cnt.update(dict(itertools.islice(counters[i].items(), max_filtered * 10)))
-                                cnt.update(dict(itertools.islice(counters[i].items(), max_filtered * 37)))
+                                cnt.update(dict(itertools.islice(counters[i].items(), max_filtered * 38)))
                 else:
                     #counters = data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db', max_filtered * 10) # TODO: compare
                     #counters = data_loader.load_index_counters(index_type, query_list, data_path, max_filtered * 10)
-                    counters = data_loader.load_index_counters(index_type, query_list, data_path, max_filtered * 37)
+                    counters = data_loader.load_index_counters(index_type, query_list, data_path, max_filtered * 38)
                     cnt = counters[0]
                     for i in range(1, len(counters)):
                         cnt.update(counters[i]) # sum tf-idf values for each identical line and merge counters in general 
