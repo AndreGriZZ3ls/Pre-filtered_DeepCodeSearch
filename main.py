@@ -293,10 +293,10 @@ if __name__ == '__main__':
                 break
             start        = time.time()
             start_proc   = time.process_time()
-            max_filtered = max(1950, 130 * n_results + 650)
+            max_filtered = max(2000, 130 * n_results + 650)
             #max_filtered = max(5000, 500 * n_results + 2500)
             #min_filtered = max(5000, 250 * n_results + 2500)
-            min_filtered = max(1300, 65 * n_results + 650)
+            min_filtered = max(1500, 65 * n_results + 650)
             ##### Process user query ######
             query_proc = re.sub(pattern1, ' ', query) # replace all non-alphabetic characters except '[' by ' '
             query_proc = re.sub(pattern2, ' ', query_proc.strip()) # remove consecutive spaces and single caracters
@@ -352,15 +352,15 @@ if __name__ == '__main__':
                         for i in range(1, len(counters)):
                             if i == 1:
                                 #cnt.update(dict(itertools.islice(counters[i].items(), max_filtered * 20)))
-                                cnt.update(dict(itertools.islice(counters[i].items(), max_filtered * 70)))
+                                cnt.update(dict(itertools.islice(counters[i].items(), max_filtered * 74)))
                             else:
                                 #cnt.update(Counter(dict(itertools.islice(counters[i].items(), math.ceil((max_filtered * 10) / (i / 10 + 1.0))))))
                                 #cnt.update(dict(itertools.islice(counters[i].items(), max_filtered * 10)))
-                                cnt.update(dict(itertools.islice(counters[i].items(), max_filtered * 35)))
+                                cnt.update(dict(itertools.islice(counters[i].items(), max_filtered * 37)))
                 else:
                     #counters = data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db', max_filtered * 10) # TODO: compare
                     #counters = data_loader.load_index_counters(index_type, query_list, data_path, max_filtered * 10)
-                    counters = data_loader.load_index_counters(index_type, query_list, data_path, max_filtered * 35)
+                    counters = data_loader.load_index_counters(index_type, query_list, data_path, max_filtered * 37)
                     cnt = counters[0]
                     for i in range(1, len(counters)):
                         cnt.update(counters[i]) # sum tf-idf values for each identical line and merge counters in general 

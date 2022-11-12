@@ -57,19 +57,17 @@ def load_index_counters(name, word_list, index_path, max_items):
             counters.append(Counter(dict(raw)))
         conn.close()
         counters.sort(key = lambda x: -next(iter(x.values())))
+        counters[1] = Counter(dict(itertools.islice(counters[i].items(), max_items * 2)))
         for i in range(2, len(counters)):
             counters[i] = Counter(dict(itertools.islice(counters[i].items(), max_items)))
         print(f"Successfully loaded tf-idf value counters from index '{name}' in database '{index_path}'.")
     else:
         index_file = index_path + name + '.h5'
         assert os.path.exists(index_file), f"Index file {index_file} not found!"
-        h5f      = tables.open_file(index_file, mode = "r")
-        meta     = h5f.root.meta
-        keys     = h5f.root.keys
-        vals     = h5f.root.vals
-        #for word in word_list:
-        #    #word = word.encode()
-        #    cond = f'word == b"{word}"'
+        h5f  = tables.open_file(index_file, mode = "r")
+        meta = h5f.root.meta
+        keys = h5f.root.keys
+        vals = h5f.root.vals
         cond = "|".join(['(word == b"%s")'%w for w in word_list])
         rows = sorted(meta.where(cond), key = lambda row: -vals[row['pos']])
         for i, row in enumerate(rows):
