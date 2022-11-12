@@ -78,6 +78,9 @@ def load_index_counters(name, word_list, index_path, max_items):
             if i > 1:
                 k = keys[p:p + min(l, max_items)]
                 v = vals[p:p + min(l, max_items)]
+            elif i == 1:
+                k = keys[p:p + min(l, max_items * 2)]
+                v = vals[p:p + min(l, max_items * 2)]
             else:
                 k = keys[p:p + l]
                 v = vals[p:p + l]

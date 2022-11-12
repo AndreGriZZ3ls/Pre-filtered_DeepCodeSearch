@@ -350,7 +350,7 @@ if __name__ == '__main__':
                         cnt = counters[0].copy()
                         for i in range(1, len(counters)):
                             if i == 1:
-                                cnt.update(counters[i])
+                                cnt.update(dict(itertools.islice(counters[i].items(), max_filtered * 20)))
                             else:
                                 #cnt.update(Counter(dict(itertools.islice(counters[i].items(), math.ceil((max_filtered * 10) / (i / 10 + 1.0))))))
                                 cnt.update(dict(itertools.islice(counters[i].items(), max_filtered * 10)))
