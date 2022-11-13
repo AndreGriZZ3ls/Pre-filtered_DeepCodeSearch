@@ -303,8 +303,8 @@ def parse_args():
                         " the `repr_code` mode computes vectors for the codebase with a trained model; "
                         " the `search` mode searches the codebase for code snippets most relevant for the users query.")
     parser.add_argument("--verbose",     action = "store_true", default=True, help="Be verbose")
-    parser.add_argument("--memory_mode", choices=["vecs_and_code","vecs","code","nothing"], 
-                        default="nothing", help="'vecs_and_code': [fastest, highest memory usage] "
+    parser.add_argument("--memory_mode", choices=["vecs_and_code","vecs","code","nothing"], default="vecs", 
+                        help="'vecs_and_code': [fastest, highest memory usage] "
                         " Vectors and raw code are loaded at program start and kept in memory for fast access. "
                         " 'vecs': [reasonably slower, quite less memory usage, recommended] Vectors are kept "
                         " in memory; for each query just pre-filtered elements of the raw code are loaded. "
@@ -355,7 +355,9 @@ if __name__ == '__main__':
     optimizer = config.get('training_params', dict()).get('optimizer', 'adam')
     model.compile(optimizer = optimizer)  
 
-    data_path = args.data_path + args.dataset + '/'
+    data_path   = args.data_path + args.dataset + '/'
+    vecs_in_mem = args.memory_mode in ["vecs_and_code","vecs"]
+    code_in_mem = args.memory_mode in ["vecs_and_code","code"]
     
     if args.mode == 'train':  
         engine.train(model)
@@ -386,9 +388,9 @@ if __name__ == '__main__':
         # search code based on a desc:
         assert config['training_params']['reload'] > 0, "Please specify the number of epoch of the optimal checkpoint in config.py"
         engine.load_model(model, config['training_params']['reload'])
-        if args.memory_mode in ["vecs_and_code","vecs"]:
+        if vecs_in_mem:
             engine._code_reprs = data_loader.load_code_reprs(data_path + config['data_params']['use_codevecs'], engine._codebase_chunksize)
-        if args.memory_mode in ["vecs_and_code","code"]:
+        if code_in_mem:
             engine._codebase   = data_loader.load_codebase(  data_path + config['data_params']['use_codebase'], engine._codebase_chunksize)
         vocab = data_loader.load_pickle(data_path + config['data_params']['vocab_desc'])
         while True:
@@ -405,5 +407,6 @@ if __name__ == '__main__':
             start_proc = time.process_time()
             query   = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'])
+            if not code_in_mem: engine._codebase = None
             print('Total time:  {:5.3f}s'.format(time.time()-start))
             print('System time: {:5.3f}s'.format(time.process_time()-start_proc))
