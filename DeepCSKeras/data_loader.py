@@ -62,6 +62,8 @@ def load_index_counters(name, word_list, index_path, max_items):
             counters[i] = Counter(dict(itertools.islice(counters[i].items(), max_items)))
         print(f"Successfully loaded tf-idf value counters from index '{name}' in database '{index_path}'.")
     else:
+        counters   = [Counter(), Counter()]
+        val_scores = []
         index_file = index_path + name + '.h5'
         assert os.path.exists(index_file), f"Index file {index_file} not found!"
         h5f  = tables.open_file(index_file, mode = "r")
@@ -69,20 +71,27 @@ def load_index_counters(name, word_list, index_path, max_items):
         keys = h5f.root.keys
         vals = h5f.root.vals
         cond = "|".join(['(word == b"%s")'%w for w in word_list])
-        rows = sorted(list(meta.where(cond)), key = lambda row: -vals[row['pos']])
+        rows = meta.where(cond)
+        for row in rows:
+            val_scores.append(vals[row['pos']])
+        val_scores[val_scores.index(max(val_scores))] = -2
+        val_scores[val_scores.index(max(val_scores))] = -1
         for i, row in enumerate(rows):
             l = row['len']
             p = row['pos']
-            if i > 1:
-                k = keys[p:p + min(l, max_items)]
-                v = vals[p:p + min(l, max_items)]
-            elif i == 1:
-                k = keys[p:p + min(l, math.ceil(max_items * 1.5))]
-                v = vals[p:p + min(l, math.ceil(max_items * 1.5))]
-            else:
+            print(vals[p])
+            if val_scores[i] == -2:
                 k = keys[p:p + l]
                 v = vals[p:p + l]
-            counters.append(Counter(dict(zip(k, v))))
+                counters[0] = Counter(dict(zip(k, v)))
+            elif val_scores[i] == -1:
+                k = keys[p:p + min(l, math.ceil(max_items * 1.5))]
+                v = vals[p:p + min(l, math.ceil(max_items * 1.5))]
+                counters[1] = Counter(dict(zip(k, v)))
+            else:
+                k = keys[p:p + min(l, max_items)]
+                v = vals[p:p + min(l, max_items)]
+                counters.append(Counter(dict(zip(k, v))))
         h5f.close()
         print('Total load_index_counters time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time()-start))
         print(f"Successfully loaded tf-idf value counters from index '{index_file}'.")
