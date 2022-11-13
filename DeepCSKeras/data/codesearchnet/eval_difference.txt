@@ -1,5 +1,5 @@
 convert an inputstream to a string
-create arraylist from array
+create arraylist from array######################################################################################
 iterate through a hashmap
 generating random integers in a specific range
 converting string to int in java

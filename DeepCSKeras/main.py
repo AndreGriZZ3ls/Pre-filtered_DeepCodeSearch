@@ -407,6 +407,5 @@ if __name__ == '__main__':
             start_proc = time.process_time()
             query   = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'])
-            if not code_in_mem: engine._codebase = None
             print('Total time:  {:5.3f}s'.format(time.time()-start))
             print('System time: {:5.3f}s'.format(time.process_time()-start_proc))
