@@ -75,12 +75,12 @@ def load_index_counters(name, word_list, index_path, max_items):
         for i, row in enumerate(rows):
             l = row[0]
             p = row[1]
-            print(l)
+            #print(l)
             if i == 0:
                 #k = keys[p:p + l]
                 #v = vals[p:p + l]
-                k = keys[p:p + min(l, max_items * 5)]
-                v = vals[p:p + min(l, max_items * 5)]
+                k = keys[p:p + min(l, max_items * 4)]
+                v = vals[p:p + min(l, max_items * 4)]
             elif i == 1:
                 k = keys[p:p + min(l, math.ceil(max_items * 1.5))]
                 v = vals[p:p + min(l, math.ceil(max_items * 1.5))]
