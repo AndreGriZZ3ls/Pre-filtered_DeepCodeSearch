@@ -71,26 +71,29 @@ def load_index_counters(name, word_list, index_path, max_items):
         keys = h5f.root.keys
         vals = h5f.root.vals
         cond = "|".join(['(word == b"%s")'%w for w in word_list])
-        rows = meta.where(cond)
-        #rows = [row for row in meta.where(cond)]
+        #rows = meta.where(cond)
+        raw  = meta.where(cond)
+        rows = [zip(row['len'], row['pos']) for row in meta.where(cond)]
         #rows = list(meta.read_where(cond))
         #rows.sort(key = lambda row: -vals[row['pos']])
-        for row in rows:
+        rows.sort(key = lambda row: -vals[row[1]])
+        """for row in rows:
             val_scores.append(vals[row['pos']])
         val_scores[val_scores.index(max(val_scores))] = -2
         val_scores[val_scores.index(max(val_scores))] = -1
-        rows = meta.where(cond)
+        rows = meta.where(cond)"""
         for i, row in enumerate(rows):
-            l = row['len']
-            p = row['pos']
+            #l = row['len']
+            #p = row['pos']
+            l, p = zip(*row)
             print(vals[p])
-            if val_scores[i] == -2:
-            #if i == 0:
+            #if val_scores[i] == -2:
+            if i == 0:
                 k = keys[p:p + l]
                 v = vals[p:p + l]
                 counters[0] = Counter(dict(zip(k, v)))
-            elif val_scores[i] == -1:
-            #elif i == 1:
+            #elif val_scores[i] == -1:
+            elif i == 1:
                 k = keys[p:p + min(l, math.ceil(max_items * 1.5))]
                 v = vals[p:p + min(l, math.ceil(max_items * 1.5))]
                 counters[1] = Counter(dict(zip(k, v)))
