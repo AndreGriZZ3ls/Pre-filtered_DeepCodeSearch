@@ -348,7 +348,8 @@ if __name__ == '__main__':
                     if len(counters) == 1:
                         cnt = counters[0]
                     else:
-                        cnt = counters[0].copy()
+                        #cnt = counters[0].copy()
+                        cnt = Counter(dict(itertools.islice(counters[0].items(), max_filtered * 190))).copy()
                         for i in range(1, len(counters)):
                             if i == 1:
                                 #cnt.update(dict(itertools.islice(counters[i].items(), max_filtered * 20)))
