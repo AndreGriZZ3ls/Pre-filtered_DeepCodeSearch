@@ -72,7 +72,7 @@ def load_index_counters(name, word_list, index_path, max_items):
         vals = h5f.root.vals
         cond = "|".join(['(word == b"%s")'%w for w in word_list])
         #rows = meta.where(cond)
-        rows = [zip(row['len'], row['pos']) for row in meta.where(cond)]
+        rows = [(row['len'], row['pos']) for row in meta.where(cond)]
         #rows = list(meta.read_where(cond))
         #rows.sort(key = lambda row: -vals[row['pos']])
         rows.sort(key = lambda row: -vals[row[1]])
@@ -84,7 +84,8 @@ def load_index_counters(name, word_list, index_path, max_items):
         for i, row in enumerate(rows):
             #l = row['len']
             #p = row['pos']
-            l, p = zip(*row)
+            l = row[0]
+            p = row[1]
             print(vals[p])
             #if val_scores[i] == -2:
             if i == 0:
