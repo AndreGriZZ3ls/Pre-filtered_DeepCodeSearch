@@ -171,8 +171,8 @@ if __name__ == '__main__':
         index     = indexer.load_index()
         n_results = 10
         porter    = PorterStemmer()
-        max_filtered = max(5000, 500 * n_results + 2500)
-        min_filtered = max(5000, 250 * n_results + 2500)
+        max_filtered = max(2000, 130 * n_results + 650)
+        min_filtered = max(1500, 65 * n_results + 650)
         
         
         for query in queries:
@@ -194,10 +194,15 @@ if __name__ == '__main__':
             query_list = [indexer.replace_synonyms(w) for w in query_list]
             query_list = list(set(query_list))
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
-            query_cnt, cnt = Counter(), Counter()
-            for word in query_list:
-                if word in index: # for each word of the processed query that the index contains: ...
-                    cnt.update(index[word])
+            query_cnt = Counter()
+            counters = sorted([index[word] for word in query_list if word in index], key = lambda x: -next(iter(x.values())))
+            if len(counters) == 1:
+                cnt = counters[0]
+            else:
+                cnt = Counter(dict(itertools.islice(counters[0].items(), max_filtered * 152))).copy()
+                cnt.update(dict(itertools.islice(counters[1].items(), max_filtered * 57)))
+                for i in range(1, len(counters)):
+                    cnt.update(dict(itertools.islice(counters[i].items(), max_filtered * 38)))
             result_line_numbers, values = zip(*cnt.most_common(max_filtered))
             try:
                 last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val >= tf_idf_threshold)
@@ -294,8 +299,6 @@ if __name__ == '__main__':
             start        = time.time()
             start_proc   = time.process_time()
             max_filtered = max(2000, 130 * n_results + 650)
-            #max_filtered = max(5000, 500 * n_results + 2500)
-            #min_filtered = max(5000, 250 * n_results + 2500)
             min_filtered = max(1500, 65 * n_results + 650)
             ##### Process user query ######
             query_proc = re.sub(pattern1, ' ', query) # replace all non-alphabetic characters except '[' by ' '
@@ -333,8 +336,8 @@ if __name__ == '__main__':
                 
             elif index_type == "inverted_index":
                 if index_in_mem:
-                    cnt = None
-                    """for word in query_list:
+                    """cnt = None
+                    for word in query_list:
                         if word in index: # for each word of the processed query that the index contains: ...
                             #cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
                             #cnt += Counter(dict(itertools.islice(index[word].items(), max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
@@ -342,25 +345,16 @@ if __name__ == '__main__':
                                 cnt.update(index[word])
                             else:
                                 cnt = index[word].copy()"""
-                    #counters = sorted([index[word] for word in query_list if word in index], key = len, reverse = True)
                     counters = sorted([index[word] for word in query_list if word in index], key = lambda x: -next(iter(x.values())))
-                    #counters = [index[word] for word in query_list if word in index]
                     if len(counters) == 1:
                         cnt = counters[0]
                     else:
-                        #cnt = counters[0].copy()
                         cnt = Counter(dict(itertools.islice(counters[0].items(), max_filtered * 152))).copy()
+                        cnt.update(dict(itertools.islice(counters[1].items(), max_filtered * 57)))
                         for i in range(1, len(counters)):
-                            if i == 1:
-                                #cnt.update(dict(itertools.islice(counters[i].items(), max_filtered * 20)))
-                                cnt.update(dict(itertools.islice(counters[i].items(), max_filtered * 57)))
-                            else:
-                                #cnt.update(Counter(dict(itertools.islice(counters[i].items(), math.ceil((max_filtered * 10) / (i / 10 + 1.0))))))
-                                #cnt.update(dict(itertools.islice(counters[i].items(), max_filtered * 10)))
-                                cnt.update(dict(itertools.islice(counters[i].items(), max_filtered * 38)))
+                            cnt.update(dict(itertools.islice(counters[i].items(), max_filtered * 38)))
                 else:
                     #counters = data_loader.load_index_counters(index_type, query_list, data_path + 'sqlite.db', max_filtered * 10) # TODO: compare
-                    #counters = data_loader.load_index_counters(index_type, query_list, data_path, max_filtered * 10)
                     counters = data_loader.load_index_counters(index_type, query_list, data_path, max_filtered * 38)
                     cnt = counters[0]
                     for i in range(1, len(counters)):
