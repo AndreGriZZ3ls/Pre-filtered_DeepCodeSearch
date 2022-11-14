@@ -145,9 +145,9 @@ if __name__ == '__main__':
             #out_path_pf = data_path + 'search_results_filtered.txt'
             out_path_pf = data_path + 'eval_results.txt'
             #if os.path.exists(out_path   ): os.remove(out_path)
-            if os.path.exists(out_path_pf): os.remove(out_path_pf)
+            #if os.path.exists(out_path_pf): os.remove(out_path_pf)
             #out_file    = io.open(out_path   , "a", encoding='utf8', errors='replace')
-            out_file_pf = io.open(out_path_pf, "a", encoding='utf8', errors='replace')
+            #out_file_pf = io.open(out_path_pf, "a", encoding='utf8', errors='replace')
             
             engine = deepCS_main.SearchEngine(args, config)
             model  = getattr(models, args.model)(config) # initialize the model
@@ -230,7 +230,7 @@ if __name__ == '__main__':
                 seperator = f"########################## {e} #################################\n"
                 metrics = "\n\nFRank:   | P@1:   | P@5:   | P@10: \n\n"
                 #out_file.write(   seperator + '\n\n'.join(map(str, list(zip(deepCS_codes, deepCS_sims)))) + metrics)
-                out_file_pf.write(seperator + '\n\n'.join(map(str, list(zip(       codes,        sims)))) + metrics)
+                #out_file_pf.write(seperator + '\n\n'.join(map(str, list(zip(       codes,        sims)))) + metrics)
             else:
                 for s, line in enumerate(query_lines):
                     score = query_scores[s]
@@ -243,16 +243,17 @@ if __name__ == '__main__':
                 result_file.write(f"{e}&{query}&{query_cnt['found_3']} / {query_cnt['total_3']}&{query_cnt['found_2']} / {query_cnt['total_2']}&{query_cnt['found_1']} / {query_cnt['total_1']}\\\\\n")
         if args.mode == "eval":
             e = 0
-            result_file = fileinput.FileInput(data_path + 'eval_difference_results.txt', inplace=1)
+            #result_file = fileinput.FileInput(data_path + 'eval_difference_results.txt', inplace=1)
+            result_file = fileinput.FileInput(data_path + 'eval_results.txt', inplace=1)
             for line in result_file:
                 line = re.sub(r'(&[\d,]+&[\d,]+&)', f"&{format(round(mean_sims[e], 4), '.4f')}&{format(round(mean_sims_pf[e], 4), '.4f')}&", line)
                 line = re.sub(r'(&\d+\\\\$)', f"&{10 - amount_diff[e]}\\\\\ ", line)
                 print(line.strip())
                 e += 1
             #out_file.write(   f"Mean sims: {format(round(mean(mean_sims), 4), '.4f')}")
-            out_file_pf.write(f"Mean sims: {format(round(mean(mean_sims_pf), 4), '.4f')}")
+            #out_file_pf.write(f"Mean sims: {format(round(mean(mean_sims_pf), 4), '.4f')}")
             #out_file.close()
-            out_file_pf.close()
+            #out_file_pf.close()
         else:
             result_file.write(f"&Insgesamt&{global_cnt['found_3']} / {global_cnt['total_3']}&{global_cnt['found_2']} / {global_cnt['total_2']}&{global_cnt['found_1']} / {global_cnt['total_1']}\\\\\n")
         result_file.close()
