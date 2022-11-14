@@ -142,7 +142,8 @@ if __name__ == '__main__':
             source_file.close()
             amount_diff, mean_sims, mean_sims_pf = [], [], []
             #out_path    = data_path + 'search_results.txt'
-            out_path_pf = data_path + 'search_results_filtered.txt'
+            #out_path_pf = data_path + 'search_results_filtered.txt'
+            out_path_pf = data_path + 'eval_results.txt'
             #if os.path.exists(out_path   ): os.remove(out_path)
             if os.path.exists(out_path_pf): os.remove(out_path_pf)
             #out_file    = io.open(out_path   , "a", encoding='utf8', errors='replace')
