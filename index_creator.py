@@ -176,7 +176,6 @@ class IndexCreator:
                         cnt = Counter()
                         cnt[i] = 1
                         index[word] = cnt
-            print(f"Found arrays in {len(list(index['[]'].keys()))} methods.")
 
     def create_index(self, stopwords):
         if self.index_type == "word_indices": print("Nothing to be done."); return

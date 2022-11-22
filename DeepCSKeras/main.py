@@ -207,12 +207,13 @@ class SearchEngine:
         desc_repr    = normalize(desc_repr).T # [dim x 1]
         codes, sims  = [], []
         threads      = []
-        ################ Reload code each time (to simulate usage of database):
+        ################ added:
         if not self._code_reprs:
             self._code_reprs = data_loader.load_code_reprs(self.data_path + self.data_params['use_codevecs'], self._codebase_chunksize)
-        ################
+        
         if len(self._code_reprs) == 1:
             self.search_thread(codes, sims, desc_repr, self._code_reprs[0], 0, n_results)
+        ################
         else:
             for i, code_reprs_chunk in enumerate(self._code_reprs):
                 t = threading.Thread(target = self.search_thread, args = (codes, sims, desc_repr, code_reprs_chunk, i, n_results))
@@ -221,20 +222,11 @@ class SearchEngine:
                 t.start()
             for t in threads:# wait until all sub-threads finish
                 t.join()
-        ################
-        #del self._code_reprs
-        #gc.collect()
-        #self._code_reprs = None
-        ################
         return codes, sims
                 
     def search_thread(self, codes, sims, desc_repr, code_reprs, i, n_results):        
     #1. compute similarity
         chunk_sims = np.dot(code_reprs, desc_repr) # [pool_size x 1] 
-        ################
-        #del code_reprs
-        #gc.collect()
-        ################
         chunk_sims = np.squeeze(chunk_sims, axis = 1)
     #2. choose top results
         negsims = np.negative(chunk_sims)
@@ -249,17 +241,12 @@ class SearchEngine:
             offset = i * self._codebase_chunksize
             for ind in range(0, len(maxinds)):
                 maxinds[ind] = maxinds[ind] + offset
-                #print(ind)
             codes.extend(maxinds)
             #######################################
-            """chunk_codes = data_loader.load_codebase_lines(self.data_path + self.data_params['use_codebase'], maxinds, self._codebase_chunksize, i)
-            codes.extend(chunk_codes)"""
         sims.extend(chunk_sims)
         
     def postproc(self, codes_sims):
         codes_, sims_ = zip(*codes_sims)
-        #codes = [code for code in codes_]
-        #sims  = [sim  for sim  in sims_ ]
         codes = list(codes_)
         sims  = list(sims_ )
         final_codes, final_sims = [], [] 
@@ -272,25 +259,6 @@ class SearchEngine:
                 final_codes.append(codes[i])
                 final_sims.append(  sims[i])
         return zip(final_codes, final_sims)
-
-    """def postproc_ln(self, codes_sims_lines):
-        codes_, sims_, lines_ = zip(*codes_sims_lines)
-        #codes = [code for code in codes_]
-        #sims  = [sim  for sim  in sims_ ]
-        codes = list(codes_)
-        sims  = list(sims_ )
-        lines = list(lines_) 
-        final_codes, final_sims, final_lines = [], [], []
-        for i in range(len(codes_sims_lines)):
-            is_dup = False
-            for j in range(i):
-                if codes[i][:80] == codes[j][:80] and abs(sims[i] - sims[j]) < 0.01:
-                    is_dup = True
-            if not is_dup:
-                final_codes.append(codes[i])
-                final_sims.append(  sims[i])
-                final_lines.append(lines[i])
-        return final_codes, final_sims, final_lines"""
     
 def parse_args():
     parser = argparse.ArgumentParser("Train and Test Code Search(Embedding) Model")
@@ -298,18 +266,22 @@ def parse_args():
     parser.add_argument("--model",     type=str, default="JointEmbeddingModel",  help="model name")
     parser.add_argument("--dataset",   type=str, default="codesearchnet",        help="dataset name")
     parser.add_argument("--mode", choices=["train","eval","repr_code","search"], default='search',
-                        help="The mode to run. The `train` mode trains a model;"
-                        " the `eval` mode evaluat models in a test set; "
-                        " the `repr_code` mode computes vectors for the codebase with a trained model; "
-                        " the `search` mode searches the codebase for code snippets most relevant for the users query.")
+                        help="The mode to run. The 'train' mode trains a model;"
+                        " the 'eval' mode evaluat models in a test set; "
+                        " the 'repr_code' mode computes vectors for the codebase with a trained model; "
+                        " the 'search' mode searches the codebase for code snippets most relevant for the users query.")
     parser.add_argument("--verbose",     action = "store_true", default=True, help="Be verbose")
-    parser.add_argument("--memory_mode", choices=["vecs_and_code","vecs","code","nothing"], default="vecs", 
-                        help="'vecs_and_code': [fastest, highest memory usage] "
-                        " Vectors and raw code are loaded at program start and kept in memory for fast access. "
-                        " 'vecs': [reasonably slower, quite less memory usage, recommended] Vectors are kept "
-                        " in memory; for each query just pre-filtered elements of the raw code are loaded. "
-                        " 'code': [much slower, much less memory usage] Just the raw code is kept in memory. "
-                        " 'nothing': [slowest, least memory usage, not recommended] Load everything from disk for each query. ") # TODO: complete
+    parser.add_argument("--memory_mode", choices=["vecs_and_code","vecs","code","nothing"], default="vecs_and_code", 
+                        help="'vecs_and_code': [fastest, highest memory usage, recommended] "
+                        "Vectors and raw code are loaded at program start and kept in memory for fast access. "
+                        "\n'vecs': [quite slower, reasonably less memory usage, adequate] Vectors are kept "
+                        "in memory; for each query just pre-filtered elements of the raw code are loaded. "
+                        "\n'code': [much slower, also highest memory usage, prototype -> not recommended -> use 'vecs_and_code' "
+                        "instead] Just the raw code is loaded at program start. Currently all vectors are loaded for the "
+                        "first query and then kept in memory (from this point same as 'vecs_and_code'). "
+                        "\n'nothing': [slowest, reasonably less memory usage, prototype -> not recommended -> use 'vecs' instead] "
+                        "Load everything from disk for first query. Currently all vectors are then kept in memory "
+                        "(so after the first query this behaves the same as 'vecs').")
     return parser.parse_args()
 
 # moved into a function:
@@ -317,28 +289,18 @@ def search_and_print_results(engine, model, vocab, query, n_results, data_path, 
     codes, sims = engine.search(model, vocab, query, n_results)
     ################ added ################
     if not engine._codebase:
-        #codes = data_loader.load_codebase_lines(data_path + data_params['use_codebase'], codes, -1)
         codes, sims = zip(*sorted(zip(codes, sims), key = lambda x:x[0]))
         codes = list(codes)
         sims  = list(sims )
         codes = data_loader.load_codebase_lines(data_path + 'sqlite.db', codes, -1) # database
     #######################################
-    """if return_line_numbers:
-        zipped  = zip(codes, sims, line_numbers)
-        zipped  = sorted(zipped, reverse = True, key = lambda x:x[1])
-        final_codes, final_sims, final_lines = engine.postproc_ln(zipped)
-        return final_codes[:n_results], final_sims[:n_results], set(final_lines[:n_results])"""
     zipped  = zip(codes, sims)
     zipped  = sorted(zipped, reverse = True, key = lambda x:x[1])
     zipped  = engine.postproc(zipped)
     zipped  = list(zipped)[:n_results]
-    if return_results: return zip(*zipped)
+    if return_results: return zip(*zipped)  # <- added
     results = '\n\n'.join(map(str, zipped)) # combine the result into a returning string
     print(results)
-    ################ added ################
-    #del codes, sims, zipped, results, engine._codebase
-    #gc.collect()
-    #######################################
 #
 
 if __name__ == '__main__':
@@ -374,17 +336,6 @@ if __name__ == '__main__':
         data_loader.save_code_reprs(vecs, data_path + config['data_params']['use_codevecs'])
         
     elif args.mode == 'search':
-        """try:
-            shutil.rmtree('__pycache__')
-            print('Info: Cleared DeepCSKeras cache.')
-        except FileNotFoundError:
-            print('Info: DeepCSKeras cache is not present --> nothing to be cleared.')
-            pass
-        except:
-            print("Exception while trying to clear cache directory '__pycache__'! \n Warning: Cache not cleared. --> Time measurements will be distorted!")
-            traceback.print_exc()
-            pass"""
-            
         # search code based on a desc:
         assert config['training_params']['reload'] > 0, "Please specify the number of epoch of the optimal checkpoint in config.py"
         engine.load_model(model, config['training_params']['reload'])

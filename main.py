@@ -56,18 +56,29 @@ def parse_args():
                         " DeepCS with a trained model to search pre-selected for the K most relevant code snippets; "
                         " 'populate_database' mode adds data to the database (for one time use only!); "
                         " 'evaluate' mode evaluates the filter (false negatives).")
-    parser.add_argument("--index_type", choices=["word_indices","inverted_index"], default="inverted_index", help="Type of index "
-                        " to be created or used: The 'word_indices' mode [not recommended at all] utilizes parts of the dataset "
-                        " already existing for DeepCS to work (simple but not usable for more accurete similarity measurements. "
-                        " For each meaningful word the 'inverted_index' stores IDs and tf-idf weights of code fragment that contain it. ")
+    parser.add_argument("--index_type", choices=["inverted_index","word_indices"], default="inverted_index", help="Type of index "
+                        " to be created or used: \nFor each meaningful word the 'inverted_index' stores IDs and tf-idf weights of "
+                        " code fragment that contain it. \nThe 'word_indices' mode [not recommended at all!] utilizes parts of the "
+                        " dataset already existing for DeepCS to use (simple and does not require any additional computing, disk/ "
+                        " memory space, nor updating but is incompatible with advanced similarity measurements.")
     parser.add_argument("--memory_mode", choices=["performance","vecs_and_code","vecs_and_index","vecs","code_and_index","code","index","nothing"], 
-                        default="nothing", help="'performance': [fastest, overly memory intensive, not recommended] All data "
-                        " are loaded just one time at program start and kept in memory for fast access. 'vecs_and_code': "
-                        " [insignificantly slower, less memory usage] Vectors and raw code are loaded at program start and kept in "
-                        " memory; for each query just necessary index items including counter objects are loaded from "
-                        " disk very fast. 'vecs': [reasonably slower, quite less memory usage, recommended] Vectors are kept "
-                        " in memory; for each query just pre-filtered elements of raw code and index are loaded. 'code':   "
-                        " 'nothing': [slowest, least memory usage]  ") # TODO: complete
+                        default="performance", help="'performance': [fastest, highest memory usage, recommended if memory is "
+                        "sufficient] All data are loaded just one time at program start and kept in memory for fast access. "
+                        "\n'vecs_and_code': [insignificantly slower, less memory usage, recommended] Vectors and raw code are "
+                        "loaded at program start and kept in memory; for each query just necessary index items including counter "
+                        "objects are loaded from disk very fast. "
+                        "\n'vecs_and_index': [insignificantly slower, less memory usage, recommended] Vectors and index are kept "
+                        "in memory; for each query just pre-filtered elements of raw code are loaded. "
+                        "\n'vecs': [reasonably slower, quite less memory usage, adequate] Vectors are kept in memory; for each "
+                        "query just pre-filtered elements of raw code and index are loaded. "
+                        "\n'code_and_index': [slower than original DeepCS, quite less memory usage, bad memory to performance "
+                        "ratio -> not recommended] Raw code and index are kept im memory; pre-filtered vectors are loaded. "
+                        "\n'code': [slower than original DeepCS, much less memory usage, questionable memory "
+                        "to performance ratio] Keep raw code in memory; load index and vectors as needed. "
+                        "\n'index': [slower than original DeepCS, much less memory usage, questionable memory to performance "
+                        "ratio] Keep index in memory; load raw code and vectors as needed. "
+                        "\n'nothing': [slower than original DeepCS, lowest memory usage, recommended only for systems with "
+                        "extremely little memory] Load just required parts of all data from disk for each query.")
     return parser.parse_args()
     
 def merge(*args):
@@ -97,16 +108,16 @@ if __name__ == '__main__':
     if args.mode == 'populate_database':
         #data_loader.data_to_db(data_path, config)
         #print('Info: Populating the database was sucessful.')
-        """index = indexer.load_index()
-        for word in index.keys():
+        index = indexer.load_index()
+        """for word in index.keys():
             index[word] = Counter(dict(sorted(index[word].items(), key=lambda x: (-x[1], x[0]))))
         data_loader.save_index(index_type, index, data_path)
         data_loader.save_pickle(data_path + index_type + '.pkl', index)"""
         #data_loader.codebase_to_sqlite(data_path + config['data_params']['use_codebase'], data_path + 'sqlite.db')
         #data_loader.index_to_sqlite(index_type, data_path + index_type + '.pkl', data_path + 'sqlite.db')
         #indexer.process_raw_code()
-        """porter = PorterStemmer()
-        to_stem = ".replace(' read ', 'load').replace(' write', 'store').replace('save', 'store').replace(' dump', 'store')\
+        porter = PorterStemmer()
+        """to_stem = ".replace(' read ', 'load').replace(' write', 'store').replace('save', 'store').replace(' dump', 'store')\
         .replace('object', 'instance').replace(' quit', 'exit').replace('terminate', 'exit').replace(' leave', 'exit')\
         .replace(' pop ', 'delet').replace('remov', 'delet').replace(' trim ', 'delet').replace(' strip ', 'delet')\
         .replace(' halt', 'stop').replace('restart', 'continue').replace('push ', 'add')\
@@ -128,6 +139,18 @@ if __name__ == '__main__':
             if word == 'replace': continue
             to_stem = to_stem.replace(word, porter.stem(word))
         print(to_stem)"""
+        word = porter.stem("convert")
+        print(word)
+        print(Counter(dict(itertools.islice(index[word].items(), 5))))
+        print(Counter(dict(itertools.islice(index[word].items(), 1999, 2001))))
+        word = porter.stem("inputsream")
+        print(word)
+        print(Counter(dict(itertools.islice(index[word].items(), 5))))
+        print(Counter(dict(itertools.islice(index[word].items(), 1999, 2001))))
+        word = porter.stem("string")
+        print(word)
+        print(Counter(dict(itertools.islice(index[word].items(), 5))))
+        print(Counter(dict(itertools.islice(index[word].items(), 1999, 2001))))
         print('Nothing done.')
     
     elif args.mode == 'create_index':
@@ -141,13 +164,13 @@ if __name__ == '__main__':
             queries     = source_file.readlines()
             source_file.close()
             amount_diff, mean_sims, mean_sims_pf = [], [], []
-            #out_path    = data_path + 'search_results.txt'
-            #out_path_pf = data_path + 'search_results_filtered.txt'
+            out_path    = data_path + 'search_results.txt'
+            out_path_pf = data_path + 'search_results_filtered.txt'
             out_path_pf = data_path + 'eval_results.txt'
-            #if os.path.exists(out_path   ): os.remove(out_path)
-            #if os.path.exists(out_path_pf): os.remove(out_path_pf)
-            #out_file    = io.open(out_path   , "a", encoding='utf8', errors='replace')
-            #out_file_pf = io.open(out_path_pf, "a", encoding='utf8', errors='replace')
+            if os.path.exists(out_path   ): os.remove(out_path)
+            if os.path.exists(out_path_pf): os.remove(out_path_pf)
+            out_file    = io.open(out_path   , "a", encoding='utf8', errors='replace')
+            out_file_pf = io.open(out_path_pf, "a", encoding='utf8', errors='replace')
             
             engine = deepCS_main.SearchEngine(args, config)
             model  = getattr(models, args.model)(config) # initialize the model
@@ -229,8 +252,8 @@ if __name__ == '__main__':
                 e += 1
                 seperator = f"########################## {e} #################################\n"
                 metrics = "\n\nFRank:   | P@1:   | P@5:   | P@10: \n\n"
-                #out_file.write(   seperator + '\n\n'.join(map(str, list(zip(deepCS_codes, deepCS_sims)))) + metrics)
-                #out_file_pf.write(seperator + '\n\n'.join(map(str, list(zip(       codes,        sims)))) + metrics)
+                out_file.write(   seperator + '\n\n'.join(map(str, list(zip(deepCS_codes, deepCS_sims)))) + metrics)
+                out_file_pf.write(seperator + '\n\n'.join(map(str, list(zip(       codes,        sims)))) + metrics)
             else:
                 for s, line in enumerate(query_lines):
                     score = query_scores[s]
@@ -243,17 +266,17 @@ if __name__ == '__main__':
                 result_file.write(f"{e}&{query}&{query_cnt['found_3']} / {query_cnt['total_3']}&{query_cnt['found_2']} / {query_cnt['total_2']}&{query_cnt['found_1']} / {query_cnt['total_1']}\\\\\n")
         if args.mode == "eval":
             e = 0
-            #result_file = fileinput.FileInput(data_path + 'eval_difference_results.txt', inplace=1)
-            result_file = fileinput.FileInput(data_path + 'eval_results.txt', inplace=1)
+            result_file = fileinput.FileInput(data_path + 'eval_difference_results.txt', inplace=1)
+            #result_file = fileinput.FileInput(data_path + 'eval_results.txt', inplace=1)
             for line in result_file:
-                line = re.sub(r'(&[\d,]+&[\d,]+&)', f"&{format(round(mean_sims[e], 4), '.4f')}&{format(round(mean_sims_pf[e], 4), '.4f')}&", line)
+                line = re.sub(r'(&[\d,]+&[\d,]+&)', f"&{format(round(mean_sims[e], 2), '.2f')}&{format(round(mean_sims_pf[e], 2), '.2f')}&", line)
                 line = re.sub(r'(&\d+\\\\$)', f"&{10 - amount_diff[e]}\\\\\ ", line)
                 print(line.strip())
                 e += 1
-            #out_file.write(   f"Mean sims: {format(round(mean(mean_sims), 4), '.4f')}")
-            #out_file_pf.write(f"Mean sims: {format(round(mean(mean_sims_pf), 4), '.4f')}")
-            #out_file.close()
-            #out_file_pf.close()
+            out_file.write(   f"Mean sims: {format(round(mean(mean_sims), 2), '.2f')}")
+            out_file_pf.write(f"Mean sims: {format(round(mean(mean_sims_pf), 2), '.2f')}")
+            out_file.close()
+            out_file_pf.close()
         else:
             result_file.write(f"&Insgesamt&{global_cnt['found_3']} / {global_cnt['total_3']}&{global_cnt['found_2']} / {global_cnt['total_2']}&{global_cnt['found_1']} / {global_cnt['total_1']}\\\\\n")
         result_file.close()
@@ -308,15 +331,8 @@ if __name__ == '__main__':
             query_proc = query_proc.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('what is ', '').replace('?', '').replace(' numeric', ' numeric int double decimal').strip()
             query      = query.lower().replace('how to ', '').replace('how do i ', '').replace('how can i ', '').replace('?', '').strip()
             query_list = list(set(query_proc.split(' ')) - stopwords)
-            #len_query_without_stems = len(query_list)
-            """for word in query_list:
-                word_stem = porter.stem(word)
-                if word != word_stem and word_stem not in stopwords:
-                    tmp.append(word_stem) # include stems of query words"""
             for i in range(0, len(query_list)):
                 query_list[i] = indexer.replace_synonyms(porter.stem(query_list[i]))
-            #query_list.extend(tmp)
-            #query_list = [indexer.replace_synonyms(w) for w in query_list]
             query_list = list(set(query_list))
             #print('Time to prepare query:  {:5.3f}s'.format(time.time()-start))
             print(f"Query without stopwords and possibly with replaced synonyms as well as added word stems: {query_list}")
@@ -338,15 +354,6 @@ if __name__ == '__main__':
                 
             elif index_type == "inverted_index":
                 if index_in_mem:
-                    """cnt = None
-                    for word in query_list:
-                        if word in index: # for each word of the processed query that the index contains: ...
-                            #cnt += Counter(dict(index[word].most_common(max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
-                            #cnt += Counter(dict(itertools.islice(index[word].items(), max_filtered))) # sum tf-idf values for each identical line and merge counters in general 
-                            if cnt:
-                                cnt.update(index[word])
-                            else:
-                                cnt = index[word].copy()"""
                     counters = sorted([index[word] for word in query_list if word in index], key = lambda x: -next(iter(x.values())))
                     if len(counters) == 1:
                         cnt = counters[0]
@@ -364,8 +371,6 @@ if __name__ == '__main__':
                 print('Time to sum the tf-idf counters:  {:5.3f}s'.format(time.time()-start))
                 ##################################################################################################################
                 result_line_numbers, values = zip(*cnt.most_common(max_filtered))
-                #result_line_numbers, values = zip(*itertools.islice(sorted(cnt.items(), key=lambda x: (-x[1], x[0])), max_filtered))
-                #cnt = None
                 print('Time to sort and slice:  {:5.3f}s'.format(time.time()-start))
                 try:
                     last_threshold_index = 1 + max(idx for idx, val in enumerate(list(values)) if val >= tf_idf_threshold)
@@ -382,7 +387,6 @@ if __name__ == '__main__':
             #print('Time to calculate most relevant lines:  {:5.3f}s'.format(time.time()-start))
             print(f"Number of pre-filtered possible results: {len(result_line_numbers)}")
             
-            #chunk_size = math.ceil(len(result_line_numbers) / max(10, n_results / 10))
             chunk_size = math.ceil(len(result_line_numbers) / n_threads)
             if vecs_in_mem:
                 vector_lines = full_code_reprs[result_line_numbers]
@@ -397,10 +401,7 @@ if __name__ == '__main__':
                 #engine._codebase = [codebase_lines]
             else:
                 engine._codebase = data_loader.load_codebase_lines(data_path + 'sqlite.db', result_line_numbers, chunk_size) # database
-            #result_line_numbers = None
             print('DeepCS start time: {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
             deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'])
-            #if not vecs_in_mem: engine._code_reprs = None
-            #if not code_in_mem: engine._codebase   = None
             print('Total time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
             print('System time: {:5.3f}s'.format(time.process_time() - start_proc))
