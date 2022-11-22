@@ -143,7 +143,7 @@ if __name__ == '__main__':
         print(word)
         print(Counter(dict(itertools.islice(index[word].items(), 5))))
         print(Counter(dict(itertools.islice(index[word].items(), 1999, 2001))))
-        word = porter.stem("inputsream")
+        word = porter.stem("inputstream")
         print(word)
         print(Counter(dict(itertools.islice(index[word].items(), 5))))
         print(Counter(dict(itertools.islice(index[word].items(), 1999, 2001))))
