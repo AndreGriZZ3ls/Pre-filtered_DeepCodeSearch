@@ -194,8 +194,10 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
     if path[-3:] == ".db": # much faster, use this!
         conn = sqlite3.connect(path)
         curs = conn.cursor()
-        cond = "SELECT code FROM codebase WHERE id IN (" + ",".join([str(line) for line in lines]) + ")"
-        curs.execute(cond)
+        #cond = "SELECT code FROM codebase WHERE id IN (" + ",".join([str(line) for line in lines]) + ")"
+        #curs.execute(cond)
+        for line in lines:
+            curs.execute("SELECT code FROM codebase WHERE id = ?", line)
         codebase_lines = list(next(zip(*curs.fetchall())))
         conn.close()
     else:
