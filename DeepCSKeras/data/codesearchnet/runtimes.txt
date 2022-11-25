@@ -1,0 +1,37 @@
+vDCSI first runtimes   V,C: 0,888+0,767+0,722+0,788+0,796
+vDCSI first proc times V,C: 1,382+1,419+1,361+1,451+1,378
+vDCSI first runtimes   V  : 
+vDCSI first proc times V  : 
+
+vDCSI opera runtimes   V,C: 0,209+0,215+0,183+0,203+0,244+0,239+0,193+0,238+0,103+0,335
+vDCSI opera proc times V,C: 0,441+0,433+0,395+0,438+0,513+0,506+0,538+0,594+0,364+0,630
+vDCSI opera runtimes   V  : 
+vDCSI opera proc times V  : 
+
+
+
+
+
+vDCS  first runtimes   V,C: 
+vDCS  first proc times V,C: 
+vDCS  first runtimes   V  : 
+vDCS  first proc times V  : 
+
+vDCS  opera runtimes   V,C: 
+vDCS  opera proc times V,C: 
+vDCS  opera runtimes   V  : 
+vDCS  opera proc times V  : 
+
+
+
+
+
+ DCS  first runtimes   V,C: 
+ DCS  first proc times V,C: 
+ DCS  first runtimes   V  : 
+ DCS  first proc times V  : 
+ 
+ DCS  opera runtimes   V,C: 
+ DCS  opera proc times V,C: 
+ DCS  opera runtimes   V  : 
+ DCS  opera proc times V  : 
