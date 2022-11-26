@@ -400,8 +400,12 @@ if __name__ == '__main__':
                 engine._codebase = [codebase_lines[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
                 #engine._codebase = [codebase_lines]
             else:
-                engine._codebase = data_loader.load_codebase_lines(data_path + 'sqlite.db', result_line_numbers, chunk_size) # database
+                #engine._codebase = data_loader.load_codebase_lines(data_path + 'sqlite.db', result_line_numbers, chunk_size) # database
+                engine._codebase = [result_line_numbers[i:i + chunk_size] for i in range(0, len(result_line_numbers), chunk_size)]
             print('DeepCS start time: {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
-            deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'])
+            if code_in_mem:
+                deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'])
+            else:
+                deepCS_main.search_and_print_results(engine, model, vocab, query, n_results, data_path, config['data_params'], False, True)
             print('Total time:  {:5.3f}s  <<<<<<<<<<<<<'.format(time.time() - start))
             print('System time: {:5.3f}s'.format(time.process_time() - start_proc))

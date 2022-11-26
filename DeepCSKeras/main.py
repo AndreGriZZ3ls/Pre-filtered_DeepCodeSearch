@@ -285,10 +285,10 @@ def parse_args():
     return parser.parse_args()
 
 # moved into a function:
-def search_and_print_results(engine, model, vocab, query, n_results, data_path, data_params, return_results = False):
+def search_and_print_results(engine, model, vocab, query, n_results, data_path, data_params, return_results = False, load_cb = False):
     codes, sims = engine.search(model, vocab, query, n_results)
     ################ added ################
-    if not engine._codebase:
+    if load_cb or not engine._codebase:
         codes, sims = zip(*sorted(zip(codes, sims), key = lambda x:x[0]))
         codes = list(codes)
         sims  = list(sims )
