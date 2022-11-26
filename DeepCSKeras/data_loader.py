@@ -199,7 +199,7 @@ def load_codebase_lines(path, lines, chunk_size, chunk_number = -1):
         codebase_lines = []
         for line in lines:
             curs.execute(f"SELECT code FROM codebase WHERE id = {line}")
-            codebase_lines.append(list(next(zip(*curs.fetchall()))))
+            codebase_lines.append(next(zip(*curs.fetchall())))
         conn.close()
     else:
         codes = io.open(path, "r", encoding='utf8',errors='replace')
