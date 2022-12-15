@@ -7,13 +7,23 @@ __author__    = "Andre Warnecke"
 __copyright__ = "Copyright (c) 2022, Andre Warnecke"
 
 #Citation for DeepCS, which is called/executed in the context of this program:
-'''bibtex
+'''
 @inproceedings{gu2018deepcs,
   title={Deep Code Search},
   author={Gu, Xiaodong and Zhang, Hongyu and Kim, Sunghun},
   booktitle={Proceedings of the 2018 40th International Conference on Software Engineering (ICSE 2018)},
   year={2018},
   organization={ACM}
+}
+'''
+
+#Citation for CodeSearchNet dataset, of which a part was integrated into the DeepCS dataset:
+'''
+@article{husain2019codesearchnet,
+    title={{CodeSearchNet} challenge: Evaluating the state of semantic code search},
+    author={Husain, Hamel and Wu, Ho-Hsiang and Gazit, Tiferet and Allamanis, Miltiadis and Brockschmidt, Marc},
+    journal={arXiv preprint arXiv:1909.09436},
+    year={2019}
 }
 '''
 
@@ -47,9 +57,9 @@ from DeepCSKeras.utils import convert, revert
 
 def parse_args():
     parser = argparse.ArgumentParser("Generate Index or perform pre-filtered deep code search")
-    parser.add_argument("--dataset",    type=str, default="codesearchnet", help="dataset name")
-    parser.add_argument("--data_path",  type=str, default='./DeepCSKeras/data/',       help="working directory")
-    parser.add_argument("--model",      type=str, default="JointEmbeddingModel",       help="DeepCS model name")
+    parser.add_argument("--dataset",    type=str, default="combined",            help="dataset name")
+    parser.add_argument("--data_path",  type=str, default='./DeepCSKeras/data/', help="working directory")
+    parser.add_argument("--model",      type=str, default="JointEmbeddingModel", help="DeepCS model name")
     parser.add_argument("--mode", choices=["create_index","search","populate_database","eval","eval_filter"], default='search', 
                         help="The mode to run: 'create_index' mode constructs an index of specified type on the desired dataset; "
                         " 'search' mode filters the dataset according to given query and index before utilizing "

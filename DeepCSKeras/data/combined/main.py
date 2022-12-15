@@ -15,26 +15,26 @@ import numpy as np
 from tqdm import tqdm
 from collections import Counter
 from nltk.stem import PorterStemmer
-from DeepCodeSearchBT.DeepCSKeras import data_loader
+from Pre-filtered_DeepCodeSearch.DeepCSKeras import data_loader
 
 #################################################################################################
-camelcase_file = "./DeepCodeSearchBT/DeepCSKeras/data/codesearchnet/allData/eval.methname.all.txt"
-deduplic_file  = "./DeepCodeSearchBT/DeepCSKeras/data/codesearchnet/eval.tokens.txt"
+camelcase_file = "./Pre-filtered_DeepCodeSearch/DeepCSKeras/data/combined/allData/eval.methname.all.txt"
+deduplic_file  = "./Pre-filtered_DeepCodeSearch/DeepCSKeras/data/combined/eval.tokens.txt"
 
-source_file1   = "./DeepCodeSearchBT/DeepCSKeras/data/codesearchnet/allData/eval_filter.txt"
-source_file2   = "./DeepCodeSearchBT/DeepCSKeras/data/codesearchnet/allData/eval.URLs.txt"
-target_file1   = "./DeepCodeSearchBT/DeepCSKeras/data/codesearchnet/eval_filter.pkl"
+source_file1   = "./Pre-filtered_DeepCodeSearch/DeepCSKeras/data/combined/allData/eval_filter.txt"
+source_file2   = "./Pre-filtered_DeepCodeSearch/DeepCSKeras/data/combined/allData/eval.URLs.txt"
+target_file1   = "./Pre-filtered_DeepCodeSearch/DeepCSKeras/data/combined/eval_filter.pkl"
 
-source_file3   = "./DeepCodeSearchBT/DeepCSKeras/data/codesearchnet/allData/eval.{}.all.txt"
-target_file3   = "./DeepCodeSearchBT/DeepCSKeras/data/codesearchnet/eval.{}.txt"
+source_file3   = "./Pre-filtered_DeepCodeSearch/DeepCSKeras/data/combined/allData/eval.{}.all.txt"
+target_file3   = "./Pre-filtered_DeepCodeSearch/DeepCSKeras/data/combined/eval.{}.txt"
 
-source_file4   = "./DeepCodeSearchBT/DeepCSKeras/data/codesearchnet/use.rawcode.txt"
-target_file4   = "./DeepCodeSearchBT/DeepCSKeras/data/codesearchnet/eval.rawcode.txt"
+source_file4   = "./Pre-filtered_DeepCodeSearch/DeepCSKeras/data/combined/use.rawcode.txt"
+target_file4   = "./Pre-filtered_DeepCodeSearch/DeepCSKeras/data/combined/eval.rawcode.txt"
 
-source_file5   = "./DeepCodeSearchBT/DeepCSKeras/data/codesearchnet/eval.{}.txt"
-target_file5   = "./DeepCodeSearchBT/DeepCSKeras/data/codesearchnet/use.{}.h5"
+source_file5   = "./Pre-filtered_DeepCodeSearch/DeepCSKeras/data/combined/eval.{}.txt"
+target_file5   = "./Pre-filtered_DeepCodeSearch/DeepCSKeras/data/combined/use.{}.h5"
 
-vocab_path     = "./DeepCodeSearchBT/DeepCSKeras/data/codesearchnet/vocab.{}.pkl"
+vocab_path     = "./Pre-filtered_DeepCodeSearch/DeepCSKeras/data/combined/vocab.{}.pkl"
 #################################################################################################
 
 def replace_camelcase():
